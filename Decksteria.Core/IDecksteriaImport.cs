@@ -1,6 +1,6 @@
 ﻿namespace Decksteria.Core;
 
-using Decksteria.Service.Models;
+using Decksteria.Core.Models;
 
 public interface IDecksteriaImport
 {

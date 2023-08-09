@@ -1,6 +1,6 @@
-﻿using Decksteria.Service.Models;
+﻿namespace Decksteria.Core;
 
-namespace Decksteria.Core;
+using Decksteria.Core.Models;
 
 public interface IDecksteriaExport
 {

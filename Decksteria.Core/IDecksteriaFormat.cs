@@ -16,11 +16,15 @@ public interface IDecksteriaFormat
 
     public IEnumerable<SearchField> SearchFields { get; }
 
+    public int CompareCards(long cardId1, long cardId2);
+
     public Task<IEnumerable<IDecksteriaCard<IDecksteriaCardArt>>> GetCardsAsync(IEnumerable<SearchField>? filters = null);
+
+    public Task<IDecksteriaCard<IDecksteriaCardArt>> GetCardAsync(long cardId);
 
     public Dictionary<string, int> GetDeckStats(IDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed);
 
-    public int CompareCards(long cardId1, long cardId2);
+    public IDecksteriaDeck GetDefaultDeck(long cardId);
 
-    public IDecksteriaDeck GetDefaultDeck(long card);
+    public IDecksteriaDeck GetDeckFromName(string name);
 }

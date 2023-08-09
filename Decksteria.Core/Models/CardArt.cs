@@ -1,3 +1,11 @@
-﻿namespace Decksteria.Service.Models;
+﻿namespace Decksteria.Core.Models;
 
-public record CardArt(long CardId, long ArtId);
+[Serializable]
+public record CardArt(long CardId, long ArtId, byte[] Image, string Details)
+{
+    public CardArt(IDecksteriaCard<IDecksteriaCardArt> decksteriaCard, long artId)
+        : this(decksteriaCard.CardId, artId, decksteriaCard.Arts.First(art => art.ArtId == artId).Image, decksteriaCard.Details)
+    {
+
+    }
+}
