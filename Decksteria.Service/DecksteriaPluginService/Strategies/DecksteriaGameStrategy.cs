@@ -12,20 +12,17 @@ internal sealed class DecksteriaGameStrategy : IDecksteriaGameStrategy
         selectedGame = newPlugIn;
     }
 
-    public string Name => CheckAndThrowIfNotSelected(selectedGame?.Name);
+    public string Name => SelectedGame.Name;
 
-    public string DisplayName => CheckAndThrowIfNotSelected(selectedGame?.DisplayName);
+    public string DisplayName => SelectedGame.DisplayName;
 
     public byte[]? Icon => selectedGame?.Icon;
 
-    public IEnumerable<IDecksteriaFormat> Formats => CheckAndThrowIfNotSelected(selectedGame?.Formats);
+    public IEnumerable<IDecksteriaFormat> Formats => SelectedGame.Formats;
 
-    public IEnumerable<IDecksteriaImport> Importers => CheckAndThrowIfNotSelected(selectedGame?.Importers);
+    public IEnumerable<IDecksteriaImport> Importers => SelectedGame.Importers;
 
-    public IEnumerable<IDecksteriaExport> Exporters => CheckAndThrowIfNotSelected(selectedGame?.Exporters);
+    public IEnumerable<IDecksteriaExport> Exporters => SelectedGame.Exporters;
 
-    private T CheckAndThrowIfNotSelected<T>(T? value)
-    {
-        return value ?? throw new NotImplementedException("Game Plug-In has not been selected.");
-    }
+    private IDecksteriaGame SelectedGame => selectedGame ?? throw new NotImplementedException("Game Plug-In has not been selected.");
 }

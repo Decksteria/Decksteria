@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Service;
 
 using Decksteria.Core;
+using Decksteria.Service.Deckbuilding;
 using Decksteria.Service.DecksteriaFile;
 using Decksteria.Service.DecksteriaFile.Models;
 using Decksteria.Service.DecksteriaPluginService;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDecksteriaServices(this IServiceCollection services, IEnumerable<IDecksteriaGame> decksteriaGames)
+    public static IServiceCollection AddDecksteriaStrategyServices(this IServiceCollection services)
     {
         var decksteriaGameStrategy = new DecksteriaGameStrategy();
         services.TryAddSingleton<IDecksteriaGameStrategy>(decksteriaGameStrategy);
@@ -20,12 +21,7 @@ public static class DependencyInjection
         services.TryAddSingleton<IDecksteriaFormatStrategy>(decksteriaFormatStrategy);
         services.TryAddSingleton<IDecksteriaFormat>(decksteriaFormatStrategy);
 
-        services.TryAddSingleton<IPlugInManagerService>(provider =>
-        {
-            var gameStrategy = provider.GetRequiredService<IDecksteriaGameStrategy>();
-            var formatStrategy = provider.GetRequiredService<IDecksteriaFormatStrategy>();
-            return new PlugInManagerService(gameStrategy, formatStrategy, decksteriaGames);
-        });
+        services.TryAddSingleton<IPlugInManagerService, PlugInManagerService>();
 
         return services;
     }
@@ -34,6 +30,12 @@ public static class DependencyInjection
     {
         services.TryAddScoped<IDecksteriaFileService, DecksteriaFileService>();
         services.TryAddScoped<DeckFileMapper>();
+        return services;
+    }
+
+    public static IServiceCollection AddDeckbuildingServices(this IServiceCollection services)
+    {
+        services.TryAddScoped<IDeckbuildingService, DeckbuildingService>();
         return services;
     }
 }

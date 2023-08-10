@@ -2,6 +2,7 @@
 
 using Decksteria.Core;
 using Decksteria.Service.DecksteriaPluginService.Strategies;
+using System.Collections.ObjectModel;
 
 internal sealed class PlugInManagerService : IPlugInManagerService
 {
@@ -9,20 +10,21 @@ internal sealed class PlugInManagerService : IPlugInManagerService
 
     private readonly IDecksteriaFormatStrategy formatStrategy;
 
-    private readonly Dictionary<string, IDecksteriaGame> availablePlugIns;
+    private ReadOnlyDictionary<string, IDecksteriaGame>? availablePlugIns;
 
-    public PlugInManagerService(IDecksteriaGameStrategy gameStrategy, IDecksteriaFormatStrategy formatStrategy, IEnumerable<IDecksteriaGame> availablePlugIns)
+    public PlugInManagerService(IDecksteriaGameStrategy gameStrategy, IDecksteriaFormatStrategy formatStrategy)
     {
         this.gameStrategy = gameStrategy;
         this.formatStrategy = formatStrategy;
-        this.availablePlugIns = availablePlugIns.ToDictionary(game => game.Name);
     }
+
+    public bool PlugInsLoaded { get; private set; }
 
     public void ChangePlugIn(IDecksteriaGame plugIn) => gameStrategy.ChangePlugIn(plugIn);
 
     public IDecksteriaGame? ChangePlugIn(string plugInName)
     {
-        var newPlugIn = availablePlugIns.GetValueOrDefault(plugInName);
+        var newPlugIn = availablePlugIns?.GetValueOrDefault(plugInName);
         gameStrategy.ChangePlugIn(newPlugIn);
         return newPlugIn;
     }
@@ -34,5 +36,11 @@ internal sealed class PlugInManagerService : IPlugInManagerService
         var newFormat = gameStrategy.Formats.FirstOrDefault(format => format.Name == formatName);
         formatStrategy.ChangeFormat(newFormat);
         return newFormat;
+    }
+
+    public void LoadAllPlugIns(IEnumerable<IDecksteriaGame> plugIns)
+    {
+        availablePlugIns = plugIns.ToDictionary(plugin => plugin.Name).AsReadOnly();
+        PlugInsLoaded = true;
     }
 }

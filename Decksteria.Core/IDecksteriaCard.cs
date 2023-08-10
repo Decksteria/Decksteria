@@ -1,10 +1,10 @@
 ﻿namespace Decksteria.Core;
 
-public interface IDecksteriaCard<out T> where T : IDecksteriaCardArt
+public interface IDecksteriaCard
 {
     public long CardId { get; }
 
-    public IEnumerable<T> Arts { get; }
+    public IEnumerable<IDecksteriaCardArt> Arts { get; }
 
     public string Details { get; }
 }

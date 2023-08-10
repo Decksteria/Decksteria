@@ -19,21 +19,18 @@ internal class DecksteriaFileService : IDecksteriaFileService
         this.decksteriaFileMapper = decksteriaFileMapper;
     }
 
-    public async Task<Decklist> LoadDecksteriaFilterAsync(MemoryStream memoryStream)
+    public async Task<Decklist> LoadDecksteriaFileAsync(Stream stream)
     {
-        var deck = JsonSerializer.Deserialize<DeckFile>(memoryStream) ?? throw new InvalidDataException();
+        var deck = JsonSerializer.Deserialize<DeckFile>(stream) ?? throw new InvalidDataException();
         var game = plugInManagerService.ChangePlugIn(deck.Game) ?? throw new KeyNotFoundException($"Game Plug-In {deck.Game} could not be found.");
         var format = plugInManagerService.ChangeFormat(deck.Format) ?? throw new KeyNotFoundException($"Format {deck.Format} is undefined in {game.DisplayName} Plug-In.");
         return await decksteriaFileMapper.ToDecklistAsync(deck);
     }
 
-    public MemoryStream ReadDecksteriaFilter(Decklist decklist)
+    public async Task SaveDecksteriaFileAsync(Decklist decklist, Stream stream)
     {
         var decksteriaFile = decksteriaFileMapper.ToDeckFile(decklist);
-
-        var stream = new MemoryStream();
         var decksteriaFileJson = JsonSerializer.SerializeToUtf8Bytes(decksteriaFile);
-        stream.Write(decksteriaFileJson);
-        return stream;
+        await stream.WriteAsync(decksteriaFileJson);
     }
 }

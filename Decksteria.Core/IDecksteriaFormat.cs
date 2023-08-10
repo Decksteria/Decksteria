@@ -16,15 +16,17 @@ public interface IDecksteriaFormat
 
     public IEnumerable<SearchField> SearchFields { get; }
 
+    public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, CancellationToken cancellationToken = default);
+
     public int CompareCards(long cardId1, long cardId2);
 
-    public Task<IEnumerable<IDecksteriaCard<IDecksteriaCardArt>>> GetCardsAsync(IEnumerable<SearchField>? filters = null);
+    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchField>? filters = null, CancellationToken cancellationToken = default);
 
-    public Task<IDecksteriaCard<IDecksteriaCardArt>> GetCardAsync(long cardId);
+    public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken? cancellationToken = null);
 
-    public Dictionary<string, int> GetDeckStats(IDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed);
+    public Task<Dictionary<string, int>> GetDeckStatsAsync(IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default);
 
-    public IDecksteriaDeck GetDefaultDeck(long cardId);
+    public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default);
 
-    public IDecksteriaDeck GetDeckFromName(string name);
+    public IDecksteriaDeck? GetDeckFromName(string name);
 }

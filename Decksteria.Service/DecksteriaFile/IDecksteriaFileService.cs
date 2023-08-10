@@ -5,7 +5,7 @@ using System.IO;
 
 public interface IDecksteriaFileService
 {
-    Task<Decklist> LoadDecksteriaFilterAsync(MemoryStream memoryStream);
+    Task<Decklist> LoadDecksteriaFileAsync(Stream stream);
 
-    MemoryStream ReadDecksteriaFilter(Decklist decklist);
+    Task SaveDecksteriaFileAsync(Decklist decklist, Stream stream);
 }

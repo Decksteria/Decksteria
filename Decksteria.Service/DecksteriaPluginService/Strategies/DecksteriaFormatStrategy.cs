@@ -3,6 +3,7 @@
 using Decksteria.Core;
 using Decksteria.Core.Models;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -10,42 +11,40 @@ internal sealed class DecksteriaFormatStrategy : IDecksteriaFormatStrategy
 {
     private IDecksteriaFormat? selectedFormat;
 
+    public string Name => SelectedFormat.Name;
+
+    public string DisplayName => SelectedFormat.DisplayName;
+
+    public byte[]? Icon => SelectedFormat.Icon;
+
+    public string Description => SelectedFormat.Description;
+
+    public IEnumerable<IDecksteriaDeck> Decks => SelectedFormat.Decks;
+
+    public IEnumerable<SearchField> SearchFields => SelectedFormat.SearchFields;
+
     public void ChangeFormat(IDecksteriaFormat? newFormat)
     {
         selectedFormat = newFormat;
     }
 
-    public string Name => CheckAndThrowIfNotSelected(selectedFormat?.Name);
+    public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
+        => SelectedFormat.CheckCardCountAsync(cardId, decklist, cancellationToken);
 
-    public string DisplayName => CheckAndThrowIfNotSelected(selectedFormat?.DisplayName);
+    public int CompareCards(long cardId1, long cardId2) => SelectedFormat.CompareCards(cardId1, cardId2);
 
-    public byte[]? Icon => selectedFormat?.Icon;
+    public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken? cancellationToken = null) => SelectedFormat.GetCardAsync(cardId, cancellationToken);
 
-    public string Description => CheckAndThrowIfNotSelected(selectedFormat?.Description);
+    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchField>? filters = null, CancellationToken cancellationToken = default)
+        => SelectedFormat.GetCardsAsync(filters, cancellationToken);
 
-    public IEnumerable<IDecksteriaDeck> Decks => CheckAndThrowIfNotSelected(selectedFormat?.Decks);
+    public IDecksteriaDeck? GetDeckFromName(string name) => SelectedFormat.GetDeckFromName(name);
 
-    public IEnumerable<SearchField> SearchFields => CheckAndThrowIfNotSelected(selectedFormat?.SearchFields);
+    public Task<Dictionary<string, int>> GetDeckStatsAsync(IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default)
+        => SelectedFormat.GetDeckStatsAsync(decklist, isDetailed, cancellationToken);
 
-    public int CompareCards(long cardId1, long cardId2) => CheckAndThrowIfNotSelected(selectedFormat?.CompareCards(cardId1, cardId2));
+    public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default)
+        => SelectedFormat.GetDefaultDeckAsync(cardId, cancellationToken);
 
-    public Task<IEnumerable<IDecksteriaCard<IDecksteriaCardArt>>> GetCardsAsync(IEnumerable<SearchField>? filters = null)
-        => CheckAndThrowIfNotSelected(selectedFormat?.GetCardsAsync(filters));
-
-    public IDecksteriaDeck GetDeckFromName(string name) => CheckAndThrowIfNotSelected(selectedFormat?.GetDeckFromName(name));
-
-    public Dictionary<string, int> GetDeckStats(IDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed)
-        => CheckAndThrowIfNotSelected(selectedFormat?.GetDeckStats(decklist, isDetailed));
-
-    public IDecksteriaDeck GetDefaultDeck(long cardId) => CheckAndThrowIfNotSelected(selectedFormat?.GetDefaultDeck(cardId));
-
-    private T CheckAndThrowIfNotSelected<T>(T? value)
-    {
-        return value ?? throw new NotImplementedException("Game Format has not been selected.");
-    }
-
-    private int CheckAndThrowIfNotSelected(int? value)
-    {
-        return value ?? throw new NotImplementedException("Game Format has not been selected.");
-    }
+    private IDecksteriaFormat SelectedFormat => selectedFormat ?? throw new NotImplementedException("Game Format has not been selected.");
 }
