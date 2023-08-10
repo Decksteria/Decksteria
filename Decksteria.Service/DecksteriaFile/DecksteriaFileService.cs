@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-internal class DecksteriaFileService : IDecksteriaFileService
+internal sealed class DecksteriaFileService : IDecksteriaFileService
 {
     private readonly IPlugInManagerService plugInManagerService;
     private readonly DeckFileMapper decksteriaFileMapper;

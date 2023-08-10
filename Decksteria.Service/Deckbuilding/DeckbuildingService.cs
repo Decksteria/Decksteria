@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-internal class DeckbuildingService : IDeckbuildingService
+internal sealed class DeckbuildingService : IDeckbuildingService
 {
     private readonly IDecksteriaGame game;
 
