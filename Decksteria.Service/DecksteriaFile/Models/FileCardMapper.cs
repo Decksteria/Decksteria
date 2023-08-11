@@ -19,6 +19,8 @@ internal partial class FileCardMapper
 
     public async Task<CardArt> ToCardArtAsync(FileCard fileCard)
     {
-        return new CardArt(await format.GetCardAsync(fileCard.CardId), fileCard.ArtId);
+        var card = await format.GetCardAsync(fileCard.CardId);
+        var art = card.Arts.First(art => art.ArtId == fileCard.ArtId);
+        return new CardArt(fileCard.CardId, fileCard.ArtId, art.DownloadUrl, art.FileName, card.Details);
     }
 }

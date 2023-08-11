@@ -45,7 +45,7 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
         IEnumerable<CardArt> ToCardArts(IDecksteriaCard cardInfo)
         {
-            return cardInfo.Arts.Select(art => new CardArt(cardInfo.CardId, art.ArtId, art.Image, cardInfo.Details));
+            return cardInfo.Arts.Select(art => new CardArt(cardInfo.CardId, art.ArtId, art.DownloadUrl, art.FileName, cardInfo.Details));
         }
     }
 

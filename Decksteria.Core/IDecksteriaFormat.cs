@@ -2,16 +2,8 @@
 
 using Decksteria.Core.Models;
 
-public interface IDecksteriaFormat
+public interface IDecksteriaFormat : IDecksteriaTile
 {
-    public string Name { get; }
-
-    public string DisplayName { get; }
-
-    public byte[]? Icon { get; }
-
-    public string Description { get; }
-
     public IEnumerable<IDecksteriaDeck> Decks { get; }
 
     public IEnumerable<SearchField> SearchFields { get; }

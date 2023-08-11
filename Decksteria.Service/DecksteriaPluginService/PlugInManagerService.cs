@@ -10,7 +10,7 @@ internal sealed class PlugInManagerService : IPlugInManagerService
 
     private readonly IDecksteriaFormatStrategy formatStrategy;
 
-    private ReadOnlyDictionary<string, IDecksteriaGame>? availablePlugIns;
+    private Dictionary<string, IDecksteriaGame>? availablePlugIns;
 
     public PlugInManagerService(IDecksteriaGameStrategy gameStrategy, IDecksteriaFormatStrategy formatStrategy)
     {
@@ -19,6 +19,17 @@ internal sealed class PlugInManagerService : IPlugInManagerService
     }
 
     public bool PlugInsLoaded { get; private set; }
+
+    public IEnumerable<IDecksteriaGame> AvailablePlugIns => availablePlugIns?.Select(kv => kv.Value) ?? throw new NotImplementedException("Game Plug-In has not been selected.");
+
+    public IEnumerable<IDecksteriaFormat> AvailableFormats => gameStrategy.Formats;
+
+    public void AddNewPlugIn(IDecksteriaGame plugIn)
+    {
+        availablePlugIns = availablePlugIns ?? new Dictionary<string, IDecksteriaGame>();
+        availablePlugIns.Add(plugIn.Name, plugIn);
+        PlugInsLoaded = true;
+    }
 
     public void ChangePlugIn(IDecksteriaGame plugIn) => gameStrategy.ChangePlugIn(plugIn);
 
@@ -38,9 +49,9 @@ internal sealed class PlugInManagerService : IPlugInManagerService
         return newFormat;
     }
 
-    public void LoadAllPlugIns(IEnumerable<IDecksteriaGame> plugIns)
+    public void SetAvailablePlugIns(IEnumerable<IDecksteriaGame> plugIns)
     {
-        availablePlugIns = plugIns.ToDictionary(plugin => plugin.Name).AsReadOnly();
+        availablePlugIns = plugIns.ToDictionary(plugin => plugin.Name);
         PlugInsLoaded = true;
     }
 }

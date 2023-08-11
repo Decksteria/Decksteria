@@ -18,6 +18,8 @@ internal sealed class DecksteriaGameStrategy : IDecksteriaGameStrategy
 
     public byte[]? Icon => selectedGame?.Icon;
 
+    public string Description => SelectedGame.Description;
+
     public IEnumerable<IDecksteriaFormat> Formats => SelectedGame.Formats;
 
     public IEnumerable<IDecksteriaImport> Importers => SelectedGame.Importers;
