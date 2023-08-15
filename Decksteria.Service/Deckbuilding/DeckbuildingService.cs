@@ -38,7 +38,7 @@ internal sealed class DeckbuildingService : IDeckbuildingService
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<CardArt>> GetCardsAsync(IEnumerable<SearchField>? filters = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CardArt>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
         var cards = await format.GetCardsAsync(filters, cancellationToken);
         return cards.SelectMany(ToCardArts);
@@ -51,13 +51,14 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
     {
-        if (await format.CheckCardCountAsync(card.CardId, SelectAsLong(decklist), cancellationToken))
+        var decks = SelectAsLong(decklist);
+        if (await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
         {
             return false;
         }
 
         var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(card.CardId, cancellationToken);
-        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, cancellationToken))
+        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
         {
             return false;
         }
@@ -82,7 +83,7 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public Decklist CreateDecklist()
     {
-        return new Decklist(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.AsEnumerable()));
+        return new Decklist(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.AsEnumerable()));
     }
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
@@ -98,9 +99,9 @@ internal sealed class DeckbuildingService : IDeckbuildingService
         return deck != null;
     }
 
-    private static IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> SelectAsLong(IReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decks)
+    private static IReadOnlyDictionary<string, IEnumerable<long>> SelectAsLong(IReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decks)
     {
-        return decks.ToDictionary(kv => kv.Key, kv => kv.Value.Select(card => card.CardId));
+        return decks.ToDictionary(kv => kv.Key.Name, kv => kv.Value.Select(card => card.CardId));
     }
 
     private Task<List<CardArt>?> GetDecklistAsync(string deckName, CancellationToken cancellationToken = default)

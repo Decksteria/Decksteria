@@ -28,23 +28,26 @@ internal sealed class DecksteriaFormatStrategy : IDecksteriaFormatStrategy
         selectedFormat = newFormat;
     }
 
-    public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
+    public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
         => SelectedFormat.CheckCardCountAsync(cardId, decklist, cancellationToken);
 
-    public int CompareCards(long cardId1, long cardId2) => SelectedFormat.CompareCards(cardId1, cardId2);
+    public Task<int> CompareCardsAsync(long cardId1, long cardId2, CancellationToken cancellationToken = default) => SelectedFormat.CompareCardsAsync(cardId1, cardId2, cancellationToken);
 
-    public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken? cancellationToken = null) => SelectedFormat.GetCardAsync(cardId, cancellationToken);
+    public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken cancellationToken = default) => SelectedFormat.GetCardAsync(cardId, cancellationToken);
 
-    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchField>? filters = null, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
         => SelectedFormat.GetCardsAsync(filters, cancellationToken);
 
     public IDecksteriaDeck? GetDeckFromName(string name) => SelectedFormat.GetDeckFromName(name);
 
-    public Task<Dictionary<string, int>> GetDeckStatsAsync(IReadOnlyDictionary<IDecksteriaDeck, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default)
+    public Task<Dictionary<string, int>> GetDeckStatsAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default)
         => SelectedFormat.GetDeckStatsAsync(decklist, isDetailed, cancellationToken);
 
     public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default)
         => SelectedFormat.GetDefaultDeckAsync(cardId, cancellationToken);
+
+    public Task<bool> IsDecklistLegal(IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
+        => SelectedFormat.IsDecklistLegal(decklist, cancellationToken);
 
     private IDecksteriaFormat SelectedFormat => selectedFormat ?? throw new NotImplementedException("Game Format has not been selected.");
 }
