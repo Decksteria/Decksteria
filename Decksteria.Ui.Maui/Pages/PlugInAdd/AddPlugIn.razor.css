@@ -1,0 +1,10 @@
+﻿.mainbutton {
+    width: 100%;
+    max-width: 500px;
+    align-self: end;
+    padding: 2px 2px;
+}
+
+.pluginlist tr {
+    border: 1px solid #000000;
+}
