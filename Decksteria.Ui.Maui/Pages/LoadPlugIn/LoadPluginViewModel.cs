@@ -17,10 +17,6 @@ public sealed class LoadPluginViewModel : BaseViewModel
 
     private ObservableCollection<PlugInTile> _gameTileSource = new();
 
-    private IEnumerable<FormatTile> _formatTileSource = new FormatTile[0];
-
-    private IEnumerable<DeckTile> _deckTileSource = new DeckTile[0];
-
     public ObservableCollection<PlugInTile> GameTiles
     {
         get => _gameTileSource;
@@ -30,17 +26,6 @@ public sealed class LoadPluginViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-
-    public IEnumerable<FormatTile> FormatTiles
-    {
-        get => _formatTileSource;
-        set
-        {
-            _formatTileSource = value;
-            OnPropertyChanged();
-        }
-    }
-
     public bool DecksExpanded
     {
         get => expandedSection == SelectionScreen.Decks;

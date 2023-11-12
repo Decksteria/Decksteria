@@ -8,7 +8,7 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        MainPage = new LoadPlugIn(plugInInitializer, new());
+        MainPage = new LoadPlugIn(plugInInitializer);
     }
 
     protected override Window CreateWindow(IActivationState? activationState)

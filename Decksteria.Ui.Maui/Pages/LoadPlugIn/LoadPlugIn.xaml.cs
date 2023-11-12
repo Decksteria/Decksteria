@@ -43,12 +43,11 @@ public partial class LoadPlugIn : ContentPage
 
     private readonly IPlugInInitializer plugInInitializer;
 
-    private LoadPluginViewModel viewModel;
+    private LoadPluginViewModel viewModel = new();
 
-    public LoadPlugIn(IPlugInInitializer plugInInitializer, LoadPluginViewModel viewModel)
+    public LoadPlugIn(IPlugInInitializer plugInInitializer)
     {
         this.plugInInitializer = plugInInitializer;
-        this.viewModel = viewModel;
         this.BindingContext = this.viewModel;
 
         InitializeComponent();
@@ -74,7 +73,7 @@ public partial class LoadPlugIn : ContentPage
             FileTypes = dllFileTypes
         });
 
-        if (result == null)
+        if (result is null)
         {
             ProcessingInProgress = false;
             return;
@@ -89,7 +88,7 @@ public partial class LoadPlugIn : ContentPage
         }
 
         var plugIn = plugInInitializer.TryGetNewPlugIn(result.FullPath);
-        if (plugIn == null)
+        if (plugIn is null)
         {
             await this.DisplayAlert(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
             ProcessingInProgress = false;
@@ -125,28 +124,53 @@ public partial class LoadPlugIn : ContentPage
         ProcessingInProgress = false;
     }
 
-    private void Back_Button_Clicked(object sender, EventArgs e)
+    private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
-
-    }
-
-    private void ListView_PlugInSelect_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        if (e.SelectedItem is not PlugInTile)
+        var senderBinding = (sender as ViewCell)?.BindingContext;
+        if (senderBinding is not PlugInTile)
         {
             this.DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateFormatList((PlugInTile) e.SelectedItem);
-        ListView_PlugInSelect.FadeTo(0, 1000, Easing.Linear);
-        ListView_FormatSelect.FadeTo(1, 1000, Easing.Linear);
+        UpdateFormatList((PlugInTile) senderBinding);
+        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.FormatsExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+    }
+
+    private void ListView_FormatSelect_Back_Clicked(object sender, EventArgs e)
+    {
+        ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.PlugInsExpanded = true;
+        ListView_PlugInSelect.FadeTo(1, 100, Easing.Linear);
+    }
+
+    private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
+    {
+        var senderBinding = (sender as ViewCell)?.BindingContext;
+        if (senderBinding is not FormatTile)
+        {
+            this.DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            return;
+        }
+
+        UpdateDeckList((FormatTile) senderBinding);
+        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.DecksExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+    }
+
+    private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
+    {
+        ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.FormatsExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
     }
 
     private void UpdatePlugInList(IEnumerable<IDecksteriaGame> plugIns)
     {
         viewModel.GameTiles.Clear();
-        viewModel.FormatTiles = new FormatTile[0];
         foreach (var plugIn in plugIns)
         {
             viewModel.GameTiles.Add(new PlugInTile(plugIn));
@@ -155,6 +179,12 @@ public partial class LoadPlugIn : ContentPage
 
     private void UpdateFormatList(PlugInTile plugInTile)
     {
-        viewModel.FormatTiles = plugInTile.Formats;
+        ListView_FormatSelect.ItemsSource = plugInTile.Formats;
+    }
+
+    private void UpdateDeckList(FormatTile formatTile)
+    {
+        // Get All Deck files from the Plug-In Format Application Path
+
     }
 }
