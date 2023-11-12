@@ -6,19 +6,36 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="PageBackgroundColor">#dfdfdf</Color>
+            <Color x:Key="PageBackgroundColor">#efefef</Color>
+            <Color x:Key="ContentBackgroundColor">#dfdfdf</Color>
+            <Color x:Key="ContentSecondaryBackgroundColor">#d5d5d5</Color>
             <Color x:Key="PrimaryTextColor">White</Color>
+            <Color x:Key="SecondaryTextColor">Black</Color>
 
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
+                <Setter Property="TextColor" Value="{DynamicResource SecondaryTextColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
             </Style>
 
             <Style TargetType="Button">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
+                <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
                 <Setter Property="BackgroundColor" Value="#2b0b98" />
                 <Setter Property="Padding" Value="14,10" />
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsPressed" Value="True">
+                        <Setter Property="BackgroundColor" Value="#3b1ba8"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="ImageButton">
+                <Setter Property="BackgroundColor" Value="#dfdfdf"/>
+                <Style.Triggers>
+                    <Trigger TargetType="ImageButton" Property="IsPressed" Value="True">
+                        <Setter Property="BackgroundColor" Value="#9f9f9f"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
         </ResourceDictionary>

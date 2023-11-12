@@ -45,7 +45,7 @@ internal sealed class PlugInInitializer : IPlugInInitializer
             var plugIn = await GetPlugInInterface(assembly);
             if (plugIn != null)
             {
-                plugIns.Append(plugIn);
+                plugIns.Enqueue(plugIn);
             }
         }
 

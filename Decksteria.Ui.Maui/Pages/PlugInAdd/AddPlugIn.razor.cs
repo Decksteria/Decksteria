@@ -1,11 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.PlugInAdd;
 
-using Decksteria.Core;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 public partial class AddPlugIn
 {

@@ -1,10 +1,15 @@
 ﻿.mainbutton {
     width: 100%;
-    max-width: 500px;
-    align-self: end;
+    max-width: 300px;
+    float: right;
     padding: 2px 2px;
 }
 
-.pluginlist tr {
+.pluginlist table {
+    width: 100%;
+    border-radius: 1px;
+}
+
+.pluginlist tr, .pluginlist th, .pluginlist td {
     border: 1px solid #000000;
 }

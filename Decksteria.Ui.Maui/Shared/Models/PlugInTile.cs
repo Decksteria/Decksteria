@@ -2,7 +2,7 @@
 
 using Decksteria.Core;
 
-internal sealed class PlugInTile
+public readonly struct PlugInTile
 {
     public PlugInTile(IDecksteriaGame plugIn)
     {
@@ -13,15 +13,18 @@ internal sealed class PlugInTile
         if (plugIn.Icon != null)
         {
             var imgString = Convert.ToBase64String(plugIn.Icon);
+            IconImg = plugIn.Icon;
             IconSrc = $"data:image/png;base64,{imgString}";
         }
     }
 
-    public string Name { get; }
+    public string Name { get; init; }
 
-    public string DisplayName { get; }
+    public string DisplayName { get; init; }
 
-    public string? IconSrc { get; }
+    public byte[]? IconImg{ get; init; }
 
-    public IEnumerable<FormatTile> Formats { get; }
+    public string? IconSrc { get; init; }
+
+    public IEnumerable<FormatTile> Formats { get; init; }
 }

@@ -1,7 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui;
 
+using CommunityToolkit.Maui;
 using Decksteria.Core.Data;
 using Decksteria.Service;
+using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
@@ -14,6 +16,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -29,10 +32,17 @@ public static class MauiProgram
         builder.Services.AddDecksteriaStrategyServices();
         builder.Services.AddDecksteriaFileServices();
         builder.Services.AddDeckbuildingServices();
+        // builder.Services.AddDecksteriaMAUI();
         builder.Services.AddSingleton<IPlugInInitializer, PlugInInitializer>();
         builder.Services.AddSingleton<IDialogService, DialogService>();
         builder.Services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
 
         return builder.Build();
+    }
+
+    private static IServiceCollection AddDecksteriaMAUI(this IServiceCollection services)
+    {
+        services.AddScoped<LoadPluginViewModel>();
+        return services;
     }
 }

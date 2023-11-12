@@ -2,7 +2,7 @@
 
 using Decksteria.Core;
 
-internal sealed class FormatTile
+public readonly struct FormatTile
 {
     public FormatTile(IDecksteriaFormat format)
     {
@@ -12,13 +12,16 @@ internal sealed class FormatTile
         if (format.Icon != null)
         {
             var imgString = Convert.ToBase64String(format.Icon);
+            IconImg = format.Icon;
             IconSrc = $"data:image/png;base64,{imgString}";
         }
     }
 
-    public string Name { get; }
+    public string Name { get; init; }
 
-    public string DisplayName { get; }
+    public string DisplayName { get; init; }
 
-    public string? IconSrc { get; }
+    public byte[]? IconImg { get; init; }
+
+    public string? IconSrc { get; init; }
 }
