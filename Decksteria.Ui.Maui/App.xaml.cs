@@ -4,11 +4,11 @@ using Decksteria.Ui.Maui.Services.PlugInInitializer;
 
 public partial class App : Application
 {
-    public App(IPlugInInitializer plugInInitializer)
+    public App(LoadPlugIn homePage)
     {
         InitializeComponent();
 
-        MainPage = new LoadPlugIn(plugInInitializer);
+        MainPage = homePage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)

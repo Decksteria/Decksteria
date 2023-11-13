@@ -4,10 +4,11 @@ using Decksteria.Core;
 
 public readonly struct FormatTile
 {
-    public FormatTile(IDecksteriaFormat format)
+    public FormatTile(string gameName, IDecksteriaFormat format)
     {
         Name = format.Name;
         DisplayName = format.DisplayName;
+        DeckDirectory = $"{gameName}\\{format.Name}";
 
         if (format.Icon != null)
         {
@@ -24,4 +25,6 @@ public readonly struct FormatTile
     public byte[]? IconImg { get; init; }
 
     public string? IconSrc { get; init; }
+
+    public string DeckDirectory { get; init; }
 }

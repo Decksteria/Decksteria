@@ -32,17 +32,25 @@ public static class MauiProgram
         builder.Services.AddDecksteriaStrategyServices();
         builder.Services.AddDecksteriaFileServices();
         builder.Services.AddDeckbuildingServices();
-        // builder.Services.AddDecksteriaMAUI();
-        builder.Services.AddSingleton<IPlugInInitializer, PlugInInitializer>();
-        builder.Services.AddSingleton<IDialogService, DialogService>();
-        builder.Services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
+        builder.Services.AddDecksteriaMAUI();
 
         return builder.Build();
     }
 
     private static IServiceCollection AddDecksteriaMAUI(this IServiceCollection services)
     {
-        services.AddScoped<LoadPluginViewModel>();
+        services.AddMAUIServices();
+
+        services.AddSingleton<LoadPlugIn>();
+        return services;
+    }
+
+    private static IServiceCollection AddMAUIServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IPlugInInitializer, PlugInInitializer>();
+        services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
+
         return services;
     }
 }

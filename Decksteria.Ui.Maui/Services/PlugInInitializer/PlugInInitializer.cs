@@ -13,20 +13,17 @@ internal sealed class PlugInInitializer : IPlugInInitializer
 
     public Dictionary<string, IDecksteriaGame>? GameList { get; private set; }
 
-    public PlugInInitializer(IDecksteriaFileReader fileReader, IDialogService dialogService)
+    public PlugInInitializer()
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
         serviceCollection.AddScoped<IDialogService, DialogService>();
-        this.serviceProvider = serviceCollection.BuildServiceProvider();
+        serviceProvider = serviceCollection.BuildServiceProvider();
     }
 
     public async Task<IEnumerable<IDecksteriaGame>> GetOrInitializeAllPlugInsAsync()
     {
-        if (GameList == null)
-        {
-            GameList = (await InitializePlugInsAsync()).ToDictionary(plugin => plugin.Name);
-        }
+        GameList ??= (await InitializePlugInsAsync()).ToDictionary(plugin => plugin.Name);
 
         return GameList.Values;
     }

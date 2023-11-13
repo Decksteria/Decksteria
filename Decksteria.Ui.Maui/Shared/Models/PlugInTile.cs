@@ -8,7 +8,7 @@ public readonly struct PlugInTile
     {
         Name = plugIn.Name;
         DisplayName = plugIn.DisplayName;
-        Formats = plugIn.Formats.Select(format => new FormatTile(format));
+        Formats = plugIn.Formats.Select(format => new FormatTile(plugIn.Name, format));
 
         if (plugIn.Icon != null)
         {

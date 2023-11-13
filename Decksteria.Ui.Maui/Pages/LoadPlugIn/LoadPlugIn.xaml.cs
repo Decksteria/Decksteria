@@ -43,7 +43,7 @@ public partial class LoadPlugIn : ContentPage
 
     private readonly IPlugInInitializer plugInInitializer;
 
-    private LoadPluginViewModel viewModel = new();
+    private readonly LoadPluginViewModel viewModel = new();
 
     public LoadPlugIn(IPlugInInitializer plugInInitializer)
     {
@@ -59,7 +59,7 @@ public partial class LoadPlugIn : ContentPage
         UpdatePlugInList(plugIns);
     }
 
-    private async void Button_NewPlugIn_ClickedAsync(object sender, EventArgs e)
+    private async void ListView_PlugInSelect_New_Clicked(object sender, EventArgs e)
     {
         if (ProcessingInProgress)
         {
@@ -83,14 +83,14 @@ public partial class LoadPlugIn : ContentPage
         if (!result.FileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
             ProcessingInProgress = false;
-            await this.DisplayAlert(ErrorAlertTitle, InvalidPlugInFile, InformationButtonText);
+            await DisplayAlert(ErrorAlertTitle, InvalidPlugInFile, InformationButtonText);
             return;
         }
 
         var plugIn = plugInInitializer.TryGetNewPlugIn(result.FullPath);
         if (plugIn is null)
         {
-            await this.DisplayAlert(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
+            await DisplayAlert(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
             ProcessingInProgress = false;
             return;
         }
@@ -99,29 +99,7 @@ public partial class LoadPlugIn : ContentPage
         UpdatePlugInList(plugIns);
         ProcessingInProgress = false;
 
-        await this.DisplayAlert(SuccessAlertTitle, AddedPlugInSuccess, InformationButtonText);
-    }
-
-    private void Button_NewDeck_Clicked(object sender, EventArgs e)
-    {
-        Console.WriteLine("New Deck Button Clicked");
-    }
-
-    private async void Button_OpenDeck_ClickedAsync(object sender, EventArgs e)
-    {
-        if (ProcessingInProgress)
-        {
-            return;
-        }
-
-        ProcessingInProgress = true;
-        var result = await FilePicker.Default.PickAsync(new()
-        {
-            PickerTitle = "Open a Deckbuilder File",
-            FileTypes = jsonFileTypes
-        });
-
-        ProcessingInProgress = false;
+        await DisplayAlert(SuccessAlertTitle, AddedPlugInSuccess, InformationButtonText);
     }
 
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
@@ -129,7 +107,7 @@ public partial class LoadPlugIn : ContentPage
         var senderBinding = (sender as ViewCell)?.BindingContext;
         if (senderBinding is not PlugInTile)
         {
-            this.DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
@@ -151,7 +129,7 @@ public partial class LoadPlugIn : ContentPage
         var senderBinding = (sender as ViewCell)?.BindingContext;
         if (senderBinding is not FormatTile)
         {
-            this.DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
@@ -166,6 +144,34 @@ public partial class LoadPlugIn : ContentPage
         ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
         ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+    }
+
+    private async void ListView_DeckSelect_Upload_Clicked(object sender, EventArgs e)
+    {
+        if (ProcessingInProgress)
+        {
+            return;
+        }
+
+        ProcessingInProgress = true;
+        var result = await FilePicker.Default.PickAsync(new()
+        {
+            PickerTitle = "Open a Deckbuilder File",
+            FileTypes = jsonFileTypes
+        });
+
+        ProcessingInProgress = false;
+    }
+
+    private void ListView_DeckSelect_Open_Clicked(object sender, EventArgs e)
+    {
+        if (ListView_DeckSelect.SelectedItem is not DeckTile)
+        {
+            return;
+        }
+
+        var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
+        // Open Deckbuilder Window
     }
 
     private void UpdatePlugInList(IEnumerable<IDecksteriaGame> plugIns)
@@ -185,6 +191,18 @@ public partial class LoadPlugIn : ContentPage
     private void UpdateDeckList(FormatTile formatTile)
     {
         // Get All Deck files from the Plug-In Format Application Path
+        var deckDirectory = Path.Combine(FileSystem.AppDataDirectory, formatTile.DeckDirectory);
 
+        if (Path.Exists(deckDirectory))
+        {
+            var files = Directory.GetFiles(deckDirectory, "*.json", SearchOption.TopDirectoryOnly);
+            var deckTiles = files.Select(file => new DeckTile(file));
+            ListView_DeckSelect.ItemsSource = deckTiles;
+        }
+    }
+
+    private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
+    {
+        Console.WriteLine("New Deck Button Clicked");
     }
 }

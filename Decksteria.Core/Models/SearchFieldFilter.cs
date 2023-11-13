@@ -35,6 +35,7 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(string? cardProperty)
     {
         if (SearchField.FieldType == FieldType.Number)
@@ -43,29 +44,24 @@ public class SearchFieldFilter
         }
 
         var stringValue = Value?.ToString();
-        if (stringValue == null)
+        if (string.IsNullOrEmpty(stringValue))
         {
             return true;
         }
 
-        if (cardProperty == null)
+        if (string.IsNullOrEmpty(cardProperty))
         {
             return false;
         }
 
-        switch (Comparison)
+        return Comparison switch
         {
-            case ComparisonType.Equals:
-                return cardProperty == stringValue;
-            case ComparisonType.NotEquals:
-                return cardProperty != stringValue;
-            case ComparisonType.Contains:
-                return stringValue != null && cardProperty.Contains(stringValue);
-            case ComparisonType.NotContains:
-                return stringValue != null && !cardProperty.Contains(stringValue);
-        }
-
-        return false;
+            ComparisonType.Equals => cardProperty == stringValue,
+            ComparisonType.NotEquals => cardProperty != stringValue,
+            ComparisonType.Contains => stringValue != null && cardProperty.Contains(stringValue),
+            ComparisonType.NotContains => stringValue != null && !cardProperty.Contains(stringValue),
+            _ => false,
+        };
     }
 
     /// <summary>
@@ -73,6 +69,7 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(int? cardProperty)
     {
         if (SearchField.FieldType != FieldType.Number)
@@ -80,7 +77,7 @@ public class SearchFieldFilter
             return false;
         }
 
-        if (Value == null)
+        if (Value is null)
         {
             return true;
         }
@@ -98,6 +95,7 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(int cardProperty)
     {
         if (SearchField.FieldType != FieldType.Number)
@@ -105,7 +103,7 @@ public class SearchFieldFilter
             return false;
         }
 
-        if (Value == null)
+        if (Value is null)
         {
             return true;
         }
@@ -115,23 +113,16 @@ public class SearchFieldFilter
 
     private bool IntMatching(int cardProperty)
     {
-        switch (Comparison)
+        return Comparison switch
         {
-            case ComparisonType.Equals:
-                return cardProperty == Convert.ToInt32(Value);
-            case ComparisonType.NotEquals:
-                return cardProperty != Convert.ToInt32(Value);
-            case ComparisonType.GreaterThan:
-                return cardProperty > Convert.ToInt32(Value);
-            case ComparisonType.GreaterThanOrEqual:
-                return cardProperty >= Convert.ToInt32(Value);
-            case ComparisonType.LessThan:
-                return cardProperty < Convert.ToInt32(Value);
-            case ComparisonType.LessThanOrEqual:
-                return cardProperty <= Convert.ToInt32(Value);
-        }
-
-        return false;
+            ComparisonType.Equals => cardProperty == Convert.ToInt32(Value),
+            ComparisonType.NotEquals => cardProperty != Convert.ToInt32(Value),
+            ComparisonType.GreaterThan => cardProperty > Convert.ToInt32(Value),
+            ComparisonType.GreaterThanOrEqual => cardProperty >= Convert.ToInt32(Value),
+            ComparisonType.LessThan => cardProperty < Convert.ToInt32(Value),
+            ComparisonType.LessThanOrEqual => cardProperty <= Convert.ToInt32(Value),
+            _ => false,
+        };
     }
 }
 
