@@ -2,6 +2,7 @@
 
 using Decksteria.Core;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
+using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Decksteria.Ui.Maui.Shared.Models;
 
@@ -41,12 +42,15 @@ public partial class LoadPlugIn : ContentPage
         { DevicePlatform.Tizen, new[] { "*/*" } }
     });
 
+    private readonly IPageService pageService;
+
     private readonly IPlugInInitializer plugInInitializer;
 
     private readonly LoadPluginViewModel viewModel = new();
 
-    public LoadPlugIn(IPlugInInitializer plugInInitializer)
+    public LoadPlugIn(IPageService pageService, IPlugInInitializer plugInInitializer)
     {
+        this.pageService = pageService;
         this.plugInInitializer = plugInInitializer;
         this.BindingContext = this.viewModel;
 
@@ -172,6 +176,7 @@ public partial class LoadPlugIn : ContentPage
 
         var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
         // Open Deckbuilder Window
+        pageService.OpenPageAsync(new Page());
     }
 
     private void UpdatePlugInList(IEnumerable<IDecksteriaGame> plugIns)

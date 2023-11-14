@@ -6,6 +6,7 @@ using Decksteria.Service;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
+using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Microsoft.Extensions.Logging;
 
@@ -50,6 +51,7 @@ public static class MauiProgram
         services.AddSingleton<IPlugInInitializer, PlugInInitializer>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
+        services.AddSingleton<IPageService, PageService>();
 
         return services;
     }

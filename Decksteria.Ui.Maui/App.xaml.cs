@@ -1,14 +1,14 @@
 ﻿namespace Decksteria.Ui.Maui;
 
-using Decksteria.Ui.Maui.Services.PlugInInitializer;
+using Decksteria.Ui.Maui.Services.PageService;
 
 public partial class App : Application
 {
-    public App(LoadPlugIn homePage)
+    public App(IPageService pageService)
     {
         InitializeComponent();
 
-        MainPage = homePage;
+        this.MainPage = pageService.HomePage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
