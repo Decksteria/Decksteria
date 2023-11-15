@@ -1,34 +1,28 @@
 ﻿namespace Decksteria.Core.Models;
 
-public class SearchFieldFilter
+/// <summary>
+/// Constructor for the UI Layer to create a SearchFieldFIlter. Not called by the plug-ins.
+/// </summary>
+/// <param name="searchField">The <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.</param>
+/// <param name="comparison">The Comparison type selected by the User.</param>
+/// <param name="value">The Search Value provided by the User.</param>
+public class SearchFieldFilter(SearchField searchField, ComparisonType comparison, object value)
 {
-    /// <summary>
-    /// Constructor for the UI Layer to create a SearchFieldFIlter. Not called by the plug-ins.
-    /// </summary>
-    /// <param name="searchField">The <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.</param>
-    /// <param name="comparison">The Comparison type selected by the User.</param>
-    /// <param name="value">The Search Value provided by the User.</param>
-    public SearchFieldFilter(SearchField searchField, ComparisonType comparison, object value)
-    {
-        SearchField = searchField;
-        Comparison = comparison;
-        Value = value;
-    }
 
     /// <summary>
     /// A <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.
     /// </summary>
-    public SearchField SearchField { get; }
+    public SearchField SearchField { get; } = searchField;
 
     /// <summary>
     /// The Comparison type selected by the User.
     /// </summary>
-    public ComparisonType Comparison { get; set; }
+    public ComparisonType Comparison { get; set; } = comparison;
 
     /// <summary>
     /// The Search Value provided by the User.
     /// </summary>
-    public object? Value { get; set; }
+    public object? Value { get; set; } = value;
 
     /// <summary>
     /// Default <see cref="string" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.

@@ -4,19 +4,13 @@ using Decksteria.Core;
 using Decksteria.Service.DecksteriaPluginService.Strategies;
 using System.Collections.ObjectModel;
 
-internal sealed class PlugInManagerService : IPlugInManagerService
+internal sealed class PlugInManagerService(IDecksteriaGameStrategy gameStrategy, IDecksteriaFormatStrategy formatStrategy) : IPlugInManagerService
 {
-    private readonly IDecksteriaGameStrategy gameStrategy;
+    private readonly IDecksteriaGameStrategy gameStrategy = gameStrategy;
 
-    private readonly IDecksteriaFormatStrategy formatStrategy;
+    private readonly IDecksteriaFormatStrategy formatStrategy = formatStrategy;
 
     private Dictionary<string, IDecksteriaGame>? availablePlugIns;
-
-    public PlugInManagerService(IDecksteriaGameStrategy gameStrategy, IDecksteriaFormatStrategy formatStrategy)
-    {
-        this.gameStrategy = gameStrategy;
-        this.formatStrategy = formatStrategy;
-    }
 
     public bool PlugInsLoaded { get; private set; }
 
@@ -26,7 +20,7 @@ internal sealed class PlugInManagerService : IPlugInManagerService
 
     public void AddNewPlugIn(IDecksteriaGame plugIn)
     {
-        availablePlugIns = availablePlugIns ?? new Dictionary<string, IDecksteriaGame>();
+        availablePlugIns ??= [];
         availablePlugIns.Add(plugIn.Name, plugIn);
         PlugInsLoaded = true;
     }

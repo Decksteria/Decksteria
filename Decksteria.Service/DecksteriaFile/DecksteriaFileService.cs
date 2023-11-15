@@ -1,22 +1,15 @@
 ﻿namespace Decksteria.Service.DecksteriaFile;
 
-using Decksteria.Core;
 using Decksteria.Core.Models;
-using Decksteria.Service.Deckbuilding.Models;
 using Decksteria.Service.DecksteriaFile.Models;
 using Decksteria.Service.DecksteriaPluginService;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-internal sealed class DecksteriaFileService : IDecksteriaFileService
+internal sealed class DecksteriaFileService(IPlugInManagerService plugInManagerService) : IDecksteriaFileService
 {
-    private readonly IPlugInManagerService plugInManagerService;
-
-    public DecksteriaFileService(IPlugInManagerService plugInManagerService)
-    {
-        this.plugInManagerService = plugInManagerService;
-    }
+    private readonly IPlugInManagerService plugInManagerService = plugInManagerService;
 
     public async Task<Decklist> LoadDecksteriaFileAsync(Stream stream)
     {

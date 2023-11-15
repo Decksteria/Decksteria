@@ -29,7 +29,6 @@ public static class DependencyInjection
     public static IServiceCollection AddDecksteriaFileServices(this IServiceCollection services)
     {
         services.TryAddScoped<IDecksteriaFileService, DecksteriaFileService>();
-        services.TryAddScoped<DeckFileMapper>();
         return services;
     }
 

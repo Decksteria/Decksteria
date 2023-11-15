@@ -6,20 +6,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-internal sealed class DeckbuildingService : IDeckbuildingService
+internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
 {
-    private readonly IDecksteriaGame game;
+    private readonly IDecksteriaGame game = game;
 
-    private readonly IDecksteriaFormat format;
+    private readonly IDecksteriaFormat format = format;
 
-    private ReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decklist;
-
-    public DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format)
-    {
-        this.game = game;
-        this.format = format;
-        decklist = format.Decks.ToDictionary(deck => deck, _ => new List<CardArt>()).AsReadOnly();
-    }
+    private ReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decklist = format.Decks.ToDictionary(deck => deck, _ => new List<CardArt>()).AsReadOnly();
 
     public Task ReInitializeAsync()
     {
@@ -88,20 +81,20 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
     {
-        var deck = await GetDecklistAsync(deckName);
+        var deck = await GetDecklistAsync(deckName, cancellationToken);
         return deck?.Remove(card) ?? false;
     }
 
     public async Task<bool> RemoveCardAtAsync(int index, string deckName, CancellationToken cancellationToken = default)
     {
-        var deck = await GetDecklistAsync(deckName);
+        var deck = await GetDecklistAsync(deckName, cancellationToken);
         deck?.RemoveAt(index);
         return deck != null;
     }
 
-    private static IReadOnlyDictionary<string, IEnumerable<long>> SelectAsLong(IReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decks)
+    private static ReadOnlyDictionary<string, IEnumerable<long>> SelectAsLong(IReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decks)
     {
-        return decks.ToDictionary(kv => kv.Key.Name, kv => kv.Value.Select(card => card.CardId));
+        return decks.ToDictionary(kv => kv.Key.Name, kv => kv.Value.Select(card => card.CardId)).AsReadOnly();
     }
 
     private Task<List<CardArt>?> GetDecklistAsync(string deckName, CancellationToken cancellationToken = default)
