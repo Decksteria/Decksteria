@@ -43,5 +43,5 @@ jobs:
           dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
           --configuration Release
           --no-restore
-          --framework
+          --framework net8.0-windows10.0.19041.0
           /p:WarningsAsErrors=false
