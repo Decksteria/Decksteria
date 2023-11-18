@@ -7,7 +7,7 @@ on:
 jobs:
 # Build Decksteria.Core
   build-core:
-    name: Build Decksteria.Core
+    name: Build Decksteria Application
     runs-on: windows-latest
     strategy:
       matrix:
@@ -34,12 +34,15 @@ jobs:
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=false
-      # - name: Install dependencies for Maui Project
-      #   run: dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64
-      # - name: Build Maui Project
-      #   run: >
-      #     dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
-      #     --configuration Release
-      #     --no-restore
-      #     /p:WarningsAsErrors=false
-      #     --run-time win-x64
+      - name: Install dependencies for Maui Project
+        run: |
+          dotnet workload restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
+          dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64 /p:PublishReadyToRun=true
+      - name: Build Maui Project
+        run: >
+          dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
+          --configuration Release
+          --no-restore
+          --runtime win-x64
+          /p:WarningsAsErrors=false
+          /p:Platform=x64
