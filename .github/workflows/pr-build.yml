@@ -44,4 +44,4 @@ jobs:
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=false
-          --run-time win-x64
+          --runtime win-x64
