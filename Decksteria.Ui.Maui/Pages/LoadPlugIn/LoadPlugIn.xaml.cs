@@ -60,6 +60,7 @@ public partial class LoadPlugIn : ContentPage
     {
         var plugIns = await plugInInitializer.GetOrInitializeAllPlugInsAsync();
         UpdatePlugInList(plugIns);
+        ListView_PlugInSelect.ItemsSource = viewModel.GameTiles;
     }
 
     private async void ListView_PlugInSelect_New_Clicked(object sender, EventArgs e)

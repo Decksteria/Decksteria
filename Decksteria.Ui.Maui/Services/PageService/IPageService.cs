@@ -5,11 +5,6 @@ using System.Threading.Tasks;
 
 public interface IPageService
 {
-    Page CurrentPage { get; }
-
-    Page HomePage { get; init; }
-
-    Task<Page> BackToHome();
-
-    Task<Page> OpenPageAsync(Page newPage);
+    Task BackToHomeAsync(Page currentPage);
+    Task OpenPageAsync(Page newPage, Page? currentPage = null);
 }
