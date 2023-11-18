@@ -33,6 +33,7 @@ jobs:
           dotnet build "Decksteria.Service/Decksteria.Service.csproj"
           --configuration Release
           --no-restore
+          --runtime win-x64
           /p:WarningsAsErrors=false
       - name: Install dependencies for Maui Project
         run: |
@@ -44,4 +45,5 @@ jobs:
           --configuration Release
           --no-restore
           --framework net8.0-windows10.0.19041.0
+          --runtime win-x64
           /p:WarningsAsErrors=false
