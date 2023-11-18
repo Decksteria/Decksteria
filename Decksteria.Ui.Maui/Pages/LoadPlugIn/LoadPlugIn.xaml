@@ -8,7 +8,7 @@
     xmlns:loadplugin="clr-namespace:Decksteria.Ui.Maui.Pages.LoadPlugIn"
     xmlns:models="clr-namespace:Decksteria.Ui.Maui.Shared.Models"
     x:DataType="loadplugin:LoadPluginViewModel"
-    x:Class="Decksteria.Ui.Maui.LoadPlugIn"
+    x:Class="Decksteria.Ui.Maui.Pages.LoadPlugIn.LoadPlugIn"
     BackgroundColor="{DynamicResource PageBackgroundColor}"
     Loaded="ContentPage_LoadedAsync"
     Title="Decksteria Deckbuilder">

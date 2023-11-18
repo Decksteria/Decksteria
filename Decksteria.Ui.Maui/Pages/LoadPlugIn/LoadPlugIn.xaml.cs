@@ -1,7 +1,6 @@
-﻿namespace Decksteria.Ui.Maui;
+﻿namespace Decksteria.Ui.Maui.Pages.LoadPlugIn;
 
 using Decksteria.Core;
-using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Decksteria.Ui.Maui.Shared.Models;
@@ -188,10 +187,7 @@ public partial class LoadPlugIn : ContentPage
         }
     }
 
-    private void UpdateFormatList(PlugInTile plugInTile)
-    {
-        ListView_FormatSelect.ItemsSource = plugInTile.Formats;
-    }
+    private void UpdateFormatList(PlugInTile plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
 
     private void UpdateDeckList(FormatTile formatTile)
     {
@@ -208,6 +204,8 @@ public partial class LoadPlugIn : ContentPage
 
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
+        // TODO: Create Deckbuilder Page
+        pageService.OpenPageAsync(new Page());
         Console.WriteLine("New Deck Button Clicked");
     }
 }

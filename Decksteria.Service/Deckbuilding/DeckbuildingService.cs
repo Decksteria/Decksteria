@@ -74,10 +74,7 @@ internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaForma
         return Task.FromResult(cards?.AsEnumerable());
     }
 
-    public Decklist CreateDecklist()
-    {
-        return new Decklist(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.AsEnumerable()));
-    }
+    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.AsEnumerable()));
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
     {

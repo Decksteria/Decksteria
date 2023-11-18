@@ -23,10 +23,7 @@ internal sealed class DecksteriaFormatStrategy : IDecksteriaFormatStrategy
 
     public IEnumerable<SearchField> SearchFields => SelectedFormat.SearchFields;
 
-    public void ChangeFormat(IDecksteriaFormat? newFormat)
-    {
-        selectedFormat = newFormat;
-    }
+    public void ChangeFormat(IDecksteriaFormat? newFormat) => selectedFormat = newFormat;
 
     public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
         => SelectedFormat.CheckCardCountAsync(cardId, decklist, cancellationToken);

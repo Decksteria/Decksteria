@@ -15,7 +15,7 @@ public sealed class LoadPluginViewModel : BaseViewModel
 
     private SelectionScreen expandedSection = SelectionScreen.PlugIn;
 
-    private ObservableCollection<PlugInTile> _gameTileSource = new();
+    private ObservableCollection<PlugInTile> _gameTileSource = [];
 
     public ObservableCollection<PlugInTile> GameTiles
     {
@@ -37,9 +37,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.Decks;
-            OnPropertyChanged(nameof(DecksExpanded));
-            OnPropertyChanged(nameof(FormatsExpanded));
-            OnPropertyChanged(nameof(PlugInsExpanded));
+            OnPropertyChanged( nameof( DecksExpanded ) );
+            OnPropertyChanged( nameof( FormatsExpanded ) );
+            OnPropertyChanged( nameof( PlugInsExpanded ) );
         }
     }
 
@@ -54,9 +54,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.Format;
-            OnPropertyChanged(nameof(DecksExpanded));
-            OnPropertyChanged(nameof(FormatsExpanded));
-            OnPropertyChanged(nameof(PlugInsExpanded));
+            OnPropertyChanged( nameof( DecksExpanded ) );
+            OnPropertyChanged( nameof( FormatsExpanded ) );
+            OnPropertyChanged( nameof( PlugInsExpanded ) );
         }
     }
 
@@ -71,9 +71,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.PlugIn;
-            OnPropertyChanged(nameof(DecksExpanded));
-            OnPropertyChanged(nameof(FormatsExpanded));
-            OnPropertyChanged(nameof(PlugInsExpanded));
+            OnPropertyChanged( nameof( DecksExpanded ) );
+            OnPropertyChanged( nameof( FormatsExpanded ) );
+            OnPropertyChanged( nameof( PlugInsExpanded ) );
         }
     }
 }

@@ -75,10 +75,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// </summary>
     /// <param name="name">The name of the deck that needs to be returned.</param>
     /// <returns>A <see cref="IDecksteriaDeck"/> that matches the deck's name.</returns>
-    public IDecksteriaDeck? GetDeckFromName(string name)
-    {
-        return Decks.FirstOrDefault(deck => deck.Name == name);
-    }
+    public IDecksteriaDeck? GetDeckFromName(string name) => Decks.FirstOrDefault(deck => deck.Name == name);
 
     /// <summary>
     /// Verifies whether an entire decklist is legal.
