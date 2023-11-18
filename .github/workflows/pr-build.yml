@@ -7,7 +7,7 @@ on:
 jobs:
 # Build Decksteria.Core
   build-core:
-    name: Build Decksteria.Core
+    name: Build Decksteria Application
     runs-on: windows-latest
     strategy:
       matrix:
