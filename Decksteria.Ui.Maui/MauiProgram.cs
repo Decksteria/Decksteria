@@ -9,6 +9,7 @@ using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 public static class MauiProgram
 {

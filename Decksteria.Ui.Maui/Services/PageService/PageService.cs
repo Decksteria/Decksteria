@@ -2,59 +2,42 @@
 
 using System.Threading.Tasks;
 
-using Decksteria.Ui.Maui.Pages.LoadPlugIn;
-
-internal sealed class PageService : IPageService
+internal sealed class PageService() : IPageService
 {
-    private readonly Application application;
-
-    private readonly Window homeWindow;
-
-    public PageService(Application application, LoadPlugIn plugInSelectPage)
+    public async Task OpenPageAsync(Page newPage, Page? currentPage = null)
     {
-        this.application = application;
-        homeWindow = application.Windows[0];
-        HomePage = IsMobile ? new NavigationPage(plugInSelectPage) : plugInSelectPage;
-        CurrentPage = HomePage;
-    }
-
-    public async Task<Page> OpenPageAsync(Page newPage)
-    {
-        if (IsMobile)
+        if (Application.MainPage is null)
         {
-            await CurrentPage!.Navigation.PushAsync(newPage);
-            CurrentPage = newPage;
-            return newPage;
+            Application.MainPage = newPage;
+            return;
         }
 
-        application.OpenWindow(new Window(newPage));
-        CurrentPage = newPage;
-        return newPage;
-    }
-
-    public async Task<Page> BackToHome()
-    {
-        if (IsMobile)
+        currentPage ??= Application.MainPage;
+        if (currentPage is NavigationPage)
         {
-            await CurrentPage.Navigation.PopToRootAsync();
-            CurrentPage = HomePage;
-            return CurrentPage;
+            await currentPage!.Navigation.PushAsync(newPage);
+            return;
         }
 
-        foreach (var window in application.Windows)
+        Application.OpenWindow(new Window(newPage));
+    }
+
+    public async Task BackToHomeAsync(Page currentPage)
+    {
+        if (currentPage is NavigationPage)
         {
-            if (!window.Equals(homeWindow))
+            await currentPage.Navigation.PopToRootAsync();
+            return;
+        }
+
+        foreach (var window in Application.Windows)
+        {
+            if (window.Parent is not null)
             {
-                application.CloseWindow(window);
+                Application.CloseWindow(window);
             }
         }
-
-        return HomePage;
     }
 
-    public Page HomePage { get; init; }
-
-    public Page CurrentPage { get; private set; }
-
-    private static bool IsMobile => DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS;
+    private static Application Application => Application.Current ?? throw new ApplicationException("Application has not loaded correctly.");
 }

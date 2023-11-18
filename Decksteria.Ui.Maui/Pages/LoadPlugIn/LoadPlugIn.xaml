@@ -33,7 +33,6 @@
             <ListView
                 x:Name="ListView_PlugInSelect"
                 BackgroundColor="{DynamicResource PageBackgroundColor}"
-                ItemsSource="{Binding GameTiles}"
                 SelectionMode="Single"
                 Opacity="1"
                 IsVisible="{Binding PlugInsExpanded}">
@@ -134,9 +133,7 @@
                 </ListView.Footer>
             </ListView>
         </FlexLayout>
-        <FlexLayout Direction="Row">
-            <Button Grid.Column="2" ImageSource="svgrepo_upload.png" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" />
-        </FlexLayout>
+        <Button Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0" />
     </Grid>
 </ContentPage>
 
