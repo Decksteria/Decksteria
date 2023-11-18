@@ -34,12 +34,12 @@ jobs:
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=false
-      # - name: Install dependencies for Maui Project
-      #   run: dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64
-      # - name: Build Maui Project
-      #   run: >
-      #     dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
-      #     --configuration Release
-      #     --no-restore
-      #     /p:WarningsAsErrors=false
-      #     --run-time win-x64
+      - name: Install dependencies for Maui Project
+        run: dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64
+      - name: Build Maui Project
+        run: >
+          dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
+          --configuration Release
+          --no-restore
+          /p:WarningsAsErrors=false
+          --run-time win-x64
