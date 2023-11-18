@@ -33,12 +33,11 @@ jobs:
           dotnet build "Decksteria.Service/Decksteria.Service.csproj"
           --configuration Release
           --no-restore
-          --runtime win-x64
           /p:WarningsAsErrors=false
       - name: Install dependencies for Maui Project
         run: |
           dotnet workload restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
-          dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
+          dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64
       - name: Build Maui Project
         run: >
           dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
