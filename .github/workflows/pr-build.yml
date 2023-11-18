@@ -45,3 +45,4 @@ jobs:
           --no-restore
           --runtime win-x64
           /p:WarningsAsErrors=false
+          /p:Platform=x64
