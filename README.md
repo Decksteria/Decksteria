@@ -33,6 +33,7 @@ Global
 	EndGlobalSection
 EndGlobal
 ```
+1. If you are using Visual Studio Code, copy the .editorconfig to the root of your custom Folder so that the style guide is applied on all other projects.
 1. Clone any other Plug-In Repositories you wish to work on from [the organisation](https://github.com/Decksteria). Add those projects into the Solution as you need.
 1. Your Folder Structure for this project should be as follows:<br/>This is to prevent contamination of code between plug-ins and the Core Solution.
 ```
@@ -48,6 +49,7 @@ EndGlobal
 │   ├── Decksteria.#PlugIn2.PlugIn
 │   └── Decksteria.#PlugIn2.DataBuilder(s)
 └── Decksteria.sln
+└──.editorconfig
 ```
 
 ## Installation
