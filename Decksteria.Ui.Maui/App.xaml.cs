@@ -7,8 +7,9 @@ public partial class App : Application
     public App(LoadPlugIn homePage)
     {
         InitializeComponent();
-
-        this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
+        var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder();
+        this.MainPage = deckbuilderPage;
+        //this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
