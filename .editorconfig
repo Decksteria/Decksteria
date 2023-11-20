@@ -85,7 +85,7 @@ csharp_style_expression_bodied_lambdas = true:warning
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = true:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true:warning
@@ -143,7 +143,7 @@ csharp_new_line_before_else = true
 csharp_new_line_before_finally = true
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_before_members_in_object_initializers = true
-csharp_new_line_before_open_brace = all
+csharp_new_line_before_open_brace = types,methods,anonymous_methods,control_blocks,anonymous_types,object_collection_array_initializers,lambdas,accessors
 csharp_new_line_between_query_expression_clauses = true
 
 # Indentation preferences

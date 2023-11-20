@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal interface IDeckbuildingService
+public interface IDeckbuildingService
 {
     Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
 
