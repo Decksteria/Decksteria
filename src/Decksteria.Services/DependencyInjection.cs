@@ -3,7 +3,6 @@
 using Decksteria.Core;
 using Decksteria.Service.Deckbuilding;
 using Decksteria.Service.DecksteriaFile;
-using Decksteria.Service.DecksteriaFile.Models;
 using Decksteria.Service.DecksteriaPluginService;
 using Decksteria.Service.DecksteriaPluginService.Strategies;
 using Microsoft.Extensions.DependencyInjection;

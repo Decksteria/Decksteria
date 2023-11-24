@@ -12,7 +12,7 @@ public interface IPlugInManagerService
     IEnumerable<IDecksteriaFormat> AvailableFormats { get; }
 
     void AddNewPlugIn(IDecksteriaGame plugIn);
-    
+
     void ChangeFormat(IDecksteriaFormat format);
 
     IDecksteriaFormat? ChangeFormat(string formatName);

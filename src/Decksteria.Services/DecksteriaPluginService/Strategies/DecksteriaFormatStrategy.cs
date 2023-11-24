@@ -1,12 +1,11 @@
 ﻿namespace Decksteria.Service.DecksteriaPluginService.Strategies;
 
-using Decksteria.Core;
-using Decksteria.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using Decksteria.Core;
+using Decksteria.Core.Models;
 
 internal sealed class DecksteriaFormatStrategy : IDecksteriaFormatStrategy
 {

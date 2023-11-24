@@ -1,13 +1,13 @@
 ﻿namespace Decksteria.Service.DecksteriaFile;
 
-using Decksteria.Core.Models;
-using Decksteria.Service.DecksteriaFile.Models;
-using Decksteria.Service.DecksteriaPluginService;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Decksteria.Core.Models;
+using Decksteria.Service.DecksteriaFile.Models;
+using Decksteria.Service.DecksteriaPluginService;
 
 internal sealed class DecksteriaFileService(IPlugInManagerService plugInManagerService) : IDecksteriaFileService
 {
@@ -18,7 +18,7 @@ internal sealed class DecksteriaFileService(IPlugInManagerService plugInManagerS
         var deck = JsonSerializer.Deserialize<DeckFile>(stream) ?? throw new InvalidDataException();
         var game = plugInManagerService.ChangePlugIn(deck.Game) ?? throw new KeyNotFoundException($"Game Plug-In {deck.Game} could not be found.");
         var format = plugInManagerService.ChangeFormat(deck.Format) ?? throw new KeyNotFoundException($"Format {deck.Format} is undefined in {game.DisplayName} Plug-In.");
-        
+
         return await ToDecklistAsync(deck);
 
         async Task<Decklist> ToDecklistAsync(DeckFile decksteriaFile)

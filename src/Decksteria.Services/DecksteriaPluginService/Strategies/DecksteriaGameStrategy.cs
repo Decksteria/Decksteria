@@ -1,8 +1,8 @@
 ﻿namespace Decksteria.Service.DecksteriaPluginService.Strategies;
 
-using Decksteria.Core;
 using System;
 using System.Collections.Generic;
+using Decksteria.Core;
 
 internal sealed class DecksteriaGameStrategy : IDecksteriaGameStrategy
 {
