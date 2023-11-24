@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Decksteria.Core", "Deckster
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Decksteria", "Decksteria", "{7E282D52-30FD-4B7A-92D8-B565188C05E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Decksteria.Service", "Decksteria.Service\Decksteria.Service.csproj", "{03B9E6B4-EDB8-4260-A071-6E1AD9D69352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Decksteria.Services", "Decksteria.Services\Decksteria.Services.csproj", "{03B9E6B4-EDB8-4260-A071-6E1AD9D69352}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Decksteria.Ui.Maui", "Decksteria.Ui.Maui\Decksteria.Ui.Maui.csproj", "{A1B91B15-DDEE-40B5-AF87-5B0038CBA2E1}"
 EndProject
