@@ -1,10 +1,10 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.PlugInSelect;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public partial class PlugInSelect
 {

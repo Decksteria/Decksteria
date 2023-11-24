@@ -25,7 +25,7 @@ public readonly struct PlugInTile
 
     public string DisplayName { get; init; }
 
-    public byte[]? IconImg{ get; init; }
+    public byte[]? IconImg { get; init; }
 
     public string? IconSrc { get; init; }
 

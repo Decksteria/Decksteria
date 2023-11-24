@@ -1,5 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.LoadPlugIn;
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Decksteria.Core;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInInitializer;
@@ -8,10 +12,6 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 public partial class LoadPlugIn : ContentPage
 {
@@ -116,7 +116,7 @@ public partial class LoadPlugIn : ContentPage
 
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
+        var senderBinding = ( sender as ViewCell )?.BindingContext;
         if (senderBinding is not PlugInTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
@@ -138,7 +138,7 @@ public partial class LoadPlugIn : ContentPage
 
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
+        var senderBinding = ( sender as ViewCell )?.BindingContext;
         if (senderBinding is not FormatTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);

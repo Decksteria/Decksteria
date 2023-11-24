@@ -1,11 +1,5 @@
 ﻿namespace Decksteria.Ui.Maui.Services.PlugInInitializer;
 
-using Decksteria.Core;
-using Decksteria.Core.Data;
-using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Services.FileReader;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Maui.Storage;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,6 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Decksteria.Core;
+using Decksteria.Core.Data;
+using Decksteria.Ui.Maui.Services.DialogService;
+using Decksteria.Ui.Maui.Services.FileReader;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Storage;
 
 internal sealed class PlugInInitializer : IPlugInInitializer
 {
@@ -30,7 +30,7 @@ internal sealed class PlugInInitializer : IPlugInInitializer
 
     public async Task<IEnumerable<IDecksteriaGame>> GetOrInitializeAllPlugInsAsync()
     {
-        GameList ??= (await InitializePlugInsAsync()).ToDictionary(plugin => plugin.Name);
+        GameList ??= ( await InitializePlugInsAsync() ).ToDictionary(plugin => plugin.Name);
 
         return GameList.Values;
     }
@@ -84,7 +84,7 @@ internal sealed class PlugInInitializer : IPlugInInitializer
 
             if (GameList != null && plugIn != null)
             {
-                GameList[plugIn.Name] = plugIn;
+                GameList[ plugIn.Name ] = plugIn;
 
                 // Load into App Data
                 var fileName = Path.GetFileName(file);
