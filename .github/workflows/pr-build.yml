@@ -27,10 +27,10 @@ jobs:
           --no-restore
           /p:WarningsAsErrors=true
       - name: Install dependencies for Services Project
-        run: dotnet restore "src/Decksteria.Service/Decksteria.Service.csproj"
+        run: dotnet restore "src/Decksteria.Services/Decksteria.Services.csproj"
       - name: Build Services Project
         run: >
-          dotnet build "src/Decksteria.Service/Decksteria.Service.csproj"
+          dotnet build "src/Decksteria.Services/Decksteria.Services.csproj"
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=false
