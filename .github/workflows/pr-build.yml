@@ -19,28 +19,28 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies for Core Project
-        run: dotnet restore "Decksteria.Core/Decksteria.Core.csproj"
+        run: dotnet restore "src/Decksteria.Core/Decksteria.Core.csproj"
       - name: Build Core Project
         run: >
-          dotnet build "Decksteria.Core/Decksteria.Core.csproj"
+          dotnet build "src/Decksteria.Core/Decksteria.Core.csproj"
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=true
       - name: Install dependencies for Services Project
-        run: dotnet restore "Decksteria.Service/Decksteria.Service.csproj"
+        run: dotnet restore "src/Decksteria.Service/Decksteria.Service.csproj"
       - name: Build Services Project
         run: >
-          dotnet build "Decksteria.Service/Decksteria.Service.csproj"
+          dotnet build "src/Decksteria.Service/Decksteria.Service.csproj"
           --configuration Release
           --no-restore
           /p:WarningsAsErrors=false
       - name: Install dependencies for Maui Project
         run: |
-          dotnet workload restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
-          dotnet restore "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64 /p:PublishReadyToRun=true
+          dotnet workload restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
+          dotnet restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64 /p:PublishReadyToRun=true
       - name: Build Maui Project
         run: >
-          dotnet build "Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
+          dotnet build "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
           --configuration Release
           --no-restore
           --runtime win-x64
