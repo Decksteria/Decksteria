@@ -3,20 +3,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Decksteria.Core;
-using Decksteria.Ui.Maui.Services.PlugInInitializer;
+using Decksteria.Ui.Maui.Services.PlugInFactory;
+using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 public partial class PlugInSelect
 {
     [Inject]
-    protected IPlugInInitializer PlugInInitializer { get; set; } = default!;
+    protected IDecksteriaPlugInFactory PlugInFactory { get; set; } = default!;
 
-    protected IEnumerable<IDecksteriaGame>? GameList;
+    protected IEnumerable<DecksteriaPlugIn>? GameList;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        GameList = await PlugInInitializer.GetOrInitializeAllPlugInsAsync();
+        GameList = PlugInFactory.GetOrInitializePlugIns();
     }
 }

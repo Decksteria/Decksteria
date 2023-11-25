@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
+using Decksteria.Service.DecksteriaFile.Models;
 
 internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
 {
@@ -76,7 +77,7 @@ internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaForma
         return Task.FromResult(cards?.AsEnumerable());
     }
 
-    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.AsEnumerable()));
+    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.Cast<CardArtId>()));
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
     {
