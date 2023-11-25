@@ -12,15 +12,15 @@ public sealed class DecksteriaPlugIn
     {
         if (!typeof(IDecksteriaGame).IsAssignableFrom(pluginType))
         {
-            throw new InvalidCastException("plugInType is not a Decksteria Plug-In.");
+            throw new InvalidCastException("PlugInType is not a Decksteria Plug-In.");
         }
 
+        PlugInType = pluginType;
         var initialLoad = CreateInstance(serviceProvider);
         Name = initialLoad.Name;
         Label = initialLoad.DisplayName;
         Icon = initialLoad.Icon;
         Formats = initialLoad.Formats.Select(format => new FormatTile(initialLoad.Name, format));
-        PlugInType = pluginType;
     }
 
     public string Name { get; init; }
