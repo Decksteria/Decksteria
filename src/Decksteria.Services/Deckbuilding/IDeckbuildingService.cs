@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
+using Decksteria.Services.DecksteriaFile.Models;
 
 public interface IDeckbuildingService
 {

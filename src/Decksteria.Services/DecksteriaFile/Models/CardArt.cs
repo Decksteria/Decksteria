@@ -1,5 +1,6 @@
-﻿namespace Decksteria.Core.Models;
+﻿namespace Decksteria.Services.DecksteriaFile.Models;
 
+using Decksteria.Core;
 using Decksteria.Service.DecksteriaFile.Models;
 
 /// <summary>

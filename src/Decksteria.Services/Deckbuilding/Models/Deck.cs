@@ -1,7 +1,7 @@
 ﻿namespace Decksteria.Service.Deckbuilding.Models;
 
 using System.Collections.Generic;
-using Decksteria.Core.Models;
+using Decksteria.Services.DecksteriaFile.Models;
 
 internal record Deck
 {

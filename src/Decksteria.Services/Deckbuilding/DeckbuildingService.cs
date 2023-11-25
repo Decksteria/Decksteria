@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Service.DecksteriaFile.Models;
+using Decksteria.Services.DecksteriaFile.Models;
 
 internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
 {
