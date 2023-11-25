@@ -1,10 +1,10 @@
-﻿namespace Decksteria.Service.Deckbuilding;
+﻿namespace Decksteria.Services.Deckbuilding;
 
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
-using Decksteria.Services.DecksteriaFile.Models;
+using Decksteria.Services.FileService.Models;
 
 public interface IDeckbuildingService
 {

@@ -1,7 +1,8 @@
-﻿namespace Decksteria.Service.DecksteriaFile.Models;
+﻿namespace Decksteria.Services.FileService.Models;
 
 using System;
 using System.Collections.Generic;
+using Decksteria.Core.Models;
 
 [Serializable]
 /// <summary>

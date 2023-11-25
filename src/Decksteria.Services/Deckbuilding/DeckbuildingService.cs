@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Service.Deckbuilding;
+﻿namespace Decksteria.Services.Deckbuilding;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,8 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
-using Decksteria.Service.DecksteriaFile.Models;
-using Decksteria.Services.DecksteriaFile.Models;
+using Decksteria.Services.FileService.Models;
 
 internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
 {

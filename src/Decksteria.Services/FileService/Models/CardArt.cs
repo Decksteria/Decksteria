@@ -1,7 +1,7 @@
-﻿namespace Decksteria.Services.DecksteriaFile.Models;
+﻿namespace Decksteria.Services.FileService.Models;
 
 using Decksteria.Core;
-using Decksteria.Service.DecksteriaFile.Models;
+using Decksteria.Core.Models;
 
 /// <summary>
 /// Model used by the Decksteria Application to represent a Card added to the Deck.

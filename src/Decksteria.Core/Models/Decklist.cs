@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using Decksteria.Core;
-using Decksteria.Service.DecksteriaFile.Models;
 
 /// <summary>
 /// Represents a decklist created by the user for a <see cref="IDecksteriaGame"/> and <see cref="IDecksteriaFormat"/>. Only used by the Plug-In for loading and saving a file.
