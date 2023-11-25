@@ -2,6 +2,7 @@
 
 using Decksteria.Core;
 using Decksteria.Core.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 internal class DeckbuilderViewModel()

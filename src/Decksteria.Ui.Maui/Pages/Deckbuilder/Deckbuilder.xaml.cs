@@ -1,9 +1,8 @@
 namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 
-using Decksteria.Core;
-using Decksteria.Core.Models;
 using Decksteria.Service.Deckbuilding;
-using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
+using System;
 
 public partial class Deckbuilder : ContentPage
 {
