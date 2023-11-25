@@ -1,9 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui.Services.FileReader;
 
-using Decksteria.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Decksteria.Core.Data;
 
 internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 {

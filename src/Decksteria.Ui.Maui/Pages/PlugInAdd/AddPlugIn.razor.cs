@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Services.PlugInInitializer;
+using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Maui.Devices;
@@ -30,7 +30,7 @@ public partial class AddPlugIn
     protected IDialogService DialogService { get; set; } = default!;
 
     [Inject]
-    protected IPlugInInitializer PlugInInitializer { get; set; } = default!;
+    protected IDecksteriaPlugInFactory PlugInFactory { get; set; } = default!;
 
     private string? ErrorMessage;
 
@@ -40,7 +40,7 @@ public partial class AddPlugIn
 
     protected override async Task OnInitializedAsync()
     {
-        var plugIns = await PlugInInitializer.GetOrInitializeAllPlugInsAsync();
+        var plugIns = PlugInFactory.GetOrInitializePlugIns();
         GameList = plugIns.Select(pi => new PlugInTile(pi));
 
         await base.OnInitializedAsync();
@@ -72,15 +72,15 @@ public partial class AddPlugIn
             return;
         }
 
-        var plugIn = PlugInInitializer.TryGetNewPlugIn(result.FullPath);
-        if (plugIn == null)
+        var plugInLoaded = PlugInFactory.TryAddGame(result.FullPath);
+        if (!plugInLoaded)
         {
             await DisplayErrorMessage(IncompatiblePlugInFile);
             ProcessingInProgress = false;
             return;
         }
 
-        var plugIns = await PlugInInitializer.GetOrInitializeAllPlugInsAsync();
+        var plugIns = PlugInFactory.GetOrInitializePlugIns();
         GameList = plugIns.Select(pi => new PlugInTile(pi));
         ProcessingInProgress = false;
     }

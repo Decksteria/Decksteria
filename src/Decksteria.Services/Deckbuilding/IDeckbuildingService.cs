@@ -1,9 +1,9 @@
 ﻿namespace Decksteria.Service.Deckbuilding;
 
-using Decksteria.Core.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Decksteria.Core.Models;
 
 internal interface IDeckbuildingService
 {

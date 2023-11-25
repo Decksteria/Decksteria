@@ -1,3 +1,3 @@
 ﻿namespace Decksteria.Service.DecksteriaFile.Models;
 
-internal record FileCard(long CardId, long ArtId);
+public record CardArtId(long CardId, long ArtId);
