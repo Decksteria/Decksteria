@@ -1,8 +1,8 @@
 ﻿namespace Decksteria.Service.DecksteriaFile;
 
-using Decksteria.Core.Models;
 using System.IO;
 using System.Threading.Tasks;
+using Decksteria.Core.Models;
 
 public interface IDecksteriaFileService
 {

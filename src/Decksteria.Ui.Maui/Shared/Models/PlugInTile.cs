@@ -7,11 +7,11 @@ using Decksteria.Core;
 
 public readonly struct PlugInTile
 {
-    public PlugInTile(IDecksteriaGame plugIn)
+    public PlugInTile(DecksteriaPlugIn plugIn)
     {
         Name = plugIn.Name;
-        DisplayName = plugIn.DisplayName;
-        Formats = plugIn.Formats.Select(format => new FormatTile(plugIn.Name, format));
+        DisplayName = plugIn.Label;
+        Formats = plugIn.Formats;
 
         if (plugIn.Icon != null)
         {
@@ -25,7 +25,7 @@ public readonly struct PlugInTile
 
     public string DisplayName { get; init; }
 
-    public byte[]? IconImg{ get; init; }
+    public byte[]? IconImg { get; init; }
 
     public string? IconSrc { get; init; }
 

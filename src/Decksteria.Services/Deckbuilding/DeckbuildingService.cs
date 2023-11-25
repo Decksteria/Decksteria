@@ -1,12 +1,13 @@
 ﻿namespace Decksteria.Service.Deckbuilding;
 
-using Decksteria.Core;
-using Decksteria.Core.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Decksteria.Core;
+using Decksteria.Core.Models;
+using Decksteria.Service.DecksteriaFile.Models;
 
 internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
 {
@@ -53,12 +54,12 @@ internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaForma
         }
 
         var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(card.CardId, cancellationToken);
-        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
+        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[ deck.Name ], cancellationToken))
         {
             return false;
         }
 
-        var cards = decklist[deck];
+        var cards = decklist[ deck ];
         cards.Add(card);
         return true;
     }
@@ -76,7 +77,7 @@ internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaForma
         return Task.FromResult(cards?.AsEnumerable());
     }
 
-    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.AsEnumerable()));
+    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key.Name, kv => kv.Value.Cast<CardArtId>()));
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
     {
@@ -105,6 +106,6 @@ internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaForma
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult<List<CardArt>?>(decklist[deck]);
+        return Task.FromResult<List<CardArt>?>(decklist[ deck ]);
     }
 }

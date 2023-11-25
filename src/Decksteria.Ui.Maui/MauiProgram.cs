@@ -1,13 +1,14 @@
 ﻿namespace Decksteria.Ui.Maui;
 
 using CommunityToolkit.Maui;
+using Decksteria.Core;
 using Decksteria.Core.Data;
 using Decksteria.Service;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
-using Decksteria.Ui.Maui.Services.PlugInInitializer;
+using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
@@ -26,11 +27,10 @@ public static class MauiProgram
         // builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
-		// builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+        // builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddDecksteriaStrategyServices();
         builder.Services.AddDecksteriaFileServices();
         builder.Services.AddDeckbuildingServices();
         builder.Services.AddDecksteriaMAUI();
@@ -48,7 +48,12 @@ public static class MauiProgram
 
     private static IServiceCollection AddMAUIServices(this IServiceCollection services)
     {
-        services.AddSingleton<IPlugInInitializer, PlugInInitializer>();
+        services.AddSingleton<IDecksteriaPlugInFactory, DecksteriaPlugInFactory>();
+        services.AddScoped<IDecksteriaGame>((sp) =>
+        {
+            var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
+            return formatFactory.CreatePlugInInstance();
+        });
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
         services.AddSingleton<IPageService, PageService>();

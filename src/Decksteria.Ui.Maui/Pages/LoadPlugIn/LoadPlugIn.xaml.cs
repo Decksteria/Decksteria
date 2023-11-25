@@ -1,17 +1,17 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.LoadPlugIn;
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Decksteria.Core;
 using Decksteria.Ui.Maui.Services.PageService;
-using Decksteria.Ui.Maui.Services.PlugInInitializer;
+using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 public partial class LoadPlugIn : ContentPage
 {
@@ -51,22 +51,22 @@ public partial class LoadPlugIn : ContentPage
 
     private readonly IPageService pageService;
 
-    private readonly IPlugInInitializer plugInInitializer;
+    private readonly IDecksteriaPlugInFactory plugInFactory;
 
     private readonly LoadPluginViewModel viewModel = new();
 
-    public LoadPlugIn(IPageService pageService, IPlugInInitializer plugInInitializer)
+    public LoadPlugIn(IPageService pageService, IDecksteriaPlugInFactory plugInFactory)
     {
         this.pageService = pageService;
-        this.plugInInitializer = plugInInitializer;
+        this.plugInFactory = plugInFactory;
         this.BindingContext = this.viewModel;
 
         InitializeComponent();
     }
 
-    private async void ContentPage_LoadedAsync(object sender, EventArgs e)
+    private void ContentPage_LoadedAsync(object sender, EventArgs e)
     {
-        var plugIns = await plugInInitializer.GetOrInitializeAllPlugInsAsync();
+        var plugIns = plugInFactory.GetOrInitializePlugIns();
         UpdatePlugInList(plugIns);
         ListView_PlugInSelect.ItemsSource = viewModel.GameTiles;
     }
@@ -99,15 +99,15 @@ public partial class LoadPlugIn : ContentPage
             return;
         }
 
-        var plugIn = plugInInitializer.TryGetNewPlugIn(result.FullPath);
-        if (plugIn is null)
+        var plugInLoaded = plugInFactory.TryAddGame(result.FullPath);
+        if (!plugInLoaded)
         {
             await DisplayAlert(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
             ProcessingInProgress = false;
             return;
         }
 
-        var plugIns = await plugInInitializer.GetOrInitializeAllPlugInsAsync();
+        var plugIns = plugInFactory.GetOrInitializePlugIns();
         UpdatePlugInList(plugIns);
         ProcessingInProgress = false;
 
@@ -116,7 +116,7 @@ public partial class LoadPlugIn : ContentPage
 
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
+        var senderBinding = ( sender as ViewCell )?.BindingContext;
         if (senderBinding is not PlugInTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
@@ -138,7 +138,7 @@ public partial class LoadPlugIn : ContentPage
 
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
+        var senderBinding = ( sender as ViewCell )?.BindingContext;
         if (senderBinding is not FormatTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
@@ -187,7 +187,7 @@ public partial class LoadPlugIn : ContentPage
         pageService.OpenPageAsync(new Page());
     }
 
-    private void UpdatePlugInList(IEnumerable<IDecksteriaGame> plugIns)
+    private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)
     {
         viewModel.GameTiles.Clear();
         foreach (var plugIn in plugIns)

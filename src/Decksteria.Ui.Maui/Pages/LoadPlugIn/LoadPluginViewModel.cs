@@ -1,8 +1,8 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.LoadPlugIn;
 
+using System.Collections.ObjectModel;
 using Decksteria.Ui.Maui.Shared;
 using Decksteria.Ui.Maui.Shared.Models;
-using System.Collections.ObjectModel;
 
 public sealed class LoadPluginViewModel : BaseViewModel
 {
@@ -37,9 +37,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.Decks;
-            OnPropertyChanged( nameof( DecksExpanded ) );
-            OnPropertyChanged( nameof( FormatsExpanded ) );
-            OnPropertyChanged( nameof( PlugInsExpanded ) );
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
         }
     }
 
@@ -54,9 +54,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.Format;
-            OnPropertyChanged( nameof( DecksExpanded ) );
-            OnPropertyChanged( nameof( FormatsExpanded ) );
-            OnPropertyChanged( nameof( PlugInsExpanded ) );
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
         }
     }
 
@@ -71,9 +71,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
             }
 
             expandedSection = SelectionScreen.PlugIn;
-            OnPropertyChanged( nameof( DecksExpanded ) );
-            OnPropertyChanged( nameof( FormatsExpanded ) );
-            OnPropertyChanged( nameof( PlugInsExpanded ) );
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
         }
     }
 }

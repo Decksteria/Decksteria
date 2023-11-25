@@ -1,7 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Services.DialogService;
 
-using Microsoft.Maui;
 using System.Threading.Tasks;
+using Microsoft.Maui;
 
 public interface IDialogService
 {
