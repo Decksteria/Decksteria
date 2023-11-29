@@ -11,6 +11,7 @@
             <Color x:Key="ContentSecondaryBackgroundColor">#d5d5d5</Color>
             <Color x:Key="PrimaryTextColor">White</Color>
             <Color x:Key="SecondaryTextColor">Black</Color>
+            <Color x:Key="PlaceholderTextColor">Gray</Color>
 
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryTextColor}" />
@@ -41,3 +42,4 @@
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+    

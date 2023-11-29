@@ -3,29 +3,15 @@
 using System;
 using Decksteria.Core;
 
-public readonly struct FormatTile
+public record FormatTile(string GameName, FormatDetails Format)
 {
-    public FormatTile(string gameName, IDecksteriaFormat format)
-    {
-        Name = format.Name;
-        DisplayName = format.DisplayName;
-        DeckDirectory = $"{gameName}\\{format.Name}";
+    public string Name { get; init; } = Format.Name;
 
-        if (format.Icon != null)
-        {
-            var imgString = Convert.ToBase64String(format.Icon);
-            IconImg = format.Icon;
-            IconSrc = $"data:image/png;base64,{imgString}";
-        }
-    }
+    public string DisplayName { get; init; } = Format.DisplayName;
 
-    public string Name { get; init; }
+    public byte[]? IconImg { get; init; } = Format.IconImg;
 
-    public string DisplayName { get; init; }
+    public string? IconSrc { get; init; } = Format.IconSrc;
 
-    public byte[]? IconImg { get; init; }
-
-    public string? IconSrc { get; init; }
-
-    public string DeckDirectory { get; init; }
+    public string DeckDirectory { get; init; } = $"{GameName}\\{Format.Name}";
 }

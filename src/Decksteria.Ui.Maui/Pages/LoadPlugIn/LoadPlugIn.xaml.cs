@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Decksteria.Core;
+using Decksteria.Services.PlugInFactory;
+using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.PageService;
-using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -117,13 +118,13 @@ public partial class LoadPlugIn : ContentPage
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
         var senderBinding = ( sender as ViewCell )?.BindingContext;
-        if (senderBinding is not PlugInTile)
+        if (senderBinding is not PlugInDetails)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateFormatList((PlugInTile) senderBinding);
+        UpdateFormatList((PlugInDetails) senderBinding);
         ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
         ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
@@ -139,7 +140,7 @@ public partial class LoadPlugIn : ContentPage
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
         var senderBinding = ( sender as ViewCell )?.BindingContext;
-        if (senderBinding is not FormatTile)
+        if (senderBinding is not FormatDetails)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
@@ -192,11 +193,11 @@ public partial class LoadPlugIn : ContentPage
         viewModel.GameTiles.Clear();
         foreach (var plugIn in plugIns)
         {
-            viewModel.GameTiles.Add(new PlugInTile(plugIn));
+            viewModel.GameTiles.Add(new PlugInDetails(plugIn));
         }
     }
 
-    private void UpdateFormatList(PlugInTile plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
+    private void UpdateFormatList(PlugInDetails plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
 
     private void UpdateDeckList(FormatTile formatTile)
     {

@@ -3,7 +3,9 @@
 using CommunityToolkit.Maui;
 using Decksteria.Core;
 using Decksteria.Core.Data;
-using Decksteria.Service;
+using Decksteria.Services;
+using Decksteria.Services.PlugInFactory;
+using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
@@ -49,7 +51,7 @@ public static class MauiProgram
     private static IServiceCollection AddMAUIServices(this IServiceCollection services)
     {
         services.AddSingleton<IDecksteriaPlugInFactory, DecksteriaPlugInFactory>();
-        services.AddScoped<IDecksteriaGame>((sp) =>
+        services.AddScoped<GameFormat>((sp) =>
         {
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
             return formatFactory.CreatePlugInInstance();

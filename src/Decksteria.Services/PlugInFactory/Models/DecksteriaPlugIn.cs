@@ -1,9 +1,10 @@
-﻿namespace Decksteria.Ui.Maui.Shared.Models;
+﻿namespace Decksteria.Services.PlugInFactory.Models;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Decksteria.Core;
+using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 public sealed class DecksteriaPlugIn
@@ -20,7 +21,7 @@ public sealed class DecksteriaPlugIn
         Name = initialLoad.Name;
         Label = initialLoad.DisplayName;
         Icon = initialLoad.Icon;
-        Formats = initialLoad.Formats.Select(format => new FormatTile(initialLoad.Name, format));
+        Formats = initialLoad.Formats.Select(format => new FormatDetails(format));
     }
 
     public string Name { get; init; }
@@ -29,7 +30,7 @@ public sealed class DecksteriaPlugIn
 
     public byte[]? Icon { get; init; }
 
-    public IEnumerable<FormatTile> Formats { get; init; }
+    public IEnumerable<FormatDetails> Formats { get; init; }
 
     public Type PlugInType { get; init; }
 
