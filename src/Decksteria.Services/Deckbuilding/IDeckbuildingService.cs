@@ -1,11 +1,12 @@
-﻿namespace Decksteria.Service.Deckbuilding;
+﻿namespace Decksteria.Services.Deckbuilding;
 
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
+using Decksteria.Services.FileService.Models;
 
-internal interface IDeckbuildingService
+public interface IDeckbuildingService
 {
     Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
 

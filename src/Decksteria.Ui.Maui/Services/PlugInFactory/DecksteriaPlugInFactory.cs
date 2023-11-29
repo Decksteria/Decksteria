@@ -7,6 +7,8 @@ using System.Linq;
 using System.Reflection;
 using Decksteria.Core;
 using Decksteria.Core.Data;
+using Decksteria.Services.PlugInFactory;
+using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,8 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     private DecksteriaPlugIn? plugInType;
 
+    private FormatDetails? formatDetails;
+
     public DecksteriaPlugInFactory(IDecksteriaFileReader fileReader, IDialogService dialogService)
     {
         var serviceCollection = new ServiceCollection();
@@ -28,9 +32,11 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public Dictionary<string, DecksteriaPlugIn>? GameList { get; private set; }
 
-    public IDecksteriaGame CreatePlugInInstance()
+    public GameFormat CreatePlugInInstance()
     {
-        return plugInType?.CreateInstance(serviceProvider) ?? throw new ArgumentNullException("Plug-In has not been selected.");
+        var game = plugInType?.CreateInstance(serviceProvider) ?? throw new ArgumentNullException("Valid Plug-In has not been selected.");
+        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid Format has not been selected.");
+        return new(game, format);
     }
 
     public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns()
@@ -46,9 +52,10 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(serviceProvider, type!));
     }
 
-    public void SelectGame(string gameName)
+    public void SelectGame(string gameName, string formatName)
     {
         plugInType = GameList?.GetValueOrDefault(gameName);
+        formatDetails = plugInType?.Formats.FirstOrDefault(format => format.Name == formatName);
     }
 
     public bool TryAddGame(string dllFilePath)

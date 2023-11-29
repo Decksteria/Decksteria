@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Service.DecksteriaFile;
+﻿namespace Decksteria.Services.FileService;
 
 using System.IO;
 using System.Threading.Tasks;

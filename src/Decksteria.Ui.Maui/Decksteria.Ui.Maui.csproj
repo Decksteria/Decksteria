@@ -78,4 +78,10 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
 </Project>

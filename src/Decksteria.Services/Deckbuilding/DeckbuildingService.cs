@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Service.Deckbuilding;
+﻿namespace Decksteria.Services.Deckbuilding;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,15 +7,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
-using Decksteria.Service.DecksteriaFile.Models;
+using Decksteria.Services.FileService.Models;
+using Decksteria.Services.PlugInFactory.Models;
 
-internal sealed class DeckbuildingService(IDecksteriaGame game, IDecksteriaFormat format) : IDeckbuildingService
+internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuildingService
 {
-    private readonly IDecksteriaGame game = game;
+    private readonly IDecksteriaGame game = selectedFormat.Game;
 
-    private readonly IDecksteriaFormat format = format;
+    private readonly IDecksteriaFormat format = selectedFormat.Format;
 
-    private ReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decklist = format.Decks.ToDictionary(deck => deck, _ => new List<CardArt>()).AsReadOnly();
+    private ReadOnlyDictionary<IDecksteriaDeck, List<CardArt>> decklist = selectedFormat.Format.Decks.ToDictionary(deck => deck, _ => new List<CardArt>()).AsReadOnly();
 
     public Task ReInitializeAsync()
     {

@@ -1,33 +1,17 @@
 ﻿namespace Decksteria.Ui.Maui.Shared.Models;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Decksteria.Core;
 
-public readonly struct PlugInTile
+public record PlugInTile(PlugInDetails PlugIn)
 {
-    public PlugInTile(DecksteriaPlugIn plugIn)
-    {
-        Name = plugIn.Name;
-        DisplayName = plugIn.Label;
-        Formats = plugIn.Formats;
+    public string Name { get; init; } = PlugIn.Name;
 
-        if (plugIn.Icon != null)
-        {
-            var imgString = Convert.ToBase64String(plugIn.Icon);
-            IconImg = plugIn.Icon;
-            IconSrc = $"data:image/png;base64,{imgString}";
-        }
-    }
+    public string DisplayName { get; init; } = PlugIn.DisplayName;
 
-    public string Name { get; init; }
+    public byte[]? IconImg { get; init; } = PlugIn.IconImg;
 
-    public string DisplayName { get; init; }
+    public string? IconSrc { get; init; } = PlugIn.IconSrc;
 
-    public byte[]? IconImg { get; init; }
-
-    public string? IconSrc { get; init; }
-
-    public IEnumerable<FormatTile> Formats { get; init; }
+    public IEnumerable<FormatTile> Formats { get; init; } = PlugIn.Formats.Select(format => new FormatTile(PlugIn.Name, format));
 }

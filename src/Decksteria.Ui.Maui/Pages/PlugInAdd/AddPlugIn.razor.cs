@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Decksteria.Services.PlugInFactory;
 using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Maui.Devices;
@@ -34,14 +34,14 @@ public partial class AddPlugIn
 
     private string? ErrorMessage;
 
-    private IEnumerable<PlugInTile>? GameList;
+    private IEnumerable<PlugInDetails>? GameList;
 
     private bool ProcessingInProgress = true;
 
     protected override async Task OnInitializedAsync()
     {
         var plugIns = PlugInFactory.GetOrInitializePlugIns();
-        GameList = plugIns.Select(pi => new PlugInTile(pi));
+        GameList = plugIns.Select(pi => new PlugInDetails(pi));
 
         await base.OnInitializedAsync();
 
@@ -81,7 +81,7 @@ public partial class AddPlugIn
         }
 
         var plugIns = PlugInFactory.GetOrInitializePlugIns();
-        GameList = plugIns.Select(pi => new PlugInTile(pi));
+        GameList = plugIns.Select(pi => new PlugInDetails(pi));
         ProcessingInProgress = false;
     }
 

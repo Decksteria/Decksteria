@@ -15,9 +15,9 @@ public sealed class LoadPluginViewModel : BaseViewModel
 
     private SelectionScreen expandedSection = SelectionScreen.PlugIn;
 
-    private ObservableCollection<PlugInTile> _gameTileSource = [];
+    private ObservableCollection<PlugInDetails> _gameTileSource = [];
 
-    public ObservableCollection<PlugInTile> GameTiles
+    public ObservableCollection<PlugInDetails> GameTiles
     {
         get => _gameTileSource;
         set

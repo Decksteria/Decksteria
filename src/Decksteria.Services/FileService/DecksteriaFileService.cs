@@ -1,13 +1,10 @@
-﻿namespace Decksteria.Service.DecksteriaFile;
+﻿namespace Decksteria.Services.FileService;
 
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Decksteria.Core;
 using Decksteria.Core.Models;
-using Decksteria.Service.DecksteriaFile.Models;
+using Decksteria.Services.FileService.Models;
 
 internal sealed class DecksteriaFileService() : IDecksteriaFileService
 {

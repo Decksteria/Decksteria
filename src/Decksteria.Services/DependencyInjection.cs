@@ -1,8 +1,7 @@
-﻿namespace Decksteria.Service;
+﻿namespace Decksteria.Services;
 
-using Decksteria.Core;
-using Decksteria.Service.Deckbuilding;
-using Decksteria.Service.DecksteriaFile;
+using Decksteria.Services.FileService;
+using Decksteria.Services.Deckbuilding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
