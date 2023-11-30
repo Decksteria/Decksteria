@@ -8,12 +8,12 @@ using Microsoft.Maui.Devices;
 
 public partial class App : Application
 {
-    public App(LoadPlugIn homePage)
+    public App(IDeckbuildingService deckbuildingService, LoadPlugIn homePage)
     {
         InitializeComponent();
-        //var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder(deckbuildingService);
-        //this.MainPage = deckbuilderPage;
-        this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
+        var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder(deckbuildingService);
+        this.MainPage = deckbuilderPage;
+        //this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
