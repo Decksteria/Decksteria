@@ -8,10 +8,10 @@ using Microsoft.Maui.Devices;
 
 public partial class App : Application
 {
-    public App(IDeckbuildingService deckbuildingService, LoadPlugIn homePage)
+    public App(LoadPlugIn homePage)
     {
         InitializeComponent();
-        var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder(deckbuildingService);
+        var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder();
         this.MainPage = deckbuilderPage;
         //this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
     }

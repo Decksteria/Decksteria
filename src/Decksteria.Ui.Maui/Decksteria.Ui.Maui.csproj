@@ -48,6 +48,8 @@
         <MauiImage Update="Resources\Images\svgrepo_add.svg" BaseSize="50" />
         <MauiImage Update="Resources\Images\svgrepo_back.svg" BaseSize="50" />
         <MauiImage Update="Resources\Images\svgrepo_upload.svg" BaseSize="50" />
+      <MauiImage Update="Resources\Images\svgrepo_search.svg" BaseSize="50" />
+      <MauiImage Update="Resources\Images\svgrepo_filter.svg" BaseSize="50" />
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
@@ -57,6 +59,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Resources\Images\svgrepo_filter.svg" />
       <None Remove="Resources\Images\svgrepo_upload.svg" />
     </ItemGroup>
 
