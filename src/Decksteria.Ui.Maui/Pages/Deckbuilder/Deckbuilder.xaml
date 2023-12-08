@@ -9,38 +9,41 @@
              x:DataType="deckbuilder:DeckbuilderViewModel"
              Title="Deckbuilder"
              Loaded="ContentPage_LoadedAsync">
-    <FlexLayout Direction="Column">
-        <Grid>
-            <toolkit:Expander IsExpanded="True" >
-                <toolkit:Expander.Header>
-                    <Button Grid.Row="1" Text="▶" WidthRequest="50" />
-                </toolkit:Expander.Header>
-                <toolkit:Expander.Content>
-                    <CollectionView BackgroundColor="{DynamicResource ContentBackgroundColor}" ZIndex="1">
-                        <CollectionView.Header>
-                            <Grid Grid.Row="0" HeightRequest="30">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5*"/>
-                                    <ColumnDefinition Width="80*"/>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="30" />
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                                <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
-                                <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
-                                <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
-                            </Grid>
-                        </CollectionView.Header>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="decksteria:CardArt">
-                                <Image Source="{Binding DownloadUrl}"/>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </toolkit:Expander.Content>
-            </toolkit:Expander>
-        </Grid>
-    </FlexLayout>
+    <AbsoluteLayout>
+        <toolkit:Expander IsExpanded="{Binding ExpandSearch}" ZIndex="1" AbsoluteLayout.LayoutBounds="0,0">
+            <toolkit:Expander.Header>
+                <Button x:Name="Button_ExpandSearch" AbsoluteLayout.LayoutBounds="0,0,5,5" AbsoluteLayout.LayoutFlags="All" Grid.Row="1" Text="▶" Pressed="Button_ExpandSearch_Pressed" />
+            </toolkit:Expander.Header>
+            <CollectionView BackgroundColor="{DynamicResource ContentBackgroundColor}" ZIndex="1">
+                <CollectionView.Header>
+                    <Grid Grid.Row="0" HeightRequest="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                        <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
+                        <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
+                        <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="decksteria:CardArt">
+                        <Image Source="{Binding DownloadUrl}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </toolkit:Expander>
+        <ScrollView ZIndex="0">
+            <VerticalStackLayout x:Name="StackLayout_Decks">
+                <Label Text="Testing" HorizontalTextAlignment="End"/>
+                <Label Text="Testing"/>
+                <Label Text="Testing"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </AbsoluteLayout>
     <!--<HorizontalStackLayout>
         <Grid>
             <Grid.ColumnDefinitions>

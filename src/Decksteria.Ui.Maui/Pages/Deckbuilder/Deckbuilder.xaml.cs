@@ -27,4 +27,9 @@ public partial class Deckbuilder : ContentPage
             viewModel.FilteredCards.Add(card);
         }
     }
+
+    private void Button_ExpandSearch_Pressed(object sender, EventArgs e)
+    {
+        viewModel.ExpandSearch = !viewModel.ExpandSearch;
+    }
 }
