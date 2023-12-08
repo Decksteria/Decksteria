@@ -35,7 +35,7 @@ public partial class LoadPlugIn : ContentPage
     private static readonly FilePickerFileType dllFileTypes = new(new Dictionary<DevicePlatform, IEnumerable<string>>()
     {
         { DevicePlatform.iOS, new[] { "public.data" } },
-        { DevicePlatform.Android, new[] { "application/octet-stream" } },
+        { DevicePlatform.Android, new[] { "application/*" } },
         { DevicePlatform.macOS, new[] { "public.data" } },
         { DevicePlatform.WinUI, new[] { ".dll" } },
         { DevicePlatform.Tizen, new[] { "*/*" } }
