@@ -9,7 +9,37 @@
              x:DataType="deckbuilder:DeckbuilderViewModel"
              Title="Deckbuilder"
              Loaded="ContentPage_LoadedAsync">
-    <AbsoluteLayout>
+    <ContentPage.Resources>
+        <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
+            <Image Source="{Binding DownloadUrl}"/>
+        </DataTemplate>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <CollectionView x:Name="CollectionView_Search" BackgroundColor="{DynamicResource ContentBackgroundColor}" ItemTemplate="{StaticResource Key=CardView}">
+            <CollectionView.Header>
+                <Grid Grid.Row="0" HeightRequest="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="80*"/>
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                    <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
+                    <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
+                    <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
+                </Grid>
+            </CollectionView.Header>
+        </CollectionView>
+        <VerticalStackLayout x:Name="DecksLayout" Grid.Column="1">
+            
+        </VerticalStackLayout>
+    </Grid>
+    <!--<AbsoluteLayout>
         <toolkit:Expander IsExpanded="{Binding ExpandSearch}" ZIndex="1" AbsoluteLayout.LayoutBounds="0,0">
             <toolkit:Expander.Header>
                 <Button x:Name="Button_ExpandSearch" AbsoluteLayout.LayoutBounds="0,0,5,5" AbsoluteLayout.LayoutFlags="All" Grid.Row="1" Text="▶" Pressed="Button_ExpandSearch_Pressed" />
@@ -43,7 +73,7 @@
                 <Label Text="Testing"/>
             </VerticalStackLayout>
         </ScrollView>
-    </AbsoluteLayout>
+    </AbsoluteLayout>-->
     <!--<HorizontalStackLayout>
         <Grid>
             <Grid.ColumnDefinitions>
