@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui;
 
+using System.Linq;
 using CommunityToolkit.Maui;
 using Decksteria.Core;
 using Decksteria.Core.Data;
@@ -54,7 +55,9 @@ public static class MauiProgram
         services.AddScoped<GameFormat>((sp) =>
         {
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
-            return formatFactory.CreatePlugInInstance();
+            // return formatFactory.CreatePlugInInstance();
+            var fakeGame = new FakeGame();
+            return new(fakeGame, fakeGame.Formats.First());
         });
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();

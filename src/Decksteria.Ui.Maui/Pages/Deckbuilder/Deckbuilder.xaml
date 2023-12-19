@@ -11,7 +11,7 @@
              Loaded="ContentPage_LoadedAsync">
     <ContentPage.Resources>
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding DownloadUrl}"/>
+            <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
     </ContentPage.Resources>
     <Grid>
@@ -19,24 +19,42 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <CollectionView x:Name="CollectionView_Search" BackgroundColor="{DynamicResource ContentBackgroundColor}" ItemTemplate="{StaticResource Key=CardView}">
-            <CollectionView.Header>
-                <Grid Grid.Row="0" HeightRequest="30">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="80*"/>
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="30" />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                    <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
-                    <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
-                    <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
-                </Grid>
-            </CollectionView.Header>
-        </CollectionView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HeightRequest="30" BackgroundColor="{DynamicResource PageBackgroundColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
+                <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
+                <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
+            </Grid>
+            <Frame
+                Grid.Row="1"
+                Padding="1"
+                BackgroundColor="{DynamicResource ContentBackgroundColor}"
+                BorderColor="Transparent"
+                CornerRadius="15">
+                <CollectionView
+                    x:Name="CollectionView_Search"
+                    ItemsSource="{Binding FilteredCards}"
+                    ItemTemplate="{StaticResource Key=CardView}"
+                    VerticalScrollBarVisibility="Default">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Horizontal" />
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </Frame>
+        </Grid>
         <VerticalStackLayout x:Name="DecksLayout" Grid.Column="1">
-            
+
         </VerticalStackLayout>
     </Grid>
     <!--<AbsoluteLayout>
