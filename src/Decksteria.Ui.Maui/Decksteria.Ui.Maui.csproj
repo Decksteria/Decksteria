@@ -66,6 +66,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.3" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+        <PackageReference Include="UraniumUI.Icons.FontAwesome" Version="2.7.3" />
+        <PackageReference Include="UraniumUI.Material" Version="2.7.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -83,6 +85,13 @@
       <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
+      <MauiXaml Update="Resources\Styles\Colors.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Styles\" />
     </ItemGroup>
 
 </Project>
