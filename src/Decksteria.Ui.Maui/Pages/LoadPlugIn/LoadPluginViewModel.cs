@@ -13,8 +13,6 @@ public sealed class LoadPluginViewModel : BaseViewModel
         Decks
     }
 
-    private SelectionScreen expandedSection = SelectionScreen.PlugIn;
-
     private ObservableCollection<PlugInDetails> _gameTileSource = [];
 
     public ObservableCollection<PlugInDetails> GameTiles
