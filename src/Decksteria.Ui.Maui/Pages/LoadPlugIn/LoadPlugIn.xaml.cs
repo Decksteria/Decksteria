@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Decksteria.Core;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.PageService;
@@ -13,8 +12,9 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
+using UraniumUI.Pages;
 
-public partial class LoadPlugIn : ContentPage
+public partial class LoadPlugIn : UraniumContentPage
 {
     private const string ErrorAlertTitle = "Error";
 
