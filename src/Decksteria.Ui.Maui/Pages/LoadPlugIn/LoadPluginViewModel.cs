@@ -15,9 +15,13 @@ public sealed class LoadPluginViewModel : BaseViewModel
 
     private SelectionScreen expandedSection = SelectionScreen.PlugIn;
 
-    private ObservableCollection<PlugInDetails> _gameTileSource = [];
+    private ObservableCollection<PlugInTile> _gameTileSource = [];
 
-    public ObservableCollection<PlugInDetails> GameTiles
+    private ObservableCollection<FormatTile> _formatTileSource = [];
+
+    private ObservableCollection<DeckTile> _deckTileSource = [];
+
+    public ObservableCollection<PlugInTile> GameTiles
     {
         get => _gameTileSource;
         set
@@ -26,6 +30,26 @@ public sealed class LoadPluginViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+
+    public ObservableCollection<FormatTile> FormatTiles
+    {
+        get => _formatTileSource;
+        set
+        {
+            _formatTileSource = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<DeckTile> DeckTiles {
+        get => _deckTileSource;
+        set
+        {
+            _deckTileSource = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool DecksExpanded
     {
         get => expandedSection == SelectionScreen.Decks;

@@ -11,6 +11,7 @@
     xmlns:models="clr-namespace:Decksteria.Ui.Maui.Shared.Models"
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     BackgroundColor="{DynamicResource Background}"
     Loaded="ContentPage_LoadedAsync"
     Title="Decksteria Deckbuilder">
@@ -35,6 +36,7 @@
             <ListView
                 x:Name="ListView_PlugInSelect"
                 BackgroundColor="{DynamicResource Background}"
+                ItemsSource="{Binding GameTiles}"
                 SelectionMode="Single"
                 Opacity="1"
                 IsVisible="{Binding PlugInsExpanded}">
@@ -45,7 +47,11 @@
                             <ColumnDefinition Width="50" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Text="Select a Plug-In" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="{DynamicResource OnPrimary}"/>
-                        <ImageButton Grid.Column="1" Source="svgrepo_add.png" Clicked="ListView_PlugInSelect_New_Clicked" />
+                        <ImageButton Grid.Column="1" Clicked="ListView_PlugInSelect_New_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Plus}" />
+                            </ImageButton.Source>
+                        </ImageButton>
                     </Grid>
                 </ListView.Header>
                 <ListView.ItemTemplate>
@@ -71,8 +77,8 @@
             </ListView>
             <ListView
                 x:Name="ListView_FormatSelect"
-                Margin="3"
                 BackgroundColor="{DynamicResource Background}"
+                ItemsSource="{Binding FormatTiles}"
                 RowHeight="100"
                 SelectionMode="Single"
                 Opacity="0"
@@ -83,7 +89,11 @@
                             <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <ImageButton Grid.Column="0" Source="svgrepo_back.png" Clicked="ListView_FormatSelect_Back_Clicked" />
+                        <ImageButton Grid.Column="0" Clicked="ListView_FormatSelect_Back_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" />
+                            </ImageButton.Source>
+                        </ImageButton>
                         <Label Grid.Column="1" Text="Select a Format" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="{DynamicResource OnPrimary}" />
                     </Grid>
                 </ListView.Header>
@@ -104,8 +114,8 @@
             </ListView>
             <ListView
                 x:Name="ListView_DeckSelect"
-                Margin="3"
                 BackgroundColor="{DynamicResource Background}"
+                ItemsSource="{Binding DeckTiles}"
                 RowHeight="100"
                 SelectionMode="Single"
                 Opacity="0"
@@ -118,9 +128,22 @@
                             <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="50" />
                         </Grid.ColumnDefinitions>
-                        <ImageButton Grid.Column="0" Source="svgrepo_back.png" Clicked="ListView_DeckSelect_Back_Clicked" />
-                        <Label Grid.Column="1" Text="Select a Format" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="{DynamicResource OnPrimary}" />
-                        <ImageButton Grid.Column="3" Source="svgrepo_add.png" Clicked="ListView_DeckSelect_New_Clicked"/>
+                        <ImageButton Grid.Column="0" Clicked="ListView_DeckSelect_Back_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+                        <Label Grid.Column="1" Text="Select a Deck" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="{DynamicResource OnPrimary}" />
+                        <ImageButton Grid.Column="2" Clicked="ListView_DeckSelect_New_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.FileCirclePlus}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+                        <ImageButton Grid.Column="3" Clicked="ListView_DeckSelect_Open_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.File}" />
+                            </ImageButton.Source>
+                        </ImageButton>
                     </Grid>
                 </ListView.Header>
                 <ListView.ItemTemplate>
@@ -128,12 +151,9 @@
                         <TextCell Text="{Binding DeckName}" TextColor="{DynamicResource OnBackground}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                <ListView.Footer>
-                    <Button Text="Open Selected Deck" Clicked="ListView_DeckSelect_Open_Clicked" />
-                </ListView.Footer>
             </ListView>
         </FlexLayout>
-        <Button Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0" />
+        <Button StyleClass="FilledButton" Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0" />
     </Grid>
 </uranium:UraniumContentPage>
 
