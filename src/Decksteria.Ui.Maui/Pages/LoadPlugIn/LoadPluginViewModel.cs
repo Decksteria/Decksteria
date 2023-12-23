@@ -26,4 +26,54 @@ public sealed class LoadPluginViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+    public bool DecksExpanded
+    {
+        get => expandedSection == SelectionScreen.Decks;
+        set
+        {
+            if (!value || expandedSection is SelectionScreen.Decks)
+            {
+                return;
+            }
+
+            expandedSection = SelectionScreen.Decks;
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
+        }
+    }
+
+    public bool FormatsExpanded
+    {
+        get => expandedSection == SelectionScreen.Format;
+        set
+        {
+            if (!value || expandedSection is SelectionScreen.Format)
+            {
+                return;
+            }
+
+            expandedSection = SelectionScreen.Format;
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
+        }
+    }
+
+    public bool PlugInsExpanded
+    {
+        get => expandedSection == SelectionScreen.PlugIn;
+        set
+        {
+            if (!value || expandedSection is SelectionScreen.PlugIn)
+            {
+                return;
+            }
+
+            expandedSection = SelectionScreen.PlugIn;
+            OnPropertyChanged(nameof(DecksExpanded));
+            OnPropertyChanged(nameof(FormatsExpanded));
+            OnPropertyChanged(nameof(PlugInsExpanded));
+        }
+    }
 }

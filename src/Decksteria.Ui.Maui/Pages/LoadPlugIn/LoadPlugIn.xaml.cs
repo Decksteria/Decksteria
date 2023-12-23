@@ -13,9 +13,8 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
-using UraniumUI.Pages;
 
-public partial class LoadPlugIn : UraniumContentPage
+public partial class LoadPlugIn : ContentPage
 {
     private const string ErrorAlertTitle = "Error";
 
@@ -126,6 +125,16 @@ public partial class LoadPlugIn : UraniumContentPage
         }
 
         UpdateFormatList((PlugInDetails) senderBinding);
+        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.FormatsExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+    }
+
+    private void ListView_FormatSelect_Back_Clicked(object sender, EventArgs e)
+    {
+        ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.PlugInsExpanded = true;
+        ListView_PlugInSelect.FadeTo(1, 100, Easing.Linear);
     }
 
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
@@ -137,15 +146,18 @@ public partial class LoadPlugIn : UraniumContentPage
             return;
         }
 
-        //UpdateDeckList((FormatTile) senderBinding);
+        UpdateDeckList((FormatTile) senderBinding);
+        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.DecksExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
     }
 
-    //private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
-    //{
-    //    ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
-    //    viewModel.FormatsExpanded = true;
-    //    ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
-    //}
+    private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
+    {
+        ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
+        viewModel.FormatsExpanded = true;
+        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+    }
 
     private async void ListView_DeckSelect_Upload_Clicked(object sender, EventArgs e)
     {
@@ -164,17 +176,17 @@ public partial class LoadPlugIn : UraniumContentPage
         ProcessingInProgress = false;
     }
 
-    //private void ListView_DeckSelect_Open_Clicked(object sender, EventArgs e)
-    //{
-    //    if (ListView_DeckSelect.SelectedItem is not DeckTile)
-    //    {
-    //        return;
-    //    }
+    private void ListView_DeckSelect_Open_Clicked(object sender, EventArgs e)
+    {
+        if (ListView_DeckSelect.SelectedItem is not DeckTile)
+        {
+            return;
+        }
 
-    //    var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
-    //    // Open Deckbuilder Window
-    //    pageService.OpenPageAsync(new Page());
-    //}
+        var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
+        // Open Deckbuilder Window
+        pageService.OpenPageAsync(new Page());
+    }
 
     private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)
     {
@@ -187,18 +199,18 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private void UpdateFormatList(PlugInDetails plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
 
-    //private void UpdateDeckList(FormatTile formatTile)
-    //{
-    //    // Get All Deck files from the Plug-In Format Application Path
-    //    var deckDirectory = Path.Combine(FileSystem.AppDataDirectory, formatTile.DeckDirectory);
+    private void UpdateDeckList(FormatTile formatTile)
+    {
+        // Get All Deck files from the Plug-In Format Application Path
+        var deckDirectory = Path.Combine(FileSystem.AppDataDirectory, formatTile.DeckDirectory);
 
-    //    if (Path.Exists(deckDirectory))
-    //    {
-    //        var files = Directory.GetFiles(deckDirectory, "*.json", SearchOption.TopDirectoryOnly);
-    //        var deckTiles = files.Select(file => new DeckTile(file));
-    //        ListView_DeckSelect.ItemsSource = deckTiles;
-    //    }
-    //}
+        if (Path.Exists(deckDirectory))
+        {
+            var files = Directory.GetFiles(deckDirectory, "*.json", SearchOption.TopDirectoryOnly);
+            var deckTiles = files.Select(file => new DeckTile(file));
+            ListView_DeckSelect.ItemsSource = deckTiles;
+        }
+    }
 
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
