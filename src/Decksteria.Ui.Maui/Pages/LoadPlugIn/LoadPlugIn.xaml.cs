@@ -70,6 +70,7 @@ public partial class LoadPlugIn : UraniumContentPage
         var plugIns = plugInFactory.GetOrInitializePlugIns();
         UpdatePlugInList(plugIns);
         ListView_PlugInSelect.ItemsSource = viewModel.GameTiles;
+        ListView_FormatSelect.ItemsSource = Array.Empty<FormatTile>();
     }
 
     private async void ListView_PlugInSelect_New_Clicked(object sender, EventArgs e)
@@ -197,7 +198,10 @@ public partial class LoadPlugIn : UraniumContentPage
         }
     }
 
-    private void UpdateFormatList(PlugInDetails plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
+    private void UpdateFormatList(PlugInDetails plugInTile)
+    {
+        ListView_FormatSelect.ItemsSource = plugInTile.Formats;
+    }
 
     private void UpdateDeckList(FormatTile formatTile)
     {

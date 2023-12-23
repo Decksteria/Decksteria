@@ -35,9 +35,10 @@
             <ListView
                 x:Name="ListView_PlugInSelect"
                 BackgroundColor="{DynamicResource Background}"
-                SelectionMode="Single"
+                SelectionMode="None"
                 Opacity="1"
-                IsVisible="{Binding PlugInsExpanded}"
+                IsEnabled="{Binding PlugInsExpanded}"
+                IsVisible="{Binding PlugInsExpanded}">
                 <ListView.Header>
                     <Grid BackgroundColor="{DynamicResource Primary}">
                         <Grid.ColumnDefinitions>
@@ -75,8 +76,9 @@
                 Margin="3"
                 BackgroundColor="{DynamicResource Background}"
                 RowHeight="100"
-                SelectionMode="Single"
+                SelectionMode="None"
                 Opacity="0"
+                IsEnabled="{Binding FormatsExpanded}"
                 IsVisible="{Binding FormatsExpanded}">
                 <ListView.Header>
                     <Grid BackgroundColor="{DynamicResource Primary}">
@@ -111,6 +113,7 @@
                 RowHeight="100"
                 SelectionMode="Single"
                 Opacity="0"
+                IsEnabled="{Binding DecksExpanded}"
                 IsVisible="{Binding DecksExpanded}">
                 <ListView.Header>
                     <Grid BackgroundColor="{DynamicResource Primary}">
