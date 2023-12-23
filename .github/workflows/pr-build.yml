@@ -36,13 +36,13 @@ jobs:
           /p:WarningsAsErrors=false
       - name: Install dependencies for Maui Project
         run: |
+          dotnet workload install android
           dotnet workload restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
-          dotnet restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --runtime win-x64 /p:PublishReadyToRun=true
+          dotnet restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" /p:PublishReadyToRun=true
       - name: Build Maui Project
         run: >
           dotnet build "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
           --configuration Release
           --no-restore
-          --runtime win-x64
           /p:WarningsAsErrors=false
           /p:Platform=x64

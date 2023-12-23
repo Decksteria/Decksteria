@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!--<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>-->
-        <TargetFrameworks>$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>net8.0-android;net8.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
         <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
         <OutputType>Exe</OutputType>
@@ -28,6 +28,7 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
         <RunTimeIdentifier Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">win10-x64</RunTimeIdentifier>
+        <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">android-arm64;android-arm;android-x64</RuntimeIdentifiers>
         <!-- <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion> -->
 
         <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
@@ -45,9 +46,6 @@
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
         <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
-        <MauiImage Update="Resources\Images\svgrepo_add.svg" BaseSize="50" />
-        <MauiImage Update="Resources\Images\svgrepo_back.svg" BaseSize="50" />
-        <MauiImage Update="Resources\Images\svgrepo_upload.svg" BaseSize="50" />
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
@@ -57,14 +55,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Images\svgrepo_upload.svg" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.3" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
+        <PackageReference Include="UraniumUI.Icons.FontAwesome" Version="2.7.3" />
+        <PackageReference Include="UraniumUI.Material" Version="2.7.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -82,6 +78,13 @@
       <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
+      <MauiXaml Update="Resources\Styles\Colors.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Styles\" />
     </ItemGroup>
 
 </Project>

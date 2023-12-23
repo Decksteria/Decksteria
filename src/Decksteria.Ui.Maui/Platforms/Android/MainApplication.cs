@@ -1,6 +1,10 @@
 ﻿namespace Decksteria.Ui.Maui;
+
+using System;
 using Android.App;
 using Android.Runtime;
+using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
 
 [Application]
 public class MainApplication : MauiApplication

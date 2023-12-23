@@ -1,7 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui;
 
 using CommunityToolkit.Maui;
-using Decksteria.Core;
 using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
+using UraniumUI;
 
 public static class MauiProgram
 {
@@ -24,7 +24,14 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
-            .ConfigureFonts(fonts => fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"));
+            .UseUraniumUI()
+            .UseUraniumUIMaterial()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFontAwesomeIconFonts();
+            });
 
         // builder.Services.AddMauiBlazorWebView();
 
