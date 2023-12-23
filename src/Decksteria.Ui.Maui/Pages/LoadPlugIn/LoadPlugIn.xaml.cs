@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Decksteria.Core;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.PageService;
@@ -13,8 +12,9 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
+using UraniumUI.Pages;
 
-public partial class LoadPlugIn : ContentPage
+public partial class LoadPlugIn : UraniumContentPage
 {
     private const string ErrorAlertTitle = "Error";
 
@@ -69,7 +69,6 @@ public partial class LoadPlugIn : ContentPage
     {
         var plugIns = plugInFactory.GetOrInitializePlugIns();
         UpdatePlugInList(plugIns);
-        ListView_PlugInSelect.ItemsSource = viewModel.GameTiles;
     }
 
     private async void ListView_PlugInSelect_New_Clicked(object sender, EventArgs e)
@@ -118,13 +117,13 @@ public partial class LoadPlugIn : ContentPage
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
         var senderBinding = ( sender as ViewCell )?.BindingContext;
-        if (senderBinding is not PlugInDetails)
+        if (senderBinding is not PlugInTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateFormatList((PlugInDetails) senderBinding);
+        UpdateFormatList((PlugInTile) senderBinding);
         ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
         ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
@@ -140,16 +139,16 @@ public partial class LoadPlugIn : ContentPage
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
         var senderBinding = ( sender as ViewCell )?.BindingContext;
-        if (senderBinding is not FormatDetails)
+        if (senderBinding is not FormatTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
         UpdateDeckList((FormatTile) senderBinding);
-        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.DecksExpanded = true;
-        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+        ListView_DeckSelect.FadeTo(1, 100, Easing.Linear);
     }
 
     private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
@@ -193,11 +192,18 @@ public partial class LoadPlugIn : ContentPage
         viewModel.GameTiles.Clear();
         foreach (var plugIn in plugIns)
         {
-            viewModel.GameTiles.Add(new PlugInDetails(plugIn));
+            viewModel.GameTiles.Add(new PlugInTile(plugIn));
         }
     }
 
-    private void UpdateFormatList(PlugInDetails plugInTile) => ListView_FormatSelect.ItemsSource = plugInTile.Formats;
+    private void UpdateFormatList(PlugInTile plugInTile)
+    {
+        viewModel.FormatTiles.Clear();
+        foreach (var format in plugInTile.Formats)
+        {
+            viewModel.FormatTiles.Add(format);
+        }
+    }
 
     private void UpdateDeckList(FormatTile formatTile)
     {

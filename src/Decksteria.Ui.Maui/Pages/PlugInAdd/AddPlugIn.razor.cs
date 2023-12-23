@@ -34,14 +34,14 @@ public partial class AddPlugIn
 
     private string? ErrorMessage;
 
-    private IEnumerable<PlugInDetails>? GameList;
+    private IEnumerable<PlugInTile>? GameList;
 
     private bool ProcessingInProgress = true;
 
     protected override async Task OnInitializedAsync()
     {
         var plugIns = PlugInFactory.GetOrInitializePlugIns();
-        GameList = plugIns.Select(pi => new PlugInDetails(pi));
+        GameList = plugIns.Select(pi => new PlugInTile(pi));
 
         await base.OnInitializedAsync();
 
@@ -81,7 +81,7 @@ public partial class AddPlugIn
         }
 
         var plugIns = PlugInFactory.GetOrInitializePlugIns();
-        GameList = plugIns.Select(pi => new PlugInDetails(pi));
+        GameList = plugIns.Select(pi => new PlugInTile(pi));
         ProcessingInProgress = false;
     }
 
