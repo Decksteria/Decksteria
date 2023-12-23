@@ -71,9 +71,6 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         GameList ??= [];
         var plugIn = new DecksteriaPlugIn(serviceProvider, plugInType);
         GameList.Add(plugIn.Name, plugIn);
-
-        var fileName = Path.GetFileName(dllFilePath);
-        File.Copy(dllFilePath, $"{FileSystem.AppDataDirectory}/{fileName}", true);
         return true;
     }
 
