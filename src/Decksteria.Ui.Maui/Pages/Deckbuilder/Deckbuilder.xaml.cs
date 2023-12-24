@@ -17,7 +17,7 @@ public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
-    private ReadOnlyDictionary<IDecksteriaDeck, CollectionView> deckViews;
+    private ReadOnlyDictionary<IDecksteriaDeck, CollectionView>? deckViews;
 
     private readonly IDeckbuildingService deckbuilder;
 
@@ -34,12 +34,7 @@ public partial class Deckbuilder : UraniumContentPage
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)
     {
         deckViews = gameFormat.Format.Decks.ToDictionary(deck => deck, RenderCollectionView).AsReadOnly();
-
-        var formatCards = await deckbuilder.GetCardsAsync();
-        foreach (var card in formatCards)
-        {
-            viewModel.FilteredCards.Add(card);
-        }
+        viewModel.FilteredCards = new(await deckbuilder.GetCardsAsync());
 
         CollectionView RenderCollectionView(IDecksteriaDeck decksteriaDeck)
         {
@@ -63,8 +58,6 @@ public partial class Deckbuilder : UraniumContentPage
                 Margin = 2,
                 Content = collectionView
             };
-            // frameView.SetDynamicResource(BackgroundColorProperty, "Background");
-            // frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BorderColorProperty, "Background");
 
             // Create Tab Item
             var tabItem = new TabItem

@@ -31,8 +31,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="70*"/>
-                    <ColumnDefinition Width="35" />
-                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="38" />
                 </Grid.ColumnDefinitions>
                 <Label
                     Grid.Column="0"
@@ -43,19 +43,22 @@
                 <Entry
                     Grid.Column="1"
                     Placeholder="Search"
-                    Margin="10,0"
                     VerticalTextAlignment="Center"
                     HeightRequest="25"/>
                 <ImageButton
                     Grid.Column="2"
-                    Margin="2,0"
+                    Margin="3,0"
                     BorderWidth="1"
                     CornerRadius="5">
                     <ImageButton.Source>
                         <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
                     </ImageButton.Source>
                 </ImageButton>
-                <ImageButton Grid.Column="3" StyleClass="FilledButton">
+                <ImageButton
+                    Grid.Column="3"
+                    Margin="3,0"
+                    BorderWidth="1"
+                    CornerRadius="5">
                     <ImageButton.Source>
                         <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
                     </ImageButton.Source>
