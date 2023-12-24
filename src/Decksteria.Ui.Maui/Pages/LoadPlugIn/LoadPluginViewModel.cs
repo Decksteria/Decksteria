@@ -100,4 +100,8 @@ public sealed class LoadPluginViewModel : BaseViewModel
             OnPropertyChanged(nameof(PlugInsExpanded));
         }
     }
+
+    public PlugInTile? SelectedPlugIn { get; set; }
+
+    public FormatTile? SelectedFormat { get; set; }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 
 public interface IDeckbuildingService
@@ -18,7 +19,9 @@ public interface IDeckbuildingService
 
     Task<IEnumerable<CardArt>?> GetDeckCardsAsync(string deckName, CancellationToken cancellationToken = default);
 
-    Task ReInitializeAsync();
+    IEnumerable<DecksteriaDeck> GetDeckInformation();
+
+    Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default);
 
     Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default);
 

@@ -133,6 +133,7 @@ public partial class LoadPlugIn : UraniumContentPage
     {
         ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.PlugInsExpanded = true;
+        viewModel.SelectedPlugIn = null;
         ListView_PlugInSelect.FadeTo(1, 100, Easing.Linear);
     }
 
@@ -155,6 +156,7 @@ public partial class LoadPlugIn : UraniumContentPage
     {
         ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
+        viewModel.SelectedFormat = null;
         ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
     }
 
@@ -182,6 +184,7 @@ public partial class LoadPlugIn : UraniumContentPage
             return;
         }
 
+        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
         // Open Deckbuilder Window
         pageService.OpenPageAsync(new Page());
@@ -199,6 +202,7 @@ public partial class LoadPlugIn : UraniumContentPage
     private void UpdateFormatList(PlugInTile plugInTile)
     {
         viewModel.FormatTiles.Clear();
+        viewModel.SelectedPlugIn = plugInTile;
         foreach (var format in plugInTile.Formats)
         {
             viewModel.FormatTiles.Add(format);
@@ -209,7 +213,7 @@ public partial class LoadPlugIn : UraniumContentPage
     {
         // Get All Deck files from the Plug-In Format Application Path
         var deckDirectory = Path.Combine(FileSystem.AppDataDirectory, formatTile.DeckDirectory);
-
+        viewModel.SelectedFormat = formatTile;
         if (Path.Exists(deckDirectory))
         {
             var files = Directory.GetFiles(deckDirectory, "*.json", SearchOption.TopDirectoryOnly);
@@ -221,6 +225,7 @@ public partial class LoadPlugIn : UraniumContentPage
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
         // TODO: Create Deckbuilder Page
+        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         pageService.OpenPageAsync(new Page());
         Console.WriteLine("New Deck Button Clicked");
     }

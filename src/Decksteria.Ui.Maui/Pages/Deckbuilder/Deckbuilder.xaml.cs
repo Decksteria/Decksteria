@@ -1,9 +1,8 @@
 namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 
-using Decksteria.Core;
 using Decksteria.Services.Deckbuilding;
+using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
-using Decksteria.Services.PlugInFactory.Models;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using System;
@@ -17,29 +16,29 @@ public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
-    private ReadOnlyDictionary<IDecksteriaDeck, CollectionView>? deckViews;
+    private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
     private readonly IDeckbuildingService deckbuilder;
 
-    private readonly GameFormat gameFormat;
-
-    public Deckbuilder(IDeckbuildingService deckbuilder, GameFormat gameFormat)
+    public Deckbuilder(IDeckbuildingService deckbuilder)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
-        this.gameFormat = gameFormat;
     }
 
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)
     {
-        deckViews = gameFormat.Format.Decks.ToDictionary(deck => deck, RenderCollectionView).AsReadOnly();
+        var decks = await deckbuilder.ReInitializeAsync();
+        var deckInfo = deckbuilder.GetDeckInformation();
+        viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
+        deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
         viewModel.FilteredCards = new(await deckbuilder.GetCardsAsync());
 
-        CollectionView RenderCollectionView(IDecksteriaDeck decksteriaDeck)
+        CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
         {
             var bindedCollection = new ObservableCollection<CardArt>();
-            viewModel.Decks.Add(decksteriaDeck, bindedCollection);
+            viewModel.Decks.Add(decksteriaDeck.Name, bindedCollection);
 
             // Collection View
             var collectionView = new CollectionView
@@ -62,7 +61,7 @@ public partial class Deckbuilder : UraniumContentPage
             // Create Tab Item
             var tabItem = new TabItem
             {
-                Title = decksteriaDeck.DisplayName,
+                Title = decksteriaDeck.Label,
                 BindingContext = decksteriaDeck,
                 Content = frameView
             };
