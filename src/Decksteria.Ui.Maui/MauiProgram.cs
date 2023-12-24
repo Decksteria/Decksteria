@@ -1,16 +1,19 @@
 ﻿namespace Decksteria.Ui.Maui;
 
+using System.Linq;
 using CommunityToolkit.Maui;
 using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
+using Decksteria.Ui.Maui.Pages.Deckbuilder;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
@@ -33,10 +36,7 @@ public static class MauiProgram
                 fonts.AddFontAwesomeIconFonts();
             });
 
-        // builder.Services.AddMauiBlazorWebView();
-
 #if DEBUG
-        // builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
 
@@ -52,6 +52,7 @@ public static class MauiProgram
         services.AddMAUIServices();
 
         services.AddSingleton<LoadPlugIn>();
+        services.TryAddScoped<Deckbuilder>();
         return services;
     }
 

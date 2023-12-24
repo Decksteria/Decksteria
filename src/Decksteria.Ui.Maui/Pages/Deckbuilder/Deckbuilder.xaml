@@ -1,38 +1,89 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
-             xmlns:deckbuilder="clr-namespace:Decksteria.Ui.Maui.Pages.Deckbuilder"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             x:DataType="deckbuilder:DeckbuilderViewModel"
-             Title="Deckbuilder"
-             Loaded="ContentPage_LoadedAsync">
-    <HorizontalStackLayout>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Text="Search: " />
-            <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" />
-            <ImageButton Grid.Column="2" />
-            <ImageButton Grid.Column="2" />
+<uranium:UraniumContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
+    xmlns:deckbuilder="clr-namespace:Decksteria.Ui.Maui.Pages.Deckbuilder"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
+    xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+    x:DataType="deckbuilder:DeckbuilderViewModel"
+    Title="Deckbuilder"
+    Loaded="ContentPage_LoadedAsync">
+    <uranium:UraniumContentPage.Resources>
+        <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
+            <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
+        </DataTemplate>
+    </uranium:UraniumContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="38" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Column="0"
+                    Text="Search:"
+                    FontSize="Micro"
+                    HorizontalTextAlignment="End"
+                    VerticalTextAlignment="Center"/>
+                <Entry
+                    Grid.Column="1"
+                    Placeholder="Search"
+                    VerticalTextAlignment="Center"
+                    HeightRequest="25"/>
+                <ImageButton
+                    Grid.Column="2"
+                    Margin="3,0"
+                    BorderWidth="1"
+                    CornerRadius="5">
+                    <ImageButton.Source>
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
+                    </ImageButton.Source>
+                </ImageButton>
+                <ImageButton
+                    Grid.Column="3"
+                    Margin="3,0"
+                    BorderWidth="1"
+                    CornerRadius="5">
+                    <ImageButton.Source>
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </Grid>
+            <Frame
+                Grid.Row="1"
+                Padding="1"
+                CornerRadius="15">
+                <CollectionView
+                    x:Name="CollectionView_Search"
+                    ItemsSource="{Binding FilteredCards}"
+                    ItemTemplate="{StaticResource Key=CardView}"
+                    VerticalOptions="Start"
+                    VerticalScrollBarVisibility="Default">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Horizontal" />
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </Frame>
         </Grid>
-        <toolkit:Expander IsExpanded="True" >
-            <toolkit:Expander.Header>
-                <Button Text="Show Search List" />
-            </toolkit:Expander.Header>
-            <CollectionView BackgroundColor="{DynamicResource ContentBackgroundColor}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="decksteria:CardArt">
-                        <Image Source="{Binding DownloadUrl}"/>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </toolkit:Expander>
-    </HorizontalStackLayout>
-</ContentPage>
+        <material:TabView
+            x:Name="DecksLayout"
+            Grid.Row="1"
+            TabPlacement="Bottom"
+            />
+    </Grid>
+</uranium:UraniumContentPage>

@@ -1,6 +1,5 @@
 ﻿namespace Decksteria.Ui.Maui;
 
-using Decksteria.Services.Deckbuilding;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -11,8 +10,6 @@ public partial class App : Application
     public App(LoadPlugIn homePage)
     {
         InitializeComponent();
-        //var deckbuilderPage = new Pages.Deckbuilder.Deckbuilder(deckbuildingService);
-        //this.MainPage = deckbuilderPage;
         this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
     }
 
