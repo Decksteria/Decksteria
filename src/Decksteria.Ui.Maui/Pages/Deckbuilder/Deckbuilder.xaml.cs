@@ -51,6 +51,7 @@ public partial class Deckbuilder : UraniumContentPage
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Default,
+                VerticalOptions = LayoutOptions.Start,
                 ItemTemplate = CollectionView_CardItem,
                 ItemsSource = bindedCollection,
                 MinimumHeightRequest = 100.0,
@@ -62,8 +63,8 @@ public partial class Deckbuilder : UraniumContentPage
                 Margin = 2,
                 Content = collectionView
             };
-            frameView.SetDynamicResource(BackgroundColorProperty, "Background");
-            frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BorderColorProperty, "Background");
+            // frameView.SetDynamicResource(BackgroundColorProperty, "Background");
+            // frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BorderColorProperty, "Background");
 
             // Create Tab Item
             var tabItem = new TabItem

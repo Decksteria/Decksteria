@@ -9,7 +9,6 @@
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
-    BackgroundColor="{DynamicResource Gray100}"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
     Loaded="ContentPage_LoadedAsync">
@@ -40,14 +39,11 @@
                     Text="Search:"
                     FontSize="Micro"
                     HorizontalTextAlignment="End"
-                    VerticalTextAlignment="Center"
-                    TextColor="{DynamicResource OnBackground}"/>
+                    VerticalTextAlignment="Center"/>
                 <Entry
                     Grid.Column="1"
                     Placeholder="Search"
                     Margin="10,0"
-                    BackgroundColor="{DynamicResource Background}"
-                    PlaceholderColor="{DynamicResource DisabledText}"
                     VerticalTextAlignment="Center"
                     HeightRequest="25"/>
                 <ImageButton
@@ -56,25 +52,24 @@
                     BorderWidth="1"
                     CornerRadius="5">
                     <ImageButton.Source>
-                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}" Color="{DynamicResource OnBackground}"/>
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
                     </ImageButton.Source>
                 </ImageButton>
                 <ImageButton Grid.Column="3" StyleClass="FilledButton">
                     <ImageButton.Source>
-                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" Color="{DynamicResource OnBackground}" />
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
                     </ImageButton.Source>
                 </ImageButton>
             </Grid>
             <Frame
                 Grid.Row="1"
                 Padding="1"
-                BackgroundColor="{DynamicResource Background}"
-                BorderColor="{DynamicResource Background}"
                 CornerRadius="15">
                 <CollectionView
                     x:Name="CollectionView_Search"
                     ItemsSource="{Binding FilteredCards}"
                     ItemTemplate="{StaticResource Key=CardView}"
+                    VerticalOptions="Start"
                     VerticalScrollBarVisibility="Default">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Horizontal" />
@@ -85,6 +80,7 @@
         <material:TabView
             x:Name="DecksLayout"
             Grid.Row="1"
+            TabPlacement="Bottom"
             />
     </Grid>
     <!--<AbsoluteLayout>
