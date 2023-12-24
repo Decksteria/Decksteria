@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
-             xmlns:deckbuilder="clr-namespace:Decksteria.Ui.Maui.Pages.Deckbuilder"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             x:DataType="deckbuilder:DeckbuilderViewModel"
-             Title="Deckbuilder"
-             Loaded="ContentPage_LoadedAsync">
-    <ContentPage.Resources>
+<uranium:UraniumContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
+    xmlns:deckbuilder="clr-namespace:Decksteria.Ui.Maui.Pages.Deckbuilder"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+    BackgroundColor="{DynamicResource Gray100}"
+    x:DataType="deckbuilder:DeckbuilderViewModel"
+    Title="Deckbuilder"
+    Loaded="ContentPage_LoadedAsync">
+    <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
-    </ContentPage.Resources>
+    </uranium:UraniumContentPage.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -21,26 +24,51 @@
         </Grid.ColumnDefinitions>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" HeightRequest="30" BackgroundColor="{DynamicResource PageBackgroundColor}">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="70*"/>
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="35" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Text="Search:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                <Entry Grid.Column="1" Placeholder="" PlaceholderColor="{DynamicResource PlaceholderTextColor}" HeightRequest="25"/>
-                <ImageButton Grid.Column="2" Source="svgrepo_search.png" />
-                <ImageButton Grid.Column="3" Source="svgrepo_filter.png" />
+                <Label
+                    Grid.Column="0"
+                    Text="Search:"
+                    FontSize="Micro"
+                    HorizontalTextAlignment="End"
+                    VerticalTextAlignment="Center"
+                    TextColor="{DynamicResource OnBackground}"/>
+                <Entry
+                    Grid.Column="1"
+                    Placeholder="Search"
+                    Margin="10,0"
+                    BackgroundColor="{DynamicResource Background}"
+                    PlaceholderColor="{DynamicResource DisabledText}"
+                    VerticalTextAlignment="Center"
+                    HeightRequest="25"/>
+                <ImageButton
+                    Grid.Column="2"
+                    Margin="2,0"
+                    BorderWidth="1"
+                    CornerRadius="5">
+                    <ImageButton.Source>
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}" Color="{DynamicResource OnBackground}"/>
+                    </ImageButton.Source>
+                </ImageButton>
+                <ImageButton Grid.Column="3" StyleClass="FilledButton">
+                    <ImageButton.Source>
+                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" Color="{DynamicResource OnBackground}" />
+                    </ImageButton.Source>
+                </ImageButton>
             </Grid>
             <Frame
                 Grid.Row="1"
                 Padding="1"
-                BackgroundColor="{DynamicResource ContentBackgroundColor}"
-                BorderColor="Transparent"
+                BackgroundColor="{DynamicResource Background}"
+                BorderColor="{DynamicResource Background}"
                 CornerRadius="15">
                 <CollectionView
                     x:Name="CollectionView_Search"
@@ -118,4 +146,4 @@
             </CollectionView>
         </toolkit:Expander>
     </HorizontalStackLayout>-->
-</ContentPage>
+</uranium:UraniumContentPage>

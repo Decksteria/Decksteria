@@ -10,8 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UraniumUI.Pages;
 
-public partial class Deckbuilder : ContentPage
+public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
@@ -43,7 +44,7 @@ public partial class Deckbuilder : ContentPage
                 VerticalTextAlignment = TextAlignment.Start,
                 HorizontalTextAlignment = TextAlignment.Center,
             };
-            headerLabel.SetDynamicResource(Label.TextColorProperty, "SecondaryTextColor");
+            headerLabel.SetDynamicResource(Label.TextColorProperty, "OnBackground");
 
             // Collection View
             var collectionView = new CollectionView
@@ -51,10 +52,19 @@ public partial class Deckbuilder : ContentPage
                 Header = headerLabel,
                 ItemTemplate = CollectionView_CardItem,
                 ItemsSource = bindedCollection,
-                MinimumHeightRequest = 100.0
+                MinimumHeightRequest = 100.0,
             };
+            var frameView = new Frame
+            {
+                Padding = 1,
+                CornerRadius = 15,
+                Margin = 2
+            };
+            frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BackgroundColorProperty, "Background");
+            frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BorderColorProperty, "Background");
+            frameView.Content = collectionView;
 
-            DecksLayout.Add(collectionView);
+            DecksLayout.Add(frameView);
             return collectionView;
         }
     }
