@@ -7,6 +7,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     BackgroundColor="{DynamicResource Gray100}"
     x:DataType="deckbuilder:DeckbuilderViewModel"
@@ -18,11 +19,11 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
@@ -81,9 +82,10 @@
                 </CollectionView>
             </Frame>
         </Grid>
-        <VerticalStackLayout x:Name="DecksLayout" Grid.Column="1">
-
-        </VerticalStackLayout>
+        <material:TabView
+            x:Name="DecksLayout"
+            Grid.Row="1"
+            />
     </Grid>
     <!--<AbsoluteLayout>
         <toolkit:Expander IsExpanded="{Binding ExpandSearch}" ZIndex="1" AbsoluteLayout.LayoutBounds="0,0">

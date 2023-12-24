@@ -10,13 +10,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 
 public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
-    private readonly ReadOnlyDictionary<IDecksteriaDeck, CollectionView> deckViews;
+    private ReadOnlyDictionary<IDecksteriaDeck, CollectionView> deckViews;
 
     private readonly IDeckbuildingService deckbuilder;
 
@@ -28,28 +29,28 @@ public partial class Deckbuilder : UraniumContentPage
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.gameFormat = gameFormat;
+    }
+
+    private async void ContentPage_LoadedAsync(object sender, EventArgs e)
+    {
         deckViews = gameFormat.Format.Decks.ToDictionary(deck => deck, RenderCollectionView).AsReadOnly();
+
+        var formatCards = await deckbuilder.GetCardsAsync();
+        foreach (var card in formatCards)
+        {
+            viewModel.FilteredCards.Add(card);
+        }
 
         CollectionView RenderCollectionView(IDecksteriaDeck decksteriaDeck)
         {
             var bindedCollection = new ObservableCollection<CardArt>();
             viewModel.Decks.Add(decksteriaDeck, bindedCollection);
 
-            // Header Label
-            var headerLabel = new Label
-            {
-                Text = $"{decksteriaDeck.DisplayName}:",
-                FontSize = 20,
-                FontAttributes = FontAttributes.Bold,
-                VerticalTextAlignment = TextAlignment.Start,
-                HorizontalTextAlignment = TextAlignment.Center,
-            };
-            headerLabel.SetDynamicResource(Label.TextColorProperty, "OnBackground");
-
             // Collection View
             var collectionView = new CollectionView
             {
-                Header = headerLabel,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Default,
                 ItemTemplate = CollectionView_CardItem,
                 ItemsSource = bindedCollection,
                 MinimumHeightRequest = 100.0,
@@ -58,23 +59,22 @@ public partial class Deckbuilder : UraniumContentPage
             {
                 Padding = 1,
                 CornerRadius = 15,
-                Margin = 2
+                Margin = 2,
+                Content = collectionView
             };
-            frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BackgroundColorProperty, "Background");
+            frameView.SetDynamicResource(BackgroundColorProperty, "Background");
             frameView.SetDynamicResource(Microsoft.Maui.Controls.Frame.BorderColorProperty, "Background");
-            frameView.Content = collectionView;
 
-            DecksLayout.Add(frameView);
+            // Create Tab Item
+            var tabItem = new TabItem
+            {
+                Title = decksteriaDeck.DisplayName,
+                BindingContext = decksteriaDeck,
+                Content = frameView
+            };
+
+            DecksLayout.Items.Add(tabItem);
             return collectionView;
-        }
-    }
-
-    private async void ContentPage_LoadedAsync(object sender, EventArgs e)
-    {
-        var formatCards = await deckbuilder.GetCardsAsync();
-        foreach (var card in formatCards)
-        {
-            viewModel.FilteredCards.Add(card);
         }
     }
 
