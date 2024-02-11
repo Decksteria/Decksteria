@@ -1,16 +1,17 @@
 ﻿namespace Decksteria.Ui.Maui;
 
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
+using Decksteria.Ui.Maui.Services.PageService;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 
 public partial class App : Application
 {
-    public App(LoadPlugIn homePage)
+    public App(IPageService pageService)
     {
         InitializeComponent();
-        this.MainPage = IsMobile ? new NavigationPage(homePage) : homePage;
+        pageService.OpenPageAsync<LoadPlugIn>();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -19,6 +20,4 @@ public partial class App : Application
         window.Title = "Decksteria Deckbuilder";
         return window;
     }
-
-    private static bool IsMobile => DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS;
 }

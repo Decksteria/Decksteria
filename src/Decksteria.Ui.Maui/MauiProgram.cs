@@ -1,6 +1,5 @@
 ﻿namespace Decksteria.Ui.Maui;
 
-using System.Linq;
 using CommunityToolkit.Maui;
 using Decksteria.Core.Data;
 using Decksteria.Services;

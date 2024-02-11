@@ -5,7 +5,6 @@ using Microsoft.Maui.Controls;
 
 public interface IPageService
 {
-    Task BackToHomeAsync(Page currentPage);
-
-    Task OpenPageAsync(Page newPage, Page? currentPage = null);
+    Task BackToHomeAsync();
+    Task OpenPageAsync<T>() where T : Page;
 }
