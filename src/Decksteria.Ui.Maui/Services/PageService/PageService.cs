@@ -4,42 +4,38 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
-internal sealed class PageService() : IPageService
+internal sealed class PageService(IServiceProvider services) : IPageService
 {
-    public async Task OpenPageAsync(Page newPage, Page? currentPage = null)
+    private readonly IServiceProvider services = services;
+
+    public async Task OpenPageAsync<T>() where T : Page
     {
-        if (Application.MainPage is null)
+        if (Application.Current is null)
         {
-            Application.MainPage = newPage;
             return;
         }
 
-        currentPage ??= Application.MainPage;
-        if (currentPage is NavigationPage)
+        if (Application.Current.MainPage is null)
         {
-            await currentPage!.Navigation.PushAsync(newPage);
-            return;
+            var newPage = GetPageInstance<T>();
+            Application.Current.MainPage = new NavigationPage(newPage);
         }
-
-        Application.OpenWindow(new Window(newPage));
-    }
-
-    public async Task BackToHomeAsync(Page currentPage)
-    {
-        if (currentPage is NavigationPage)
+        else
         {
-            await currentPage.Navigation.PopToRootAsync();
-            return;
-        }
-
-        foreach (var window in Application.Windows)
-        {
-            if (window.Parent is not null)
-            {
-                Application.CloseWindow(window);
-            }
+            var newPage = GetPageInstance<T>();
+            await Application.Current.MainPage.Navigation.PushAsync(newPage);
         }
     }
 
-    private static Application Application => Application.Current ?? throw new ApplicationException("Application has not loaded correctly.");
+    public async Task BackToHomeAsync()
+    {
+        if (Application.Current?.MainPage is null)
+        {
+            return;
+        }
+
+        await Application.Current.MainPage.Navigation.PopToRootAsync();
+    }
+
+    private T GetPageInstance<T>() where T : Page => ( services.GetService(typeof(T)) as T )!;
 }

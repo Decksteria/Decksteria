@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
+using Decksteria.Ui.Maui.Pages.Deckbuilder;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Maui;
@@ -187,7 +188,7 @@ public partial class LoadPlugIn : UraniumContentPage
         plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
         // Open Deckbuilder Window
-        pageService.OpenPageAsync(new Page());
+        pageService.OpenPageAsync<Deckbuilder>();
     }
 
     private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)
@@ -226,7 +227,7 @@ public partial class LoadPlugIn : UraniumContentPage
     {
         // TODO: Create Deckbuilder Page
         plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
-        pageService.OpenPageAsync(new Page());
+        pageService.OpenPageAsync<Deckbuilder>();
         Console.WriteLine("New Deck Button Clicked");
     }
 }

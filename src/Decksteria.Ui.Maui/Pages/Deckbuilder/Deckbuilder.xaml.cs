@@ -38,7 +38,6 @@ public partial class Deckbuilder : UraniumContentPage
         CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
         {
             var bindedCollection = new ObservableCollection<CardArt>();
-            viewModel.Decks.Add(decksteriaDeck.Name, bindedCollection);
 
             // Collection View
             var collectionView = new CollectionView

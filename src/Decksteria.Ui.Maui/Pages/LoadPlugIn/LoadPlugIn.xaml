@@ -145,7 +145,7 @@
         </FlexLayout>
         <Button StyleClass="FilledButton" Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0">
             <Button.ImageSource>
-                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Upload}" Color="{StaticResource OnPrimaryDark}" />
+                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Upload}" Color="{DynamicResource OnPrimaryDark}"/>
             </Button.ImageSource>
         </Button>
     </Grid>
