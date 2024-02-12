@@ -25,7 +25,7 @@ internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory)
         var filePath = @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
         if (!File.Exists(filePath))
         {
-            using var httpStream = await httpClient.GetStreamAsync(downloadURL);
+            using var httpStream = await httpClient.GetStreamAsync(downloadURL, cancellationToken);
             using var fileStream = File.Create(filePath);
             httpStream.CopyTo(fileStream);
         }

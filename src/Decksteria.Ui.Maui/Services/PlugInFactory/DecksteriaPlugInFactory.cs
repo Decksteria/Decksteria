@@ -35,10 +35,9 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
     private IEnumerable<DecksteriaPlugIn> GetDecksteriaPlugIns()
     {
         var dllFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.dll", SearchOption.TopDirectoryOnly);
-        var plugInTypes = dllFiles.Select(Assembly.LoadFile).Select(GetPlugInInterface);
+        var plugInTypes = dllFiles.Select(GetPlugInInterface);
         return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(plugInSeviceProvider, type!));
     }
-
 
     public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns()
     {
@@ -61,8 +60,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public bool TryAddGame(string dllFilePath)
     {
-        var assemblyFile = Assembly.LoadFile(dllFilePath);
-        var plugInType = GetPlugInInterface(assemblyFile);
+        var plugInType = GetPlugInInterface(dllFilePath);
 
         if (plugInType is null)
         {
@@ -71,15 +69,17 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
         GameList ??= [];
         var plugIn = new DecksteriaPlugIn(plugInSeviceProvider, plugInType);
-        GameList.Add(plugIn.Name, plugIn);
+        GameList[plugIn.Name] = plugIn;
 
         var fileName = Path.GetFileName(dllFilePath);
         File.Copy(dllFilePath, $"{FileSystem.AppDataDirectory}/{fileName}", true);
         return true;
     }
 
-    private static Type? GetPlugInInterface(Assembly assembly)
+    private static Type? GetPlugInInterface(string filePath)
     {
+        var assemblyBytes = File.ReadAllBytes(filePath);
+        var assembly = Assembly.Load(assemblyBytes);
         var types = assembly.GetTypes();
         var plugInType = types.FirstOrDefault(t => typeof(IDecksteriaGame).IsAssignableFrom(t));
         return plugInType;
