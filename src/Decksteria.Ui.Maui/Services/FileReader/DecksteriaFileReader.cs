@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Data;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory) : IDecksteriaFileReader
@@ -26,6 +27,12 @@ internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory)
         if (!File.Exists(filePath))
         {
             using var httpStream = await httpClient.GetStreamAsync(downloadURL, cancellationToken);
+            var directory = Path.GetDirectoryName(filePath);
+            if (directory is not null && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             using var fileStream = File.Create(filePath);
             httpStream.CopyTo(fileStream);
         }
