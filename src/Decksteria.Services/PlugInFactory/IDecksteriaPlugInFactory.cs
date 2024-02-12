@@ -5,9 +5,9 @@ using Decksteria.Services.PlugInFactory.Models;
 
 public interface IDecksteriaPlugInFactory
 {
-    GameFormat CreatePlugInInstance();
-
     IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns();
+
+    GameFormat GetSelectedFormat();
 
     void SelectGame(string gameName, string formatNaame);
 

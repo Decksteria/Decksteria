@@ -61,7 +61,7 @@ public static class MauiProgram
         services.AddScoped<GameFormat>((sp) =>
         {
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
-            return formatFactory.CreatePlugInInstance();
+            return formatFactory.GetSelectedFormat();
         });
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
