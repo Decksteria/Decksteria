@@ -70,6 +70,11 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
+    private void ContentPage_UnloadedAsync(object sender, EventArgs e)
+    {
+        DecksLayout.Items.Clear();
+    }
+
     private void Button_ExpandSearch_Pressed(object sender, EventArgs e)
     {
         viewModel.ExpandSearch = !viewModel.ExpandSearch;

@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Services.PageService;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
@@ -8,8 +9,22 @@ internal sealed class PageService(IServiceProvider services) : IPageService
 {
     private readonly IServiceProvider services = services;
 
-    public async Task OpenPageAsync<T>() where T : Page
+    public async Task BackToHomeAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (Application.Current?.MainPage is null)
+        {
+            return;
+        }
+
+        await Application.Current.MainPage.Navigation.PopToRootAsync();
+    }
+
+    public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (Application.Current is null)
         {
             return;
@@ -27,15 +42,10 @@ internal sealed class PageService(IServiceProvider services) : IPageService
         }
     }
 
-    public async Task BackToHomeAsync()
+    private T GetPageInstance<T>() where T : Page
     {
-        if (Application.Current?.MainPage is null)
-        {
-            return;
-        }
-
-        await Application.Current.MainPage.Navigation.PopToRootAsync();
+        var instance = services.GetService(typeof(T));
+        var page = instance as T;
+        return page!;
     }
-
-    private T GetPageInstance<T>() where T : Page => ( services.GetService(typeof(T)) as T )!;
 }

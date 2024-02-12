@@ -16,27 +16,27 @@ using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 {
-    private readonly IServiceProvider serviceProvider;
-
-    private DecksteriaPlugIn? plugInType;
+    private readonly IServiceProvider plugInSeviceProvider;
 
     private FormatDetails? formatDetails;
+
+    private DecksteriaPlugIn? selectedPlugIn;
 
     public DecksteriaPlugInFactory(IDecksteriaFileReader fileReader, IDialogService dialogService)
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(fileReader);
         serviceCollection.AddSingleton(dialogService);
-        serviceProvider = serviceCollection.BuildServiceProvider();
+        plugInSeviceProvider = serviceCollection.BuildServiceProvider();
     }
 
     public Dictionary<string, DecksteriaPlugIn>? GameList { get; private set; }
 
-    public GameFormat CreatePlugInInstance()
+    private IEnumerable<DecksteriaPlugIn> GetDecksteriaPlugIns()
     {
-        var game = plugInType?.CreateInstance(serviceProvider) ?? throw new ArgumentNullException("Valid Plug-In has not been selected.");
-        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid Format has not been selected.");
-        return new(game, format);
+        var dllFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.dll", SearchOption.TopDirectoryOnly);
+        var plugInTypes = dllFiles.Select(GetPlugInInterface);
+        return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(plugInSeviceProvider, type!));
     }
 
     public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns()
@@ -45,23 +45,22 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         return GameList.Values;
     }
 
-    private IEnumerable<DecksteriaPlugIn> GetDecksteriaPlugIns()
+    public GameFormat GetSelectedFormat()
     {
-        var dllFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.dll", SearchOption.TopDirectoryOnly);
-        var plugInTypes = dllFiles.Select(Assembly.LoadFile).Select(GetPlugInInterface);
-        return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(serviceProvider, type!));
+        var game = selectedPlugIn?.CreateInstance(plugInSeviceProvider) ?? throw new ArgumentNullException("Valid Plug-In has not been selected.");
+        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid Format has not been selected.");
+        return new(game, format);
     }
 
     public void SelectGame(string gameName, string formatName)
     {
-        plugInType = GameList?.GetValueOrDefault(gameName);
-        formatDetails = plugInType?.Formats.FirstOrDefault(format => format.Name == formatName);
+        selectedPlugIn = GameList?.GetValueOrDefault(gameName);
+        formatDetails = selectedPlugIn?.Formats.FirstOrDefault(format => format.Name == formatName);
     }
 
     public bool TryAddGame(string dllFilePath)
     {
-        var assemblyFile = Assembly.LoadFile(dllFilePath);
-        var plugInType = GetPlugInInterface(assemblyFile);
+        var plugInType = GetPlugInInterface(dllFilePath);
 
         if (plugInType is null)
         {
@@ -69,16 +68,18 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         }
 
         GameList ??= [];
-        var plugIn = new DecksteriaPlugIn(serviceProvider, plugInType);
-        GameList.Add(plugIn.Name, plugIn);
+        var plugIn = new DecksteriaPlugIn(plugInSeviceProvider, plugInType);
+        GameList[plugIn.Name] = plugIn;
 
         var fileName = Path.GetFileName(dllFilePath);
         File.Copy(dllFilePath, $"{FileSystem.AppDataDirectory}/{fileName}", true);
         return true;
     }
 
-    private static Type? GetPlugInInterface(Assembly assembly)
+    private static Type? GetPlugInInterface(string filePath)
     {
+        var assemblyBytes = File.ReadAllBytes(filePath);
+        var assembly = Assembly.Load(assemblyBytes);
         var types = assembly.GetTypes();
         var plugInType = types.FirstOrDefault(t => typeof(IDecksteriaGame).IsAssignableFrom(t));
         return plugInType;

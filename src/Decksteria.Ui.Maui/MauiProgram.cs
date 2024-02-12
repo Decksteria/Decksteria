@@ -50,7 +50,7 @@ public static class MauiProgram
     {
         services.AddMAUIServices();
 
-        services.AddSingleton<LoadPlugIn>();
+        services.TryAddSingleton<LoadPlugIn>();
         services.TryAddScoped<Deckbuilder>();
         return services;
     }
@@ -58,14 +58,15 @@ public static class MauiProgram
     private static IServiceCollection AddMAUIServices(this IServiceCollection services)
     {
         services.AddSingleton<IDecksteriaPlugInFactory, DecksteriaPlugInFactory>();
-        services.AddScoped<GameFormat>((sp) =>
+        services.TryAddScoped<GameFormat>((sp) =>
         {
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
-            return formatFactory.CreatePlugInInstance();
+            return formatFactory.GetSelectedFormat();
         });
-        services.AddSingleton<IDialogService, DialogService>();
-        services.AddSingleton<IDecksteriaFileReader, DecksteriaFileReader>();
-        services.AddSingleton<IPageService, PageService>();
+        services.TryAddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
+        services.AddHttpClient();
+        services.TryAddSingleton<IDialogService, DialogService>();
+        services.TryAddSingleton<IPageService, PageService>();
 
         return services;
     }

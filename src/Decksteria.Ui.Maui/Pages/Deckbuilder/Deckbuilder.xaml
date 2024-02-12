@@ -11,18 +11,19 @@
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
-    Loaded="ContentPage_LoadedAsync">
+    Loaded="ContentPage_LoadedAsync"
+    Unloaded="ContentPage_UnloadedAsync">
     <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="400" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
@@ -30,7 +31,7 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*"/>
-                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="40*"/>
                     <ColumnDefinition Width="38" />
                     <ColumnDefinition Width="38" />
                 </Grid.ColumnDefinitions>
@@ -69,11 +70,12 @@
                 Padding="1"
                 CornerRadius="15">
                 <CollectionView
-                    x:Name="CollectionView_Search"
-                    ItemsSource="{Binding FilteredCards}"
-                    ItemTemplate="{StaticResource Key=CardView}"
-                    VerticalOptions="Start"
-                    VerticalScrollBarVisibility="Default">
+                        x:Name="CollectionView_Search"
+                        ItemsSource="{Binding FilteredCards}"
+                        ItemTemplate="{StaticResource Key=CardView}"
+                        MinimumHeightRequest="100"
+                        VerticalOptions="Start"
+                        VerticalScrollBarVisibility="Default">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Horizontal" />
                     </CollectionView.ItemsLayout>
@@ -82,8 +84,8 @@
         </Grid>
         <material:TabView
             x:Name="DecksLayout"
-            Grid.Row="1"
-            TabPlacement="Bottom"
+            Grid.Column="0"
+            TabPlacement="Start"
             />
     </Grid>
 </uranium:UraniumContentPage>

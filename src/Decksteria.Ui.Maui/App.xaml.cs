@@ -4,7 +4,6 @@ using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.PageService;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Devices;
 
 public partial class App : Application
 {
