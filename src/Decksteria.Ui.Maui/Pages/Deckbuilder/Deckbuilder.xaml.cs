@@ -5,6 +5,7 @@ using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Devices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

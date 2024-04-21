@@ -38,7 +38,6 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         return true;
     }
 
-
     public Task ClearCardsAsync(CancellationToken cancellationToken = default)
     {
         foreach (var deck in decklist)
@@ -115,5 +114,4 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<List<CardArt>?>(decklist[deckName]);
     }
-
 }

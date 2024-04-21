@@ -18,74 +18,72 @@
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="400" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="35"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"/>
-                    <ColumnDefinition Width="40*"/>
-                    <ColumnDefinition Width="38" />
-                    <ColumnDefinition Width="38" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Column="0"
-                    Text="Search:"
-                    FontSize="Micro"
-                    HorizontalTextAlignment="End"
-                    VerticalTextAlignment="Center"/>
-                <Entry
-                    Grid.Column="1"
-                    Placeholder="Search"
-                    VerticalTextAlignment="Center"
-                    HeightRequest="25"/>
-                <ImageButton
-                    Grid.Column="2"
-                    Margin="3,0"
-                    BorderWidth="1"
-                    CornerRadius="5">
-                    <ImageButton.Source>
-                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
-                    </ImageButton.Source>
-                </ImageButton>
-                <ImageButton
-                    Grid.Column="3"
-                    Margin="3,0"
-                    BorderWidth="1"
-                    CornerRadius="5">
-                    <ImageButton.Source>
-                        <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
-                    </ImageButton.Source>
-                </ImageButton>
+    <ScrollView x:Name="Deckbuilder_ScrollView">
+        <FlexLayout x:Name="Deckbuilder_GridLayout" FlowDirection="LeftToRight" JustifyContent="SpaceEvenly" AlignItems="Center">
+            <material:TabView
+                Grid.Column="0"
+                x:Name="DecksLayout"
+                TabPlacement="Top"
+                />
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="40*"/>
+                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="38" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Column="0"
+                        Text="Search:"
+                        FontSize="Micro"
+                        HorizontalTextAlignment="End"
+                        VerticalTextAlignment="Center"/>
+                    <Entry
+                        Grid.Column="1"
+                        Placeholder="Search"
+                        VerticalTextAlignment="Center"
+                        HeightRequest="25"/>
+                    <ImageButton
+                        Grid.Column="2"
+                        Margin="3,0"
+                        BorderWidth="1"
+                        CornerRadius="5">
+                        <ImageButton.Source>
+                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+                    <ImageButton
+                        Grid.Column="3"
+                        Margin="3,0"
+                        BorderWidth="1"
+                        CornerRadius="5">
+                        <ImageButton.Source>
+                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                </Grid>
+                <Frame
+                    Grid.Row="1"
+                    Padding="1"
+                    CornerRadius="15">
+                    <CollectionView
+                            x:Name="CollectionView_Search"
+                            ItemsSource="{Binding FilteredCards}"
+                            ItemTemplate="{StaticResource Key=CardView}"
+                            MinimumHeightRequest="100"
+                            VerticalOptions="Start"
+                            VerticalScrollBarVisibility="Default">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                    </CollectionView>
+                </Frame>
             </Grid>
-            <Frame
-                Grid.Row="1"
-                Padding="1"
-                CornerRadius="15">
-                <CollectionView
-                        x:Name="CollectionView_Search"
-                        ItemsSource="{Binding FilteredCards}"
-                        ItemTemplate="{StaticResource Key=CardView}"
-                        MinimumHeightRequest="100"
-                        VerticalOptions="Start"
-                        VerticalScrollBarVisibility="Default">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Horizontal" />
-                    </CollectionView.ItemsLayout>
-                </CollectionView>
-            </Frame>
-        </Grid>
-        <material:TabView
-            x:Name="DecksLayout"
-            Grid.Column="0"
-            TabPlacement="Start"
-            />
-    </Grid>
+        </FlexLayout>
+    </ScrollView>
 </uranium:UraniumContentPage>
