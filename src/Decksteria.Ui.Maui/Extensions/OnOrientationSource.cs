@@ -1,15 +1,16 @@
 ﻿namespace Decksteria.Ui.Maui.Extensions;
 
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Maui.Devices;
 using System.ComponentModel;
 
 public class OnOrientationSource : INotifyPropertyChanged
 {
-    private object _defaultValue;
-    private object _portraitValue;
-    private object _landscapeValue;
+    private object? _defaultValue;
+    private object? _portraitValue;
+    private object? _landscapeValue;
 
-    public object DefaultValue {
+    public object? DefaultValue {
         get => _defaultValue;
         set
         {
@@ -18,7 +19,7 @@ public class OnOrientationSource : INotifyPropertyChanged
         }
     }
 
-    public object PortraitValue {
+    public object? PortraitValue {
         get => _portraitValue;
         set
         {
@@ -27,7 +28,7 @@ public class OnOrientationSource : INotifyPropertyChanged
         }
     }
 
-    public object LandscapeValue {
+    public object? LandscapeValue {
         get => _landscapeValue;
         set
         {
@@ -36,7 +37,7 @@ public class OnOrientationSource : INotifyPropertyChanged
         }
     }
 
-    public object Value => DeviceDisplay.MainDisplayInfo.Orientation switch
+    public object? Value => DeviceDisplay.MainDisplayInfo.Orientation switch
     {
         DisplayOrientation.Portrait => PortraitValue ?? DefaultValue,
         DisplayOrientation.Landscape => LandscapeValue ?? DefaultValue,
@@ -53,5 +54,5 @@ public class OnOrientationSource : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

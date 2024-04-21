@@ -5,6 +5,7 @@ using Microsoft.Maui.Devices;
 using System.ComponentModel;
 using System;
 using Microsoft.Maui.Controls;
+using CommunityToolkit.Mvvm.Messaging;
 
 /// <summary>
 /// OnOrientationExtension courtesy of FlavioGoncalves-Cayas from:
@@ -13,10 +14,10 @@ using Microsoft.Maui.Controls;
 [ContentProperty(nameof(Default))]
 public class OnOrientationExtension : IMarkupExtension<BindingBase>
 {
-    public Type TypeConverter { get; set; }
-    public object Default { get; set; }
-    public object Landscape { get; set; }
-    public object Portrait { get; set; }
+    public Type? TypeConverter { get; set; }
+    public object? Default { get; set; }
+    public object? Landscape { get; set; }
+    public object? Portrait { get; set; }
 
     static OnOrientationExtension()
     {
@@ -25,11 +26,16 @@ public class OnOrientationExtension : IMarkupExtension<BindingBase>
 
     public BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
-        var typeConverter = TypeConverter != null ? (TypeConverter) Activator.CreateInstance(TypeConverter) : null;
+        var typeConverter = TypeConverter is not null ? Activator.CreateInstance(TypeConverter) as TypeConverter : null;
 
-        var orientationSource = new OnOrientationSource { DefaultValue = typeConverter?.ConvertFromInvariantString((string) Default) ?? Default };
-        orientationSource.PortraitValue = Portrait == null ? orientationSource.DefaultValue : typeConverter?.ConvertFromInvariantString((string) Portrait) ?? Portrait;
-        orientationSource.LandscapeValue = Landscape == null ? orientationSource.DefaultValue : typeConverter?.ConvertFromInvariantString((string) Landscape) ?? Landscape;
+        var defaultString = Default as string;
+        var defaultValue = (defaultString is not null ? typeConverter?.ConvertFromInvariantString(defaultString) : null ) ?? Default;
+        var orientationSource = new OnOrientationSource
+        {
+            DefaultValue = defaultValue
+        };
+        orientationSource.PortraitValue = Portrait is null ? orientationSource.DefaultValue : typeConverter?.ConvertFromInvariantString((string) Portrait) ?? Portrait;
+        orientationSource.LandscapeValue = Landscape is null ? orientationSource.DefaultValue : typeConverter?.ConvertFromInvariantString((string) Landscape) ?? Landscape;
 
         return new Binding
         {
