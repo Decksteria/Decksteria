@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui;
 
+using System;
 using CommunityToolkit.Maui;
 using Decksteria.Core.Data;
 using Decksteria.Services;
@@ -49,9 +50,8 @@ public static class MauiProgram
     private static IServiceCollection AddDecksteriaMAUI(this IServiceCollection services)
     {
         services.AddMAUIServices();
-
-        services.TryAddSingleton<LoadPlugIn>();
-        services.TryAddScoped<Deckbuilder>();
+        services.TryAddSingleton<AppShell>();
+        services.TryAddSingleton<Lazy<AppShell>>((sp) => new(() => sp.GetRequiredService<AppShell>()));
         return services;
     }
 
@@ -65,8 +65,8 @@ public static class MauiProgram
         });
         services.TryAddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
         services.AddHttpClient();
-        services.TryAddSingleton<IDialogService, DialogService>();
-        services.TryAddSingleton<IPageService, PageService>();
+        services.TryAddScoped<IDialogService, DialogService>();
+        services.TryAddScoped<IPageService, PageService>();
 
         return services;
     }
