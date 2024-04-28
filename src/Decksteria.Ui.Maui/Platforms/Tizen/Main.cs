@@ -1,7 +1,7 @@
 namespace Decksteria.Ui.Maui;
+using System;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
-using System;
 
 internal class Program : MauiApplication
 {

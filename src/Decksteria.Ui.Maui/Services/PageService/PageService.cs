@@ -3,48 +3,39 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Decksteria.Ui.Maui.Pages.LoadPlugIn;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 
-internal sealed class PageService(IServiceProvider services) : IPageService
+internal sealed class PageService(Lazy<AppShell> appShell, IServiceProvider services) : IPageService
 {
+    private readonly Lazy<AppShell> appShell = appShell;
+
     private readonly IServiceProvider services = services;
 
     public async Task BackToHomeAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (Application.Current?.MainPage is null)
-        {
-            return;
-        }
-
-        await Application.Current.MainPage.Navigation.PopToRootAsync();
+        await appShell.Value.Navigation.PopToRootAsync();
     }
 
-    public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    public ContentPage CreateHomePageInstance()
+    {
+        return GetPageInstance<LoadPlugIn>();
+    }
+
+    public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (Application.Current is null)
-        {
-            return;
-        }
-
-        if (Application.Current.MainPage is null)
-        {
-            var newPage = GetPageInstance<T>();
-            Application.Current.MainPage = new NavigationPage(newPage);
-        }
-        else
-        {
-            var newPage = GetPageInstance<T>();
-            await Application.Current.MainPage.Navigation.PushAsync(newPage);
-        }
+        var newPage = GetPageInstance<T>();
+        await appShell.Value.Navigation.PushAsync(newPage);
     }
 
-    private T GetPageInstance<T>() where T : Page
+    private T GetPageInstance<T>() where T : ContentPage
     {
-        var instance = services.GetService(typeof(T));
+        var instance = ActivatorUtilities.GetServiceOrCreateInstance<T>(services);
         var page = instance as T;
         return page!;
     }
