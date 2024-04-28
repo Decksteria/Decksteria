@@ -22,7 +22,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Decksteria.Ui.Maui</ApplicationTitle>
+		<ApplicationTitle>Decksteria</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.decksteria.maui</ApplicationId>
