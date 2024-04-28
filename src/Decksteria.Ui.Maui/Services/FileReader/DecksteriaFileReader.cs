@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Data;
-using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory) : IDecksteriaFileReader

@@ -8,5 +8,7 @@ public interface IPageService
 {
     Task BackToHomeAsync(CancellationToken cancellationToken = default);
 
-    Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : Page;
+    ContentPage CreateHomePageInstance();
+
+    Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage;
 }

@@ -5,6 +5,7 @@ namespace Decksteria.Ui.Maui.WinUI;
 
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
+using Microsoft.UI.Xaml;
 
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
