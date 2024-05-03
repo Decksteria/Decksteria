@@ -83,15 +83,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\Deckbuilder\Deckbuilder.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\LoadPlugIn\LoadPlugIn.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
