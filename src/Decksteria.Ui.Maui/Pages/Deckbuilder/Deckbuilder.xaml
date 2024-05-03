@@ -9,6 +9,7 @@
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+    xmlns:clayout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
     Loaded="ContentPage_LoadedAsync"
@@ -18,7 +19,13 @@
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
-    <ScrollView x:Name="Deckbuilder_ScrollView">
+    <clayout:SwitchingGridLayout>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+    </clayout:SwitchingGridLayout>
+    <!--<ScrollView x:Name="Deckbuilder_ScrollView">
         <Grid x:Name="Deckbuilder_GridLayout" FlowDirection="LeftToRight">
             <Grid.RowDefinitions>
                 <RowDefinition Height="{Binding SearchRowHeight}"/>
@@ -80,7 +87,7 @@
                             MinimumHeightRequest="100"
                             VerticalOptions="Start">
                         <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Horizontal" VerticalItemSpacing="2" HorizontalItemSpacing="2" />
+                            <LinearItemsLayout Orientation="Horizontal"  />
                         </CollectionView.ItemsLayout>
                     </CollectionView>
                 </Frame>
@@ -91,5 +98,5 @@
                 TabPlacement="Top"
             />
         </Grid>
-    </ScrollView>
+    </ScrollView>-->
 </uranium:UraniumContentPage>
