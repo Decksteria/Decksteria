@@ -9,11 +9,11 @@
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+    xmlns:ext="clr-namespace:Decksteria.Ui.Maui.Extensions"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
     Loaded="ContentPage_LoadedAsync"
-    Unloaded="ContentPage_UnloadedAsync"
-    SizeChanged="ContentPage_SizeChanged">
+    Unloaded="ContentPage_UnloadedAsync">
     <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
@@ -21,9 +21,35 @@
     </uranium:UraniumContentPage.Resources>
     <Grid x:Name="Grid_Main">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ext:OnOrientation>
+                <ext:OnOrientation.Default>
+                    <ColumnDefinitionCollection>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </ColumnDefinitionCollection>
+                </ext:OnOrientation.Default>
+                <ext:OnOrientation.Portrait>
+                    <ColumnDefinitionCollection>
+                        <ColumnDefinition Width="*"/>
+                    </ColumnDefinitionCollection>
+                </ext:OnOrientation.Portrait>
+            </ext:OnOrientation>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <ext:OnOrientation>
+                <ext:OnOrientation.Default>
+                    <RowDefinitionCollection>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </RowDefinitionCollection>
+                </ext:OnOrientation.Default>
+                <ext:OnOrientation.Landscape>
+                    <RowDefinitionCollection>
+                        <RowDefinition Height="*"/>
+                    </RowDefinitionCollection>
+                </ext:OnOrientation.Landscape>
+            </ext:OnOrientation>
+        </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
