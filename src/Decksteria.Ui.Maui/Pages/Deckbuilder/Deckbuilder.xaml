@@ -19,8 +19,12 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <ScrollView x:Name="Deckbuilder_ScrollView">
-        <FlexLayout x:Name="Deckbuilder_GridLayout" FlowDirection="LeftToRight" JustifyContent="SpaceEvenly" AlignItems="Center">
-            <Grid Grid.Column="0">
+        <Grid x:Name="Deckbuilder_GridLayout" FlowDirection="LeftToRight">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding SearchRowHeight}"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="*"/>
@@ -42,12 +46,15 @@
                         Grid.Column="1"
                         Placeholder="Search"
                         VerticalTextAlignment="Center"
-                        HeightRequest="25"/>
+                        HeightRequest="25"
+                        Text="{Binding SearchText}"
+                        Completed="Entry_Completed"/>
                     <ImageButton
                         Grid.Column="2"
                         Margin="3,0"
                         BorderWidth="1"
-                        CornerRadius="5">
+                        CornerRadius="5"
+                        Pressed="Entry_Completed">
                         <ImageButton.Source>
                             <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
                         </ImageButton.Source>
@@ -71,19 +78,18 @@
                             ItemsSource="{Binding FilteredCards}"
                             ItemTemplate="{StaticResource Key=CardView}"
                             MinimumHeightRequest="100"
-                            VerticalOptions="Start"
-                            VerticalScrollBarVisibility="Default">
+                            VerticalOptions="Start">
                         <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Horizontal" />
+                            <GridItemsLayout Orientation="Horizontal" VerticalItemSpacing="2" HorizontalItemSpacing="2" />
                         </CollectionView.ItemsLayout>
                     </CollectionView>
                 </Frame>
             </Grid>
             <material:TabView
-                Grid.Column="1"
+                Grid.Row="1"
                 x:Name="DecksLayout"
                 TabPlacement="Top"
             />
-        </FlexLayout>
+        </Grid>
     </ScrollView>
 </uranium:UraniumContentPage>

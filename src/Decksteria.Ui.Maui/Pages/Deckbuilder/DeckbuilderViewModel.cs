@@ -6,9 +6,12 @@ using System.Collections.ObjectModel;
 
 internal class DeckbuilderViewModel()
 {
-    public bool ExpandSearch { get; set; } = false;
+    public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
 
     public ObservableCollection<CardArt> FilteredCards { get; set; } = [];
 
-    public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
+    // Expands the Grid to half the screen size when a search has produced
+    public string SearchRowHeight => FilteredCards.Count > 0 ? "*" : "35";
+
+    public string SearchText { get; set; } = "";
 }

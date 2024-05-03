@@ -49,9 +49,14 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<CardArt>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CardArt>> GetCardsAsync(string? searchText = null, IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
         var cards = await format.GetCardsAsync(filters, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            cards = cards.Where(c => c.Details.Contains(searchText));
+        }
+
         return cards.SelectMany(ToCardArts);
 
         IEnumerable<CardArt> ToCardArts(IDecksteriaCard cardInfo)

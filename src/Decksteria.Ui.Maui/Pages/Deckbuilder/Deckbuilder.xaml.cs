@@ -3,9 +3,9 @@ namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
+using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Devices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +34,6 @@ public partial class Deckbuilder : UraniumContentPage
         var deckInfo = deckbuilder.GetDeckInformation();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
-        viewModel.FilteredCards = new(await deckbuilder.GetCardsAsync());
 
         CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
         {
@@ -76,8 +75,13 @@ public partial class Deckbuilder : UraniumContentPage
         DecksLayout.Items.Clear();
     }
 
-    private void Button_ExpandSearch_Pressed(object sender, EventArgs e)
+    private async void Entry_Completed(object sender, EventArgs e)
     {
-        viewModel.ExpandSearch = !viewModel.ExpandSearch;
+        if (viewModel.SearchText.Length < 3)
+        {
+            return;
+        }
+
+        viewModel.FilteredCards.ReplaceData(await deckbuilder.GetCardsAsync(viewModel.SearchText));
     }
 }
