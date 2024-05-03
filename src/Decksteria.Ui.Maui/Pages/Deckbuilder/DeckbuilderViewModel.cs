@@ -10,8 +10,5 @@ internal class DeckbuilderViewModel()
 
     public ObservableCollection<CardArt> FilteredCards { get; set; } = [];
 
-    // Expands the Grid to half the screen size when a search has produced
-    public string SearchRowHeight => FilteredCards.Count > 0 ? "*" : "35";
-
     public string SearchText { get; set; } = "";
 }

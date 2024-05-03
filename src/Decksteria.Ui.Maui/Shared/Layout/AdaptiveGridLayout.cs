@@ -3,10 +3,10 @@
 using Microsoft.Maui.Layouts;
 using UraniumUI.Layouts;
 
-internal sealed class SwitchingGridLayout : GridLayout
+internal sealed class AdaptiveGridLayout : GridLayout
 {
     protected override ILayoutManager CreateLayoutManager()
     {
-        return new SwitchingGridLayoutManager(this);
+        return new AdaptiveGridLayoutManager(this);
     }
 }

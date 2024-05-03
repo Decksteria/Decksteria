@@ -5,9 +5,9 @@ using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Layouts;
 
-internal class SwitchingGridLayoutManager(SwitchingGridLayout switchingGridLayout) : GridLayoutManager(switchingGridLayout)
+internal class AdaptiveGridLayoutManager(AdaptiveGridLayout switchingGridLayout) : GridLayoutManager(switchingGridLayout)
 {
-    private readonly SwitchingGridLayout _layout = switchingGridLayout;
+    private readonly AdaptiveGridLayout _layout = switchingGridLayout;
 
     public override Size ArrangeChildren(Rect bounds)
     {
