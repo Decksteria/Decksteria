@@ -9,6 +9,7 @@
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+    xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
     Loaded="ContentPage_LoadedAsync"
@@ -17,36 +18,8 @@
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
         </DataTemplate>
-        <ResourceDictionary>
-            <Style TargetType="Grid" x:Key="AdaptiveGridStyle">
-                <Setter Property="VisualStateManager.VisualStateGroups">
-                    <VisualStateGroupList>
-                        <VisualStateGroup>
-                            <VisualState x:Name="Landscape">
-                                <VisualState.StateTriggers>
-                                    <OrientationStateTrigger Orientation="Landscape" />
-                                </VisualState.StateTriggers>
-                                <VisualState.Setters>
-                                    <Setter Property="ColumnDefinitions" Value="*" />
-                                    <Setter Property="RowDefinitions" Value="*,*" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Portrait">
-                                <VisualState.StateTriggers>
-                                    <OrientationStateTrigger Orientation="Portrait" />
-                                </VisualState.StateTriggers>
-                                <VisualState.Setters>
-                                    <Setter Property="ColumnDefinitions" Value="*,*" />
-                                    <Setter Property="RowDefinitions" Value="*" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </Setter>
-            </Style>
-        </ResourceDictionary>
     </uranium:UraniumContentPage.Resources>
-    <Grid x:Name="Grid_Main" Style="{StaticResource AdaptiveGridStyle}">
+    <clyout:AdaptiveGrid x:Name="Grid_Main" RowCount="2" ColumnCount="2" RowGridLength="*" ColumnGridLength="*">
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
@@ -114,5 +87,5 @@
             x:Name="DecksLayout"
             TabPlacement="Top"
         />
-    </Grid>
+    </clyout:AdaptiveGrid>
 </uranium:UraniumContentPage>
