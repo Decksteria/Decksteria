@@ -20,12 +20,7 @@
     </uranium:UraniumContentPage.Resources>
     <ScrollView x:Name="Deckbuilder_ScrollView">
         <FlexLayout x:Name="Deckbuilder_GridLayout" FlowDirection="LeftToRight" JustifyContent="SpaceEvenly" AlignItems="Center">
-            <material:TabView
-                Grid.Column="0"
-                x:Name="DecksLayout"
-                TabPlacement="Top"
-                />
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="*"/>
@@ -84,6 +79,11 @@
                     </CollectionView>
                 </Frame>
             </Grid>
+            <material:TabView
+                Grid.Column="1"
+                x:Name="DecksLayout"
+                TabPlacement="Top"
+            />
         </FlexLayout>
     </ScrollView>
 </uranium:UraniumContentPage>
