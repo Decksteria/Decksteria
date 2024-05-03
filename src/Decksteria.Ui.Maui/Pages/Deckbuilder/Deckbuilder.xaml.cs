@@ -21,6 +21,8 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IDeckbuildingService deckbuilder;
 
+    private bool prevIsLandscape = true;
+
     public Deckbuilder(IDeckbuildingService deckbuilder)
     {
         InitializeComponent();
