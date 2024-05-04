@@ -15,6 +15,7 @@
     Loaded="ContentPage_LoadedAsync"
     Unloaded="ContentPage_UnloadedAsync">
     <uranium:UraniumContentPage.Resources>
+        <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill"/>
         </DataTemplate>
@@ -60,7 +61,11 @@
                         CornerRadius="5"
                         Pressed="Entry_Completed">
                         <ImageButton.Source>
-                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
+                            <FontImageSource
+                                Size="28"
+                                FontFamily="FASolid"
+                                Glyph="{x:Static fa:Solid.MagnifyingGlass}"
+                                Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
                         </ImageButton.Source>
                     </ImageButton>
                     <ImageButton
@@ -69,7 +74,11 @@
                         BorderWidth="1"
                         CornerRadius="5">
                         <ImageButton.Source>
-                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
+                            <FontImageSource
+                                Size="28"
+                                FontFamily="FASolid"
+                                Glyph="{x:Static fa:Solid.Filter}"
+                                Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                         </ImageButton.Source>
                     </ImageButton>
                 </Grid>
