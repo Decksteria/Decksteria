@@ -3,7 +3,6 @@
 using System.ComponentModel;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Layouts;
 
 internal sealed class AdaptiveGrid : Grid
 {
@@ -14,7 +13,9 @@ internal sealed class AdaptiveGrid : Grid
     }
 
     public static readonly BindableProperty RowCountProperty = BindableProperty.Create(
-        nameof(RowCount), typeof(int), typeof(AdaptiveGrid),
+        nameof(RowCount),
+        typeof(int),
+        typeof(AdaptiveGrid),
         defaultValue: 2,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
@@ -31,7 +32,9 @@ internal sealed class AdaptiveGrid : Grid
     }
 
     public static readonly BindableProperty ColumnCountProperty = BindableProperty.Create(
-        nameof(ColumnCount), typeof(int), typeof(AdaptiveGrid),
+        nameof(ColumnCount),
+        typeof(int),
+        typeof(AdaptiveGrid),
         defaultValue: 2,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
@@ -51,8 +54,12 @@ internal sealed class AdaptiveGrid : Grid
     }
 
     /// <summary>Bindable property for <see cref="OrientationSwitchWidth"/>.</summary>
-    public static readonly BindableProperty OrientationSwitchWidthProperty = BindableProperty.Create(nameof(OrientationSwitchWidth), typeof(double),
-        typeof(Grid), 500d, propertyChanged: (bindable, oldValue, newValue) =>
+    public static readonly BindableProperty OrientationSwitchWidthProperty = BindableProperty.Create(
+        nameof(OrientationSwitchWidth),
+        typeof(double),
+        typeof(Grid),
+        500d,
+        propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is AdaptiveGrid grid)
             {
@@ -60,11 +67,6 @@ internal sealed class AdaptiveGrid : Grid
                 grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
-
-    protected override ILayoutManager CreateLayoutManager()
-    {
-        return base.CreateLayoutManager();
-    }
 
     protected override void OnSizeAllocated(double width, double height)
     {
@@ -103,10 +105,17 @@ internal sealed class AdaptiveGrid : Grid
     }
 
     [TypeConverter(typeof(GridLengthTypeConverter))]
-    public GridLength ColumnGridLength { get => (GridLength) GetValue(ColumnGridLengthProperty); set => SetValue(ColumnGridLengthProperty, value); }
+    public GridLength ColumnGridLength
+    {
+        get => (GridLength) GetValue(ColumnGridLengthProperty);
+        set => SetValue(ColumnGridLengthProperty, value);
+    }
 
     public static readonly BindableProperty ColumnGridLengthProperty = BindableProperty.Create(
-        nameof(ColumnGridLength), typeof(GridLength), typeof(AdaptiveGrid), GridLength.Auto,
+        nameof(ColumnGridLength),
+        typeof(GridLength),
+        typeof(AdaptiveGrid),
+        GridLength.Auto,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is AdaptiveGrid grid)
@@ -116,10 +125,17 @@ internal sealed class AdaptiveGrid : Grid
         });
 
     [TypeConverter(typeof(GridLengthTypeConverter))]
-    public GridLength RowGridLength { get => (GridLength) GetValue(RowGridLengthProperty); set => SetValue(RowGridLengthProperty, value); }
+    public GridLength RowGridLength
+    {
+        get => (GridLength) GetValue(RowGridLengthProperty);
+        set => SetValue(RowGridLengthProperty, value);
+    }
 
     public static readonly BindableProperty RowGridLengthProperty = BindableProperty.Create(
-        nameof(RowGridLength), typeof(GridLength), typeof(AdaptiveGrid), GridLength.Auto,
+        nameof(RowGridLength),
+        typeof(GridLength),
+        typeof(AdaptiveGrid),
+        GridLength.Auto,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is AdaptiveGrid grid)

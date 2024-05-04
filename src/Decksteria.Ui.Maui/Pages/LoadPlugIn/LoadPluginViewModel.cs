@@ -41,7 +41,8 @@ public sealed class LoadPluginViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<DeckTile> DeckTiles {
+    public ObservableCollection<DeckTile> DeckTiles
+    {
         get => _deckTileSource;
         set
         {

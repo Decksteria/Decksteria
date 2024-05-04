@@ -1,8 +1,8 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 
-using Decksteria.Services.FileService.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Decksteria.Services.FileService.Models;
 
 internal class DeckbuilderViewModel()
 {
