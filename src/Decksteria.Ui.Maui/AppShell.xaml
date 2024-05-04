@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Decksteria.Ui.Maui"
     xmlns:loadplugin="clr-namespace:Decksteria.Ui.Maui.Pages.LoadPlugIn"
     Shell.FlyoutBehavior="Disabled"
-    Title="Decksteria.Ui.Maui">
+    Title="Decksteria">
     
     <ShellContent x:Name="ShellContent_Main" />
 
