@@ -22,13 +22,13 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
     {
         var decks = SelectAsLong(decklist);
-        if(await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
+        if (await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
         {
             return false;
         }
 
         var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(card.CardId, cancellationToken);
-        if(deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
+        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
         {
             return false;
         }
