@@ -10,14 +10,20 @@
     xmlns:loadplugin="clr-namespace:Decksteria.Ui.Maui.Pages.LoadPlugIn"
     xmlns:models="clr-namespace:Decksteria.Ui.Maui.Shared.Models"
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:m="clr-namespace:UraniumUI.Material.Resources;assembly=UraniumUI.Material"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     Loaded="ContentPage_LoadedAsync"
     Title="Decksteria Deckbuilder">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary>
-            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
-            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
+                <ResourceDictionary>
+                    <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+                    <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </uranium:UraniumContentPage.Resources>
 
@@ -42,7 +48,7 @@
                         <Label Grid.Column="0" Text="Select a Plug-In" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                         <ImageButton Grid.Column="1" Clicked="ListView_PlugInSelect_New_Clicked" ToolTipProperties.Text="Add new Plug-In">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Plus}" />
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Plus}" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
                     </Grid>
@@ -82,7 +88,7 @@
                         </Grid.ColumnDefinitions>
                         <ImageButton Grid.Column="0" Clicked="ListView_FormatSelect_Back_Clicked" ToolTipProperties.Text="Back to Plug-Ins">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" />
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
                         <Label Grid.Column="1" Text="Select a Format" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
@@ -120,18 +126,18 @@
                         </Grid.ColumnDefinitions>
                         <ImageButton Grid.Column="0" Clicked="ListView_DeckSelect_Back_Clicked" ToolTipProperties.Text="Back to Formats">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" />
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.AngleLeft}" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
                         <Label Grid.Column="1" Text="Select a Deck" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                         <ImageButton Grid.Column="2" Clicked="ListView_DeckSelect_New_Clicked" ToolTipProperties.Text="New Deck">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.FileCirclePlus}" />
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.FileCirclePlus}" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
                         <ImageButton Grid.Column="3" Clicked="ListView_DeckSelect_Open_Clicked" ToolTipProperties.Text="Open Deck">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.File}" />
+                                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.File}" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
                     </Grid>
@@ -145,7 +151,7 @@
         </FlexLayout>
         <Button StyleClass="FilledButton" Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0">
             <Button.ImageSource>
-                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Upload}" Color="{DynamicResource OnPrimaryDark}"/>
+                <FontImageSource FontFamily="FASolid" Glyph="{x:Static fa:Solid.Upload}" Color="{AppThemeBinding Light={StaticResource OnPrimary}, Dark={StaticResource OnPrimaryDark}}" />
             </Button.ImageSource>
         </Button>
     </Grid>
