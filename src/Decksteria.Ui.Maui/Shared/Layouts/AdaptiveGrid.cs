@@ -21,7 +21,7 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
+                grid.SetRowDefinitions(!grid.HorizontalDisplay);
             }
         });
 
@@ -40,7 +40,7 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
+                grid.SetColumnDefinitions(grid.HorizontalDisplay);
             }
         });
 
@@ -63,8 +63,50 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
-                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
+                grid.SetColumnDefinitions(grid.HorizontalDisplay);
+                grid.SetRowDefinitions(!grid.HorizontalDisplay);
+            }
+        });
+
+    public bool HorizontalDisplay => IsLandscape(Width, OrientationSwitchWidth);
+
+    [TypeConverter(typeof(GridLengthTypeConverter))]
+    public GridLength ColumnGridLength
+    {
+        get => (GridLength) GetValue(ColumnGridLengthProperty);
+        set => SetValue(ColumnGridLengthProperty, value);
+    }
+
+    public static readonly BindableProperty ColumnGridLengthProperty = BindableProperty.Create(
+        nameof(ColumnGridLength),
+        typeof(GridLength),
+        typeof(AdaptiveGrid),
+        GridLength.Auto,
+        propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            if (bindable is AdaptiveGrid grid)
+            {
+                grid.SetColumnDefinitions(!grid.HorizontalDisplay);
+            }
+        });
+
+    [TypeConverter(typeof(GridLengthTypeConverter))]
+    public GridLength RowGridLength
+    {
+        get => (GridLength) GetValue(RowGridLengthProperty);
+        set => SetValue(RowGridLengthProperty, value);
+    }
+
+    public static readonly BindableProperty RowGridLengthProperty = BindableProperty.Create(
+        nameof(RowGridLength),
+        typeof(GridLength),
+        typeof(AdaptiveGrid),
+        GridLength.Auto,
+        propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            if (bindable is AdaptiveGrid grid)
+            {
+                grid.SetRowDefinitions(grid.HorizontalDisplay);
             }
         });
 
@@ -75,6 +117,8 @@ internal sealed class AdaptiveGrid : Grid
         SetRowDefinitions(isLandscape);
         base.OnSizeAllocated(width, height);
     }
+
+    private static bool IsLandscape(double width, double switchSize) => width > switchSize;
 
     private void SetColumnDefinitions(bool isPortrait)
     {
@@ -102,50 +146,5 @@ internal sealed class AdaptiveGrid : Grid
         {
             RowDefinitions.Add(new RowDefinition(RowGridLength));
         }
-    }
-
-    [TypeConverter(typeof(GridLengthTypeConverter))]
-    public GridLength ColumnGridLength
-    {
-        get => (GridLength) GetValue(ColumnGridLengthProperty);
-        set => SetValue(ColumnGridLengthProperty, value);
-    }
-
-    public static readonly BindableProperty ColumnGridLengthProperty = BindableProperty.Create(
-        nameof(ColumnGridLength),
-        typeof(GridLength),
-        typeof(AdaptiveGrid),
-        GridLength.Auto,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is AdaptiveGrid grid)
-            {
-                grid.SetColumnDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
-            }
-        });
-
-    [TypeConverter(typeof(GridLengthTypeConverter))]
-    public GridLength RowGridLength
-    {
-        get => (GridLength) GetValue(RowGridLengthProperty);
-        set => SetValue(RowGridLengthProperty, value);
-    }
-
-    public static readonly BindableProperty RowGridLengthProperty = BindableProperty.Create(
-        nameof(RowGridLength),
-        typeof(GridLength),
-        typeof(AdaptiveGrid),
-        GridLength.Auto,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is AdaptiveGrid grid)
-            {
-                grid.SetRowDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
-            }
-        });
-
-    private static bool IsLandscape(double width, double switchSize)
-    {
-        return width > switchSize;
     }
 }
