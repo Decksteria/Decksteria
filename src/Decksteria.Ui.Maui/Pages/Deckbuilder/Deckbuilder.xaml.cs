@@ -84,4 +84,9 @@ public partial class Deckbuilder : UraniumContentPage
 
         viewModel.FilteredCards.ReplaceData(await deckbuilder.GetCardsAsync(viewModel.SearchText));
     }
+
+    private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
+    {
+        viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
+    }
 }

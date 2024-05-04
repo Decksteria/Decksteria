@@ -20,7 +20,14 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
-        <clyout:AdaptiveGrid x:Name="Grid_Main" RowCount="2" ColumnCount="2" RowGridLength="*" ColumnGridLength="*" OrientationSwitchWidth="670">
+        <clyout:AdaptiveGrid
+            x:Name="AdaptiveGrid_Main"
+            RowCount="2"
+            ColumnCount="2"
+            RowGridLength="*"
+            ColumnGridLength="*"
+            OrientationSwitchWidth="670"
+            SizeChanged="AdaptiveGrid_Main_SizeChanged">
             <Grid Grid.Row="0" Grid.Column="1" MinimumHeightRequest="300">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35"/>
@@ -86,8 +93,8 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 x:Name="DecksLayout"
-                TabPlacement="Top"
                 MinimumHeightRequest="300"
+                TabPlacement="{Binding TabViewTabPlacement}"
             />
         </clyout:AdaptiveGrid>
     </ScrollView>
