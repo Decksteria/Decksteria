@@ -9,6 +9,10 @@ using Decksteria.Services.FileService.Models;
 
 public interface IDeckbuildingService
 {
+    string GameTitle { get; }
+
+    string FormatTitle { get; }
+
     Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
 
     Task ClearCardsAsync(CancellationToken cancellationToken = default);

@@ -19,6 +19,10 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
 
     private ReadOnlyDictionary<string, List<CardArt>> decklist = selectedFormat.Format.Decks.ToDictionary(deck => deck.Name, _ => new List<CardArt>()).AsReadOnly();
 
+    public string GameTitle => game.DisplayName;
+
+    public string FormatTitle => format.DisplayName;
+
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
     {
         var decks = SelectAsLong(decklist);

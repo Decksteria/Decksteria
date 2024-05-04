@@ -34,6 +34,7 @@ public partial class Deckbuilder : UraniumContentPage
         var deckInfo = deckbuilder.GetDeckInformation();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
+        Title = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
 
         CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
         {
