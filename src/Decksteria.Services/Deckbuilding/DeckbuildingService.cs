@@ -19,16 +19,20 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
 
     private ReadOnlyDictionary<string, List<CardArt>> decklist = selectedFormat.Format.Decks.ToDictionary(deck => deck.Name, _ => new List<CardArt>()).AsReadOnly();
 
+    public string GameTitle => game.DisplayName;
+
+    public string FormatTitle => format.DisplayName;
+
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
     {
         var decks = SelectAsLong(decklist);
-        if(await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
+        if (await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
         {
             return false;
         }
 
         var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(card.CardId, cancellationToken);
-        if(deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
+        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
         {
             return false;
         }
@@ -37,7 +41,6 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         cards.Add(card);
         return true;
     }
-
 
     public Task ClearCardsAsync(CancellationToken cancellationToken = default)
     {
@@ -50,9 +53,14 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<CardArt>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CardArt>> GetCardsAsync(string? searchText = null, IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
         var cards = await format.GetCardsAsync(filters, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            cards = cards.Where(c => c.Details.Contains(searchText));
+        }
+
         return cards.SelectMany(ToCardArts);
 
         IEnumerable<CardArt> ToCardArts(IDecksteriaCard cardInfo)
@@ -115,5 +123,4 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<List<CardArt>?>(decklist[deckName]);
     }
-
 }

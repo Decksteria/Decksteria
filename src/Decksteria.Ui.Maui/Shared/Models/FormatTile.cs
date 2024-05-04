@@ -1,8 +1,4 @@
 ﻿namespace Decksteria.Ui.Maui.Shared.Models;
-
-using System;
-using Decksteria.Core;
-
 public record FormatTile(string GameName, FormatDetails Format)
 {
     public string Name { get; init; } = Format.Name;

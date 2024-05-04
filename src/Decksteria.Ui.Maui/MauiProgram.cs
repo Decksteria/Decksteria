@@ -6,8 +6,6 @@ using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
-using Decksteria.Ui.Maui.Pages.Deckbuilder;
-using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
