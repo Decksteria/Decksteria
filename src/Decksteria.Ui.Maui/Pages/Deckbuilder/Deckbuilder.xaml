@@ -16,7 +16,7 @@
     Unloaded="ContentPage_UnloadedAsync">
     <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding DownloadUrl}" WidthRequest="80"/>
+            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill"/>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
@@ -81,10 +81,11 @@
                         x:Name="CollectionView_Search"
                         ItemsSource="{Binding FilteredCards}"
                         ItemTemplate="{StaticResource Key=CardView}"
-                        MinimumHeightRequest="100"
-                        VerticalOptions="Start">
+                        SelectionMode="None"
+                        VerticalOptions="FillAndExpand"
+                        VerticalScrollBarVisibility="Default">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal"  />
+                            <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="2" VerticalItemSpacing="2" SnapPointsAlignment="Center" />
                         </CollectionView.ItemsLayout>
                     </CollectionView>
                 </Frame>
