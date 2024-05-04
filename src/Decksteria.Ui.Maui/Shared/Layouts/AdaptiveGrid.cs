@@ -20,7 +20,7 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
+                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
 
@@ -37,44 +37,27 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
+                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
 
     /// <summary>
-    /// If the orientation is horizontal by default, it will switch to a vertical Grid orientation if the width is smaller than this property.
-    /// If the orientation is vertical by default, it will switch to a horizontal Grid orientation if the height is smaller than this property.
+    /// Switches to a vertical Grid orientation if the width is smaller than this property.
     /// </summary>
-    public double DimensionSwitchSize
+    public double OrientationSwitchWidth
     {
-        get => (double) GetValue(DimensionSwitchSizeProperty);
-        set => SetValue(DimensionSwitchSizeProperty, value);
+        get => (double) GetValue(OrientationSwitchWidthProperty);
+        set => SetValue(OrientationSwitchWidthProperty, value);
     }
 
-    /// <summary>Bindable property for <see cref="DimensionSwitchSize"/>.</summary>
-    public static readonly BindableProperty DimensionSwitchSizeProperty = BindableProperty.Create(nameof(DimensionSwitchSize), typeof(double),
+    /// <summary>Bindable property for <see cref="OrientationSwitchWidth"/>.</summary>
+    public static readonly BindableProperty OrientationSwitchWidthProperty = BindableProperty.Create(nameof(OrientationSwitchWidth), typeof(double),
         typeof(Grid), 500d, propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
-                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
-            }
-        });
-
-    public StackOrientation Orientation
-    {
-        get => (StackOrientation) GetValue(OrientationProperty);
-        set => SetValue(OrientationProperty, value);
-    }
-
-    /// <summary>Bindable property for <see cref="Orientation"/>.</summary>
-    public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation),
-        typeof(StackLayout), StackOrientation.Horizontal, propertyChanged:  (bindable, oldValue, newValue) =>
-        {
-            if (bindable is AdaptiveGrid grid)
-            {
-                grid.InvalidateMeasure();
+                grid.SetColumnDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
+                grid.SetRowDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
 
@@ -85,7 +68,7 @@ internal sealed class AdaptiveGrid : Grid
 
     protected override void OnSizeAllocated(double width, double height)
     {
-        var isLandscape = IsLandscape(width, height, DimensionSwitchSize, Orientation);
+        var isLandscape = IsLandscape(width, OrientationSwitchWidth);
         SetColumnDefinitions(!isLandscape);
         SetRowDefinitions(isLandscape);
         base.OnSizeAllocated(width, height);
@@ -128,7 +111,7 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetColumnDefinitions(!IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
+                grid.SetColumnDefinitions(!IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
 
@@ -141,16 +124,12 @@ internal sealed class AdaptiveGrid : Grid
         {
             if (bindable is AdaptiveGrid grid)
             {
-                grid.SetRowDefinitions(IsLandscape(grid.Width, grid.Height, grid.DimensionSwitchSize, grid.Orientation));
+                grid.SetRowDefinitions(IsLandscape(grid.Width, grid.OrientationSwitchWidth));
             }
         });
 
-    private static bool IsLandscape(double width, double height, double switchSize, StackOrientation stackOrientation)
+    private static bool IsLandscape(double width, double switchSize)
     {
-        return stackOrientation switch
-        {
-            StackOrientation.Vertical => height < switchSize,
-            _ => width > switchSize
-        };
+        return width > switchSize;
     }
 }
