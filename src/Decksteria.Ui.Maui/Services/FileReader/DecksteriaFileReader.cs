@@ -9,18 +9,15 @@ using System.Threading.Tasks;
 using Decksteria.Core.Data;
 using Microsoft.Maui.Storage;
 
-internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory) : IDecksteriaFileReader
+internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory) : IDecksteriaFileReader
 {
     private readonly HttpClient httpClient = httpClientFactory.CreateClient();
 
-    public string BuildConnectionString(string fileName, string gameName, IDictionary<string, string> connectionProperties, string downloadURL, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    private readonly string gameName = gameName;
 
-    public Task<byte[]> ReadImageAsync(string fileName, string gameName, string downloadURL, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+    public string BuildConnectionString(string fileName, IDictionary<string, string> connectionProperties, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
-    public async Task<string> GetFileLocationAsync(string fileName, string gameName, string downloadURL, CancellationToken cancellationToken = default)
+    public async Task<string> GetFileLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
     {
         var filePath = @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
         if (!File.Exists(filePath))
@@ -33,17 +30,27 @@ internal sealed class DecksteriaFileReader(IHttpClientFactory httpClientFactory)
             }
 
             using var fileStream = File.Create(filePath);
-            httpStream.CopyTo(fileStream);
+            await httpStream.CopyToAsync(fileStream, cancellationToken);
         }
 
         return filePath;
     }
 
-    public Task<byte[]> ReadByteFileAsync(string fileName, string gameName, string downloadURL, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    public Task<byte[]> ReadByteFileAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
-    public async Task<string> ReadTextFileAsync(string fileName, string gameName, string downloadURL, CancellationToken cancellationToken = default)
+    public Task<byte[]> ReadImageAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
     {
-        var fileLocation = await GetFileLocationAsync(fileName, gameName, downloadURL, cancellationToken);
+        throw new NotImplementedException();
+    }
+
+    public async Task<string> ReadTextFileAsync(string? fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return await httpClient.GetStringAsync(downloadURL, cancellationToken);
+        }
+
+        var fileLocation = await GetFileLocationAsync(fileName, downloadURL, md5Checksum, cancellationToken);
         return await File.ReadAllTextAsync(fileLocation, cancellationToken);
     }
 }

@@ -4,30 +4,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using Decksteria.Core;
 using Decksteria.Core.Data;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.DialogService;
+using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 {
-    private readonly IServiceProvider plugInSeviceProvider;
+    private readonly IDialogService dialogService;
+
+    private readonly IHttpClientFactory httpClientFactory;
 
     private FormatDetails? formatDetails;
 
     private DecksteriaPlugIn? selectedPlugIn;
 
-    public DecksteriaPlugInFactory(IDecksteriaFileReader fileReader, IDialogService dialogService)
+    public DecksteriaPlugInFactory(IDialogService dialogService, IHttpClientFactory httpClientFactory)
     {
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton(fileReader);
-        serviceCollection.AddSingleton(dialogService);
-        plugInSeviceProvider = serviceCollection.BuildServiceProvider();
+        this.dialogService = dialogService;
+        this.httpClientFactory = httpClientFactory;
     }
 
     public Dictionary<string, DecksteriaPlugIn>? GameList { get; private set; }
@@ -36,7 +39,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
     {
         var dllFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.dll", SearchOption.TopDirectoryOnly);
         var plugInTypes = dllFiles.Select(GetPlugInInterface);
-        return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(plugInSeviceProvider, type!));
+        return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(InitializeSelectedGame(type!)));
     }
 
     public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns()
@@ -47,8 +50,8 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public GameFormat GetSelectedFormat()
     {
-        var game = selectedPlugIn?.CreateInstance(plugInSeviceProvider) ?? throw new ArgumentNullException("Valid Plug-In has not been selected.");
-        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid Format has not been selected.");
+        var game = selectedPlugIn is not null ? InitializeSelectedGame(selectedPlugIn.PlugInType) : throw new ArgumentNullException("Valid plug-in has not been selected.");
+        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid format has not been selected.");
         return new(game, format);
     }
 
@@ -68,7 +71,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         }
 
         GameList ??= [];
-        var plugIn = new DecksteriaPlugIn(plugInSeviceProvider, plugInType);
+        var plugIn = new DecksteriaPlugIn(InitializeSelectedGame(plugInType));
         GameList[plugIn.Name] = plugIn;
 
         var fileName = Path.GetFileName(dllFilePath);
@@ -83,5 +86,14 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         var types = assembly.GetTypes();
         var plugInType = types.FirstOrDefault(t => typeof(IDecksteriaGame).IsAssignableFrom(t));
         return plugInType;
+    }
+
+    private IDecksteriaGame InitializeSelectedGame(Type type)
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.TryAddSingleton<IDialogService>(dialogService);
+        serviceCollection.TryAddSingleton<IDecksteriaFileReader>(new DecksteriaFileReader(type.Name, httpClientFactory));
+        var plugIn = ActivatorUtilities.GetServiceOrCreateInstance(serviceCollection.BuildServiceProvider(), type);
+        return plugIn as IDecksteriaGame ?? throw new TypeLoadException($"The type {type.FullName} does not inherit IDecksteriaGame.");
     }
 }

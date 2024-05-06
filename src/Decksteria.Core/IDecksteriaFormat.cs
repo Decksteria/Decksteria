@@ -12,6 +12,12 @@ using Decksteria.Core.Models;
 public interface IDecksteriaFormat : IDecksteriaTile
 {
     /// <summary>
+    /// The name stored inside the saved deck file.
+    /// The name should be unique among all the formats.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
     /// A list of all <see cref="IDecksteriaDeck"/> types in the Format.
     /// </summary>
     public IEnumerable<IDecksteriaDeck> Decks { get; }
@@ -46,8 +52,8 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// </summary>
     /// <param name="filters">A set of filters used to determine if a card should be returned. All cards will be returned if no filters are defined.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
-    /// <returns></returns>
-    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
+    /// <returns>An implementation of the IQueryable that allows additional filtering based on IDecksteriaCard.</returns>
+    public Task<IQueryable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a single card based on its ID.
@@ -70,7 +76,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// Determines which deck a card should be added to by default, if not defined by the user.
     /// </summary>
     /// <param name="cardId">The ID of the card that is being checked.</param>
-    /// <param name="cancellationToken"> The cancellation token used to cancel the execution.</param>t wishes to be added to its default deck.</param>
+    /// <param name="cancellationToken"> The cancellation token used to cancel the execution.</param>
     /// <returns>The interface of the deck that the card should be added to by default.</returns>
     public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default);
 
