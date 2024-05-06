@@ -6,9 +6,9 @@ using System.Collections.Generic;
 public record SearchField
 {
     /// <summary>
-    /// Default Constructor for initialising a text-based Search Field.
+    /// Default constructor for initialising a text-based advanced filter field.
     /// </summary>
-    /// <param name="fieldName">Label and Name of the Search Field.</param>
+    /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="length">Maximum length of the text field.</param>
     public SearchField(string fieldName, int? length = null)
     {
@@ -18,9 +18,9 @@ public record SearchField
     }
 
     /// <summary>
-    /// Default Constructor for initialising a number-based Search Field.
+    /// Default constructor for initialising a number-based advanced filter field.
     /// </summary>
-    /// <param name="fieldName">Label and Name of the Search Field.</param>
+    /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="minValue">Minimum value of the integer.</param>
     /// <param name="maxValue">Maximum value of the integer.</param>
     public SearchField(string fieldName, int minValue, int maxValue)
@@ -32,9 +32,9 @@ public record SearchField
     }
 
     /// <summary>
-    /// Default Constructor for initialising a Selection-based Search Field.
+    /// Default constructor for initialising a selection-based advanced filter field.
     /// </summary>
-    /// <param name="fieldName">Label and Name of the Search Field.</param>
+    /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="options">Options available to the user..</param>
     public SearchField(string fieldName, IEnumerable<string> options)
     {
@@ -49,7 +49,8 @@ public record SearchField
     public string FieldName { get; }
 
     /// <summary>
-    /// The type of the <see cref="SearchField"/>, it determines the valid values the Search Field can have.
+    /// The type of the <see cref="SearchField"/>, it determines the rendering and
+    /// values the advanced filter field can have.
     /// </summary>
     public FieldType FieldType { get; }
 

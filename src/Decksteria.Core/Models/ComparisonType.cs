@@ -1,7 +1,8 @@
 ﻿namespace Decksteria.Core.Models;
 
 /// <summary>
-/// Represents what Comparison the user wants to perform
+/// Represents what comparison the user wants to perform on a
+/// particular advanced filter field.
 /// </summary>
 public enum ComparisonType
 {

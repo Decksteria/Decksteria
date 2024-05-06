@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Decksteria.Core.Models;
 
 /// <summary>
-/// Represents a valid Import command to convert another file type into a Decksteria <see cref="Decklist"/>.
+/// Represents a valid import command to convert another file type into a Decksteria <see cref="Decklist"/>.
 /// </summary>
 public interface IDecksteriaImport
 {
@@ -26,9 +26,9 @@ public interface IDecksteriaImport
     public string Label { get; }
 
     /// <summary>
-    /// Creates a <see cref="Decklist"/> from a different file format.
+    /// Converts a different file format into a <see cref="Decklist"/>.
     /// </summary>
-    /// <param name="memoryStream">The MemoryStream containing the data from a file.</param>
+    /// <param name="memoryStream">The <see cref="MemoryStream"/> containing the data from a file.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the execution.</param>
     /// <returns>The <see cref="Decklist"/> created from loading the file format.</returns>
     public Task<Decklist> LoadDecklistAsync(MemoryStream memoryStream, IDecksteriaFormat currentFormat, CancellationToken cancellationToken = default!);
