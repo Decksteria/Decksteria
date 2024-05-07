@@ -3,18 +3,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Networking;
 using Microsoft.Maui.Storage;
+using Windows.ApplicationModel.Background;
 
-internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory) : IDecksteriaFileReader
+internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger) : IDecksteriaFileReader
 {
     private readonly HttpClient httpClient = httpClientFactory.CreateClient();
 
     private readonly string gameName = gameName;
+
+    private readonly ILogger<DecksteriaFileReader> logger = logger;
 
     private List<string> VerifiedFiles = new();
 
@@ -24,6 +30,14 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
     {
         // Gets the file path used by the .NET Maui Application
         var filePath = @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
+
+        // If the device does not have internet, return the expected file path assuming it was already downloaded.
+        // Exception handling for a missing file will be handled on the application side.
+        if (ValidateNetworkAccess())
+        {
+            return filePath;
+        }
+        
         if (File.Exists(filePath) && await VerifyChecksum(filePath, md5Checksum))
         {
             return filePath;
@@ -36,28 +50,16 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
             _ = Directory.CreateDirectory(directory);
         }
 
-        // Download file
-        await DownloadAsync(true);
-
+        // Download file and implement retry policy
+        await DownloadRetryAsync(DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
         return filePath;
 
-        async Task DownloadAsync(bool performChecksumValidation)
+        async Task DownloadAsync()
         {
             using var httpStream = await httpClient.GetStreamAsync(downloadURL, cancellationToken);
             using var fileStream = File.Create(filePath);
             await httpStream.CopyToAsync(fileStream, cancellationToken);
             fileStream.Close();
-
-            // If checksum is not to be validated, or checksum was completed return.
-            if (!performChecksumValidation || await VerifyChecksum(filePath, md5Checksum))
-            {
-                return;
-            }
-
-            // If checksum validation failed, download again without checksum validation.
-            // If this retry fails, the checksum will be presumed to be parsed in incorrectly.
-            await DownloadAsync(false);
-            VerifiedFiles.Add(filePath);
         }
     }
 
@@ -77,6 +79,30 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
 
         var fileLocation = await GetFileLocationAsync(fileName, downloadURL, md5Checksum, cancellationToken);
         return await File.ReadAllTextAsync(fileLocation, cancellationToken);
+    }
+
+    private async Task DownloadRetryAsync(Func<Task> DownloadAsync, Func<Task<bool>> ValidateChecksum)
+    {
+        // Add custom retry policy for HTTP Request
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                await DownloadAsync();
+                var checksumValid = await ValidateChecksum();
+
+                if (checksumValid)
+                {
+                    logger.LogWarning("File checksum validation did not match. Retry: {RetryCount}.", i);
+                    break;
+                }
+            }
+            catch (Exception e) when (e is HttpRequestException or TaskCanceledException)
+            {
+                logger.LogError("File Download failed, {ExceptionMessage}. Retry: {RetryCount}.", e.Message, i);
+                continue;
+            }
+        }
     }
 
     private async Task<bool> VerifyChecksum(string filePath, string? md5Checksum)
@@ -106,7 +132,18 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
 
         static string StandardiseHash(string hash)
         {
-            return hash.Replace("-", "").ToUpper();
+            return hash.Replace("-", "").ToUpperInvariant().Trim();
         }
+    }
+
+    private bool ValidateNetworkAccess()
+    {
+        if (Connectivity.Current.NetworkAccess is NetworkAccess.Internet)
+        {
+            return true;
+        }
+
+        logger.LogInformation("The device does not have internet.");
+        return false;
     }
 }
