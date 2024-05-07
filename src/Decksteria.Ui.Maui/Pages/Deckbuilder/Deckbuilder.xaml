@@ -34,6 +34,10 @@
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <ActivityIndicator
+                    Grid.RowSpan="2"
+                    IsRunning="{Binding Searching}"
+                    Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
@@ -55,15 +59,15 @@
                         VerticalTextAlignment="Center"
                         Margin="1"
                         Text="{Binding SearchText}"
-                        Completed="Entry_Completed"/>
+                        Completed="TextSearch_Entered"/>
                     <ImageButton
                         StyleClass="FilledTonalButton"
                         Grid.Column="2"
-                        Margin="3"
+                        Margin="5"
+                        Padding="1"
                         BorderWidth="1"
                         CornerRadius="5"
-                        Pressed="Entry_Completed"
-                        >
+                        Pressed="TextSearch_Entered">
                         <ImageButton.Source>
                             <FontImageSource
                                 Size="28"
@@ -75,10 +79,11 @@
                     <ImageButton
                         StyleClass="FilledTonalButton"
                         Grid.Column="3"
-                        Margin="3"
+                        Margin="5"
+                        Padding="1"
                         BorderWidth="1"
-                        CornerRadius="5">
-                        <!--BorderColor="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource OutlineDark}}"-->
+                        CornerRadius="5"
+                        Pressed="AdvancedFilter_Pressed">
                         <ImageButton.Source>
                             <FontImageSource
                                 Size="28"

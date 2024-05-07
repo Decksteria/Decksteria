@@ -6,6 +6,6 @@ public partial class SearchModal : UraniumContentPage
 {
 	public SearchModal()
 	{
-		InitializeComponent();
+        InitializeComponent();
 	}
 }

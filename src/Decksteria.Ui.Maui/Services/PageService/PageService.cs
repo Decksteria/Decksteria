@@ -17,7 +17,7 @@ internal sealed class PageService(Lazy<AppShell> appShell, IServiceProvider serv
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        await appShell.Value.Navigation.PopToRootAsync();
+        await AppShellNavigation.PopToRootAsync(true);
     }
 
     public ContentPage CreateHomePageInstance()
@@ -25,15 +25,32 @@ internal sealed class PageService(Lazy<AppShell> appShell, IServiceProvider serv
         return GetPageInstance<LoadPlugIn>();
     }
 
+    public async Task OpenModalAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var newPage = GetPageInstance<T>();
+        await AppShellNavigation.PushModalAsync(newPage, true);
+    }
+
     public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         var newPage = GetPageInstance<T>();
-        await appShell.Value.Navigation.PushAsync(newPage);
+        await AppShellNavigation.PushAsync(newPage, true);
     }
 
-    private T GetPageInstance<T>() where T : ContentPage
+    public async Task<T?> PopModalAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return await AppShellNavigation.PopModalAsync(true) as T;
+    }
+
+    private INavigation AppShellNavigation => appShell.Value.Navigation;
+
+    private T GetPageInstance<T>() where T : Page
     {
         var instance = ActivatorUtilities.GetServiceOrCreateInstance<T>(services);
         var page = instance as T;

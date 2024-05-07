@@ -7,6 +7,8 @@ using System.Linq;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
+using Decksteria.Ui.Maui.Pages.Search;
+using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -17,15 +19,18 @@ public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
-    private ReadOnlyDictionary<string, CollectionView>? deckViews;
-
     private readonly IDeckbuildingService deckbuilder;
 
-    public Deckbuilder(IDeckbuildingService deckbuilder)
+    private readonly IPageService pageService;
+
+    private ReadOnlyDictionary<string, CollectionView>? deckViews;
+
+    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
+        this.pageService = pageService;
     }
 
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)
@@ -71,23 +76,31 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
+    private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
+    {
+        viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
+    }
+
     private void ContentPage_UnloadedAsync(object sender, EventArgs e)
     {
         DecksLayout.Items.Clear();
     }
 
-    private async void Entry_Completed(object sender, EventArgs e)
+    private async void TextSearch_Entered(object sender, EventArgs e)
     {
         if (viewModel.SearchText.Length < 3)
         {
             return;
         }
 
-        viewModel.FilteredCards.ReplaceData(await deckbuilder.GetCardsAsync(viewModel.SearchText));
+        viewModel.Searching = true;
+        var results = await deckbuilder.GetCardsAsync(viewModel.SearchText);
+        viewModel.FilteredCards.ReplaceData(results);
+        viewModel.Searching = false;
     }
 
-    private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
+    private async void AdvancedFilter_Pressed(object sender, EventArgs e)
     {
-        viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
+        await pageService.OpenModalAsync<SearchModal>();
     }
 }
