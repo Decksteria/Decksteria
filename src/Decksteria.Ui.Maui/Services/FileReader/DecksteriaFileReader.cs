@@ -46,6 +46,7 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
             using var httpStream = await httpClient.GetStreamAsync(downloadURL, cancellationToken);
             using var fileStream = File.Create(filePath);
             await httpStream.CopyToAsync(fileStream, cancellationToken);
+            fileStream.Close();
 
             // If checksum is not to be validated, or checksum was completed return.
             if (!performChecksumValidation || await VerifyChecksum(filePath, md5Checksum))
@@ -56,6 +57,7 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
             // If checksum validation failed, download again without checksum validation.
             // If this retry fails, the checksum will be presumed to be parsed in incorrectly.
             await DownloadAsync(false);
+            VerifiedFiles.Add(filePath);
         }
     }
 
