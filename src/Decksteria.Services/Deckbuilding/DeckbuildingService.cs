@@ -85,7 +85,7 @@ internal sealed class DeckbuildingService(GameFormat selectedFormat) : IDeckbuil
         return Task.FromResult<IEnumerable<CardArt>?>(decklist[deckName]);
     }
 
-    public Decklist CreateDecklist() => new(game.Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));
+    public Decklist CreateDecklist() => new(game.GetType().Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));
 
     public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
     {

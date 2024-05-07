@@ -8,12 +8,13 @@ using System.Collections.Generic;
 public interface IDecksteriaCard
 {
     /// <summary>
-    /// The ID used by the Decksteria Plug-Ins and Applications to determine a unique card.
+    /// The unique identifier used by the Decksteria plug-in and applications to determine which card
+    /// is being asked for by the application.
     /// </summary>
     public long CardId { get; }
 
     /// <summary>
-    /// All of the different Artworks available to a unique card.
+    /// All of the different artworks available to a unique card.
     /// </summary>
     public IEnumerable<IDecksteriaCardArt> Arts { get; }
 

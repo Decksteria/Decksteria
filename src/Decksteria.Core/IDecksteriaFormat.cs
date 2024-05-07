@@ -7,22 +7,29 @@ using System.Threading.Tasks;
 using Decksteria.Core.Models;
 
 /// <summary>
-/// Represents a game's format and its deck-building rules. (e.g. Standard vs. Commander)
+/// Represents a game's format and its individual deck-building rules. (e.g. Standard vs. Commander)
 /// </summary>
 public interface IDecksteriaFormat : IDecksteriaTile
 {
     /// <summary>
-    /// A list of all <see cref="IDecksteriaDeck"/> types in the Format.
+    /// The name stored inside the saved deck file.
+    /// The name should be unique among all the formats.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// A list of all the different deck sections, a decklist in the format consists of.
+    /// (e.g. Main Deck, Side Deck, Extra Deck)
     /// </summary>
     public IEnumerable<IDecksteriaDeck> Decks { get; }
 
     /// <summary>
-    /// A list of all the <see cref="SearchField"/> that the user can use to perform an Advanced Search
+    /// A list of all the <see cref="SearchField"/> that the user can use to perform an advanced search.
     /// </summary>
     public IEnumerable<SearchField> SearchFields { get; }
 
     /// <summary>
-    /// Checks whether a Card has reached its maximum number of copies in the decklist.
+    /// Checks whether a card has reached its maximum number of copies in the decklist.
     /// </summary>
     /// <param name="cardId">The ID of the unique <see cref="IDecksteriaCard"/>.</param>
     /// <param name="decklist">The decklist created by the user.</param>
@@ -42,17 +49,18 @@ public interface IDecksteriaFormat : IDecksteriaTile
     public Task<int> CompareCardsAsync(long cardId1, long cardId2, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets all cards available in the Format that fulfil the Filter criteria.
+    /// Gets all cards available in the format that fulfil the filter criteria as
+    /// specified in <see cref="SearchFields"/>.
     /// </summary>
     /// <param name="filters">A set of filters used to determine if a card should be returned. All cards will be returned if no filters are defined.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
-    /// <returns></returns>
-    public Task<IEnumerable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
+    /// <returns>An implementation of the IQueryable that allows additional filtering based on IDecksteriaCard.</returns>
+    public Task<IQueryable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a single card based on its ID.
     /// </summary>
-    /// <param name="cardId">The ID the Decksteria Application is looking for.</param>
+    /// <param name="cardId">The ID of the card the Decksteria Application is looking for provided by the plug-in.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
     /// <returns></returns>
     public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken cancellationToken = default);
@@ -70,12 +78,12 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// Determines which deck a card should be added to by default, if not defined by the user.
     /// </summary>
     /// <param name="cardId">The ID of the card that is being checked.</param>
-    /// <param name="cancellationToken"> The cancellation token used to cancel the execution.</param>t wishes to be added to its default deck.</param>
+    /// <param name="cancellationToken"> The cancellation token used to cancel the execution.</param>
     /// <returns>The interface of the deck that the card should be added to by default.</returns>
     public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the <see cref="IDecksteriaDeck"/> type from <see cref="Decks"/> based on the name.
+    /// Gets the <see cref="IDecksteriaDeck"/> from <see cref="Decks"/> based on the name.
     /// </summary>
     /// <param name="name">The name of the deck that needs to be returned.</param>
     /// <returns>A <see cref="IDecksteriaDeck"/> that matches the deck's name.</returns>

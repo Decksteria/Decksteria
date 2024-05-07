@@ -5,17 +5,18 @@ using System.Threading;
 using System.Threading.Tasks;
 
 /// <summary>
-/// Represents a Deck type inside a format. (e.g. Side Deck)
+/// Represents a deck type that a format will handle. (e.g. Main Deck, Side Deck)
 /// </summary>
 public interface IDecksteriaDeck
 {
     /// <summary>
-    /// The name used by the Decksteria Application to save decklists.
+    /// The identifier name used by the Decksteria Application to save decklists.
+    /// 
     /// </summary>
     public string Name { get; }
 
     /// <summary>
-    /// The name of the Deck being displayed to the user.
+    /// The label/name of the Deck being displayed to the user.
     /// </summary>
     public string DisplayName { get; }
 

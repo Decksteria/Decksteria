@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Decksteria.Core.Models;
 
 /// <summary>
-/// Represents a valid Import command to convert another file type into a Decksteria <see cref="Decklist"/>.
+/// Represents a valid import command to convert another file type into a Decksteria <see cref="Decklist"/>.
 /// </summary>
 public interface IDecksteriaExport
 {
