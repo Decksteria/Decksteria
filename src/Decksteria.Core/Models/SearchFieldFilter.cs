@@ -1,9 +1,10 @@
 ﻿namespace Decksteria.Core.Models;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// Constructor for the UI Layer to create a SearchFieldFIlter. Not called by the plug-ins.
+/// Constructor for the UI Layer to create a SearchFieldFilter. Not called by the plug-ins.
 /// </summary>
 /// <param name="searchField">The <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.</param>
 /// <param name="comparison">The Comparison type selected by the User.</param>
@@ -12,26 +13,27 @@ public class SearchFieldFilter(SearchField searchField, ComparisonType compariso
 {
 
     /// <summary>
-    /// A <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.
+    /// A <see cref="Decksteria.Core.Models.SearchField"/> provided by the plug-in.
     /// </summary>
     public SearchField SearchField { get; } = searchField;
 
     /// <summary>
-    /// The Comparison type selected by the User.
+    /// The comparison type selected by the user.
     /// </summary>
     public ComparisonType Comparison { get; set; } = comparison;
 
     /// <summary>
-    /// The Search Value provided by the User.
+    /// The search value provided by the user.
     /// </summary>
     public object? Value { get; set; } = value;
 
     /// <summary>
     /// Default <see cref="string" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
+    /// Don't call this if you need a different implementation.
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
+    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(string? cardProperty)
     {
         if (SearchField.FieldType == FieldType.Number)
@@ -61,11 +63,12 @@ public class SearchFieldFilter(SearchField searchField, ComparisonType compariso
     }
 
     /// <summary>
-    /// Default <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
+    /// Default nullable <see cref="int?" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
+    /// Don't call this if you need a different implementation.
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
+    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(int? cardProperty)
     {
         if (SearchField.FieldType != FieldType.Number)
@@ -88,6 +91,7 @@ public class SearchFieldFilter(SearchField searchField, ComparisonType compariso
 
     /// <summary>
     /// Default <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
+    /// Don't call this if you need a different implementation.
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
@@ -107,6 +111,11 @@ public class SearchFieldFilter(SearchField searchField, ComparisonType compariso
         return IntMatching(cardProperty);
     }
 
+    /// <summary>
+    /// Default implementation for matching <see cref="int"/> against its own value.
+    /// </summary>
+    /// <param name="cardProperty"></param>
+    /// <returns></returns>
     private bool IntMatching(int cardProperty)
     {
         return Comparison switch

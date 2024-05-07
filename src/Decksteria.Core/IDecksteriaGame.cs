@@ -3,7 +3,10 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// Represents the Game Plug-In of the Assembly.
+/// Represents the actual plug-in of the Assembly.
+/// The name of the plug-in will be the name of the class that inherits this interface.
+/// Make sure to choose a name that you likely won't change in the future and is unique
+/// to your plug-in.
 /// </summary>
 public interface IDecksteriaGame : IDecksteriaTile
 {

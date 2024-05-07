@@ -9,19 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 public sealed class DecksteriaPlugIn
 {
-    public DecksteriaPlugIn(IServiceProvider serviceProvider, Type pluginType)
+    public DecksteriaPlugIn(IDecksteriaGame decksteriaGame)
     {
-        if (!typeof(IDecksteriaGame).IsAssignableFrom(pluginType))
-        {
-            throw new InvalidCastException("PlugInType is not a Decksteria Plug-In.");
-        }
-
-        PlugInType = pluginType;
-        var initialLoad = CreateInstance(serviceProvider);
-        Name = initialLoad.Name;
-        Label = initialLoad.DisplayName;
-        Icon = initialLoad.Icon;
-        Formats = initialLoad.Formats.Select(format => new FormatDetails(format));
+        PlugInType = decksteriaGame.GetType();
+        Name = PlugInType.Name;
+        Label = decksteriaGame.DisplayName;
+        Icon = decksteriaGame.Icon;
+        Formats = decksteriaGame.Formats.Select(format => new FormatDetails(format));
     }
 
     public string Name { get; init; }
@@ -33,10 +27,4 @@ public sealed class DecksteriaPlugIn
     public IEnumerable<FormatDetails> Formats { get; init; }
 
     public Type PlugInType { get; init; }
-
-    public IDecksteriaGame CreateInstance(IServiceProvider serviceProvider)
-    {
-        var plugInInstance = ActivatorUtilities.CreateInstance(serviceProvider, PlugInType) as IDecksteriaGame;
-        return plugInInstance!;
-    }
 }

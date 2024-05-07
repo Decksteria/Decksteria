@@ -61,7 +61,6 @@ public static class MauiProgram
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
             return formatFactory.GetSelectedFormat();
         });
-        services.TryAddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
         services.AddHttpClient();
         services.TryAddScoped<IDialogService, DialogService>();
         services.TryAddScoped<IPageService, PageService>();

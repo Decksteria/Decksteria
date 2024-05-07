@@ -5,11 +5,18 @@
 /// </summary>
 public interface IDecksteriaTile
 {
-    public string Name { get; }
-
+    /// <summary>
+    /// The name to be displayed to the user.
+    /// </summary>
     public string DisplayName { get; }
 
+    /// <summary>
+    /// The icon to display when showing the plug-in or format to the user.
+    /// </summary>
     public byte[]? Icon { get; }
 
+    /// <summary>
+    /// A brief description of the plug-in or format to the user.
+    /// </summary>
     public string Description { get; }
 }
