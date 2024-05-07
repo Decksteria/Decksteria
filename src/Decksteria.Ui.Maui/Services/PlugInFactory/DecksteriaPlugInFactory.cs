@@ -15,6 +15,7 @@ using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
@@ -23,14 +24,20 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     private readonly IHttpClientFactory httpClientFactory;
 
+    private readonly ILoggerFactory loggerFactory;
+
+    private readonly ILogger<DecksteriaPlugInFactory> logger;
+
     private FormatDetails? formatDetails;
 
     private DecksteriaPlugIn? selectedPlugIn;
 
-    public DecksteriaPlugInFactory(IDialogService dialogService, IHttpClientFactory httpClientFactory)
+    public DecksteriaPlugInFactory(IDialogService dialogService, IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory, ILogger<DecksteriaPlugInFactory> logger)
     {
         this.dialogService = dialogService;
         this.httpClientFactory = httpClientFactory;
+        this.loggerFactory = loggerFactory;
+        this.logger = logger;
     }
 
     public Dictionary<string, DecksteriaPlugIn>? GameList { get; private set; }
@@ -38,8 +45,8 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
     private IEnumerable<DecksteriaPlugIn> GetDecksteriaPlugIns()
     {
         var dllFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.dll", SearchOption.TopDirectoryOnly);
-        var plugInTypes = dllFiles.Select(GetPlugInInterface);
-        return plugInTypes.Where(plugin => plugin is not null).Select(type => new DecksteriaPlugIn(InitializeSelectedGame(type!)));
+        var plugInTypes = dllFiles.Select(GetPlugInInterface).Select(InitializeSelectedGame);
+        return plugInTypes.Where(plugin => plugin is not null).Select(plugIn => new DecksteriaPlugIn(plugIn!));
     }
 
     public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns()
@@ -50,7 +57,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public GameFormat GetSelectedFormat()
     {
-        var game = selectedPlugIn is not null ? InitializeSelectedGame(selectedPlugIn.PlugInType) : throw new ArgumentNullException("Valid plug-in has not been selected.");
+        var game = InitializeSelectedGame(selectedPlugIn?.PlugInType) ?? throw new ArgumentNullException("Valid plug-in has not been selected.");
         var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid format has not been selected.");
         return new(game, format);
     }
@@ -71,7 +78,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         }
 
         GameList ??= [];
-        var plugIn = new DecksteriaPlugIn(InitializeSelectedGame(plugInType));
+        var plugIn = new DecksteriaPlugIn(InitializeSelectedGameThrowIfNull(plugInType));
         GameList[plugIn.Name] = plugIn;
 
         var fileName = Path.GetFileName(dllFilePath);
@@ -88,12 +95,33 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         return plugInType;
     }
 
-    private IDecksteriaGame InitializeSelectedGame(Type type)
+    private IDecksteriaGame? InitializeSelectedGame(Type? type)
     {
+        if (type is null || !typeof(IDecksteriaGame).IsAssignableFrom(type))
+        {
+            return null;
+        }
+
         var serviceCollection = new ServiceCollection();
-        serviceCollection.TryAddSingleton<IDialogService>(dialogService);
-        serviceCollection.TryAddSingleton<IDecksteriaFileReader>(new DecksteriaFileReader(type.Name, httpClientFactory));
-        var plugIn = ActivatorUtilities.GetServiceOrCreateInstance(serviceCollection.BuildServiceProvider(), type);
-        return plugIn as IDecksteriaGame ?? throw new TypeLoadException($"The type {type.FullName} does not inherit IDecksteriaGame.");
+        serviceCollection.TryAddSingleton(dialogService);
+        serviceCollection.TryAddSingleton<IDecksteriaFileReader>(new DecksteriaFileReader(type.Name, httpClientFactory, loggerFactory.CreateLogger<DecksteriaFileReader>()));
+        serviceCollection.AddLogging();
+        var sp = serviceCollection.BuildServiceProvider();
+
+        try
+        {
+            var plugIn = ActivatorUtilities.GetServiceOrCreateInstance(sp, type);
+            return plugIn as IDecksteriaGame;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message);
+            return null;
+        }
+    }
+
+    private IDecksteriaGame InitializeSelectedGameThrowIfNull(Type type)
+    {
+        return InitializeSelectedGame(type) ?? throw new TypeLoadException($"The type {type.FullName} does not inherit IDecksteriaGame.");
     }
 }

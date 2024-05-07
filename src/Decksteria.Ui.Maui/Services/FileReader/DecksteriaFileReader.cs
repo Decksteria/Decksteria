@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
@@ -12,7 +11,6 @@ using Decksteria.Core.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Networking;
 using Microsoft.Maui.Storage;
-using Windows.ApplicationModel.Background;
 
 internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger) : IDecksteriaFileReader
 {
@@ -33,7 +31,7 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
 
         // If the device does not have internet, return the expected file path assuming it was already downloaded.
         // Exception handling for a missing file will be handled on the application side.
-        if (ValidateNetworkAccess())
+        if (!ValidateNetworkAccess())
         {
             return filePath;
         }
@@ -70,13 +68,26 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
         throw new NotImplementedException();
     }
 
-    public async Task<string> ReadTextFileAsync(string? fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    public async Task<string?> ReadOnlineTextAsync(string URL, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(fileName))
+        if (!ValidateNetworkAccess())
         {
-            return await httpClient.GetStringAsync(downloadURL, cancellationToken);
+            return null;
         }
 
+        try
+        {
+            return await httpClient.GetStringAsync(URL, cancellationToken);
+        }
+        catch (HttpRequestException e)
+        {
+            logger.LogError(e, e.Message);
+            return null;
+        }
+    }
+
+    public async Task<string> ReadTextFileAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    {
         var fileLocation = await GetFileLocationAsync(fileName, downloadURL, md5Checksum, cancellationToken);
         return await File.ReadAllTextAsync(fileLocation, cancellationToken);
     }
@@ -93,13 +104,14 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
 
                 if (checksumValid)
                 {
-                    logger.LogWarning("File checksum validation did not match. Retry: {RetryCount}.", i);
-                    break;
+                    return;
                 }
+
+                logger.LogWarning("File checksum validation did not match. Retry: {RetryCount}.", i);
             }
-            catch (Exception e) when (e is HttpRequestException or TaskCanceledException)
+            catch (HttpRequestException e)
             {
-                logger.LogError("File Download failed, {ExceptionMessage}. Retry: {RetryCount}.", e.Message, i);
+                logger.LogError(e, "File Download failed, {ExceptionMessage}. Retry: {RetryCount}.", e.Message, i);
                 continue;
             }
         }
