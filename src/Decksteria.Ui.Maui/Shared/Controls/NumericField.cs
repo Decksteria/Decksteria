@@ -14,6 +14,7 @@ using System.ComponentModel;
 
 using System.Windows.Input;
 using UraniumUI.Material.Controls;
+using InputKit.Shared.Validations;
 
 [ContentProperty(nameof(Validations))]
 internal partial class NumericField : InputField
@@ -386,6 +387,13 @@ internal partial class NumericField : InputField
         }
     }
 
+    protected override void CheckAndShowValidations()
+    {
+        Validations.Add();
+        base.CheckAndShowValidations();
+        Validations.Remove();
+    }
+
     protected override object GetValueForValidator()
     {
         return EntryView.Text;
@@ -420,5 +428,25 @@ internal partial class NumericField : InputField
     {
         EntryView.Text = string.Empty;
         base.ResetValidation();
+    }
+
+    private sealed class NumberBetweenValidator : IValidation
+    {
+        private readonly int min;
+        private readonly int max;
+
+        public NumberBetweenValidator(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
+        public string Message => throw new NotImplementedException();
+
+        public bool Validate(object value)
+        {
+            var intValue = value as int?;
+            return intValue is null || (intValue >= min && intValue <= max);
+        }
     }
 }
