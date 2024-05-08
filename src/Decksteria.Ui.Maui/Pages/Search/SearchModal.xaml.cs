@@ -8,4 +8,6 @@ public partial class SearchModal : UraniumContentPage
 	{
         InitializeComponent();
 	}
+
+    public int? ValueTest { get; set; }
 }

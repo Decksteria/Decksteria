@@ -2,8 +2,12 @@
 <uranium:UraniumContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
              xmlns:local="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
+             xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
+             xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
              x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
+             x:DataType="search:SearchModalViewModel"
              Title="Advanced Filters">
     <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Key="Filter_ItemTemplate">
@@ -11,8 +15,7 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <VerticalStackLayout>
-        <CollectionView x:Name="Search_Items">
-        
-        </CollectionView>
+        <shared:NumericField Value="{Binding TestInt}" Title="Test Integer" />
+        <material:TextField Text="{Binding TestString}" Title="Test String" />
     </VerticalStackLayout>
 </uranium:UraniumContentPage>
