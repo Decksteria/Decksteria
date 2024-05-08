@@ -15,7 +15,7 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <VerticalStackLayout>
-        <shared:NumericField Value="{Binding TestInt}" Title="Test Integer" />
-        <material:TextField Text="{Binding TestString}" Title="Test String" />
+        <shared:NumericField Value="{Binding TestInt}" Title="Test Integer" AllowClear="True" />
+        <material:TextField Text="{Binding TestString}" Title="Test String" AllowClear="True" />
     </VerticalStackLayout>
 </uranium:UraniumContentPage>
