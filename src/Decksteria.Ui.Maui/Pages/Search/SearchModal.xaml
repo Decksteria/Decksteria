@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
              xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
              xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
+             xmlns:validation="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
              x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
              x:DataType="search:SearchModalViewModel"
              Title="Advanced Filters">
@@ -15,7 +16,7 @@
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <VerticalStackLayout>
-        <shared:NumericField Value="{Binding TestInt}" Title="Test Integer" AllowClear="True" />
+        <shared:NumericField Value="{Binding TestInt}" Title="Test Integer" AllowClear="True" Min="1" Max="100" AllowNegatives="True" />
         <material:TextField Text="{Binding TestString}" Title="Test String" AllowClear="True" />
     </VerticalStackLayout>
 </uranium:UraniumContentPage>

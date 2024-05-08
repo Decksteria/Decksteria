@@ -44,6 +44,10 @@ internal partial class NumericField : InputField
         }
     };
 
+    protected MinValueValidation minValueValidation = new();
+
+    protected MaxValueValidation maxValueValidation = new();
+
     public int? Value
     {
         get
@@ -66,10 +70,12 @@ internal partial class NumericField : InputField
         BindingMode.TwoWay,
         propertyChanging: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.UpdateClearIconState();
+                return;
             }
+
+            numericField.UpdateClearIconState();
         });
 
     public Color TextColor { get => (Color) GetValue(TextColorProperty); set => SetValue(TextColorProperty, value); }
@@ -81,10 +87,12 @@ internal partial class NumericField : InputField
         ColorResource.GetColor("OnBackground", "OnBackgroundDark", Colors.DarkGray),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.TextColor = (Color) newValue;
+                return;
             }
+
+            numericField.EntryView.TextColor = (Color) newValue;
         });
 
     public string FontFamily { get => (string) GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
@@ -95,11 +103,13 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.FontFamily = (string) newValue;
-                numericField.labelTitle.FontFamily = (string) newValue;
+                return;
             }
+
+            numericField.EntryView.FontFamily = (string) newValue;
+            numericField.labelTitle.FontFamily = (string) newValue;
         });
 
     public ClearButtonVisibility ClearButtonVisibility { get => (ClearButtonVisibility) GetValue(ClearButtonVisibilityProperty); set => SetValue(ClearButtonVisibilityProperty, value); }
@@ -111,10 +121,12 @@ internal partial class NumericField : InputField
         ClearButtonVisibility.WhileEditing,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.ClearButtonVisibility = (ClearButtonVisibility) newValue;
+                return;
             }
+
+            numericField.EntryView.ClearButtonVisibility = (ClearButtonVisibility) newValue;
         });
 
     public bool IsPassword { get => (bool) GetValue(IsPasswordProperty); set => SetValue(IsPasswordProperty, value); }
@@ -126,10 +138,12 @@ internal partial class NumericField : InputField
         false,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.IsPassword = (bool) newValue;
+                return;
             }
+             
+            numericField.EntryView.IsPassword = (bool) newValue;
         });
 
     public object ReturnCommandParameter { get => GetValue(ReturnCommandParameterProperty); set => SetValue(ReturnCommandParameterProperty, value); }
@@ -156,10 +170,12 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.CharacterSpacing = (double) newValue;
+                return;
             }
+
+            numericField.EntryView.CharacterSpacing = (double) newValue;
         });
 
     public ReturnType ReturnType { get => (ReturnType) GetValue(ReturnTypeProperty); set => SetValue(ReturnTypeProperty, value); }
@@ -170,10 +186,12 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.ReturnType = (ReturnType) newValue;
+                return;
             }
+
+            numericField.EntryView.ReturnType = (ReturnType) newValue;
         });
 
     public int SelectionLength { get => (int) GetValue(SelectionLengthProperty); set => SetValue(SelectionLengthProperty, value); }
@@ -200,10 +218,12 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.IsTextPredictionEnabled = (bool) newValue;
+                return;
             }
+
+            numericField.EntryView.IsTextPredictionEnabled = (bool) newValue;
         });
 
     public int Min { get => (int) GetValue(MinProperty); set => SetValue(MinProperty, value); }
@@ -222,11 +242,15 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.MaxLength = newValue.ToString()?.Length ?? int.MaxValue.ToString().Length;
+                return;
             }
+
+            numericField.EntryView.MaxLength = numericField.MaxDigits;
         });
+
+    protected int MaxDigits => Max.ToString().Length + (AllowNegatives ? 1 : 0);
 
     public bool AllowClear { get => (bool) GetValue(AllowClearProperty); set => SetValue(AllowClearProperty, value); }
 
@@ -236,10 +260,28 @@ internal partial class NumericField : InputField
         false,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.OnAllowClearChanged();
+                return;
             }
+
+            numericField.OnAllowClearChanged();
+        });
+
+    public bool AllowNegatives { get => (bool) GetValue(AllowNegativesProperty); set => SetValue(AllowNegativesProperty, value); }
+
+    public static BindableProperty AllowNegativesProperty = BindableProperty.Create(
+        nameof(AllowNegatives),
+        typeof(bool), typeof(NumericField),
+        false,
+        propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            if (bindable is not NumericField numericField)
+            {
+                return;
+            }
+
+            numericField.EntryView.MaxLength = numericField.MaxDigits;
         });
 
     public new bool IsReadOnly { get => (bool) GetValue(IsReadOnlyProperty); set => SetValue(IsReadOnlyProperty, value); }
@@ -260,10 +302,12 @@ internal partial class NumericField : InputField
         defaultValue: Label.FontSizeProperty.DefaultValue,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.FontSize = (double) newValue;
+                return;
             }
+
+            numericField.EntryView.FontSize = (double) newValue;
         });
 
     public FontAttributes FontAttributes { get => (FontAttributes) GetValue(FontAttributesProperty); set => SetValue(FontAttributesProperty, value); }
@@ -275,10 +319,12 @@ internal partial class NumericField : InputField
         defaultValue: Entry.FontAttributesProperty.DefaultValue,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.FontAttributes = (FontAttributes) newValue;
+                return;
             }
+
+            numericField.EntryView.FontAttributes = (FontAttributes) newValue;
         });
 
     public TextAlignment HorizontalTextAlignment { get => (TextAlignment) GetValue(HorizontalTextAlignmentProperty); set => SetValue(HorizontalTextAlignmentProperty, value); }
@@ -290,10 +336,12 @@ internal partial class NumericField : InputField
         defaultValue: Entry.HorizontalTextAlignmentProperty.DefaultValue,
         propertyChanged: (bindable, oldValue, newValue) =>
         {
-            if (bindable is NumericField numericField)
+            if (bindable is not NumericField numericField)
             {
-                numericField.EntryView.HorizontalTextAlignment = (TextAlignment) newValue;
+                return;
             }
+
+            numericField.EntryView.HorizontalTextAlignment = (TextAlignment) newValue;
         });
 
     public override bool HasValue => !string.IsNullOrEmpty(EntryView.Text);
@@ -308,6 +356,11 @@ internal partial class NumericField : InputField
         iconClear.TappedCommand = new Command(OnClearTapped);
 
         UpdateClearIconState();
+
+        minValueValidation.SetBinding(MinValueValidation.MinValueProperty, new Binding(nameof(Min), BindingMode.TwoWay, source: this));
+        maxValueValidation.SetBinding(MaxValueValidation.MaxValueProperty, new Binding(nameof(Max), BindingMode.TwoWay, source: this));
+        Validations.Add(minValueValidation);
+        Validations.Add(maxValueValidation);
 
         EntryView.SetBinding(Entry.ReturnCommandParameterProperty, new Binding(nameof(ReturnCommandParameter), BindingMode.TwoWay, source: this));
         EntryView.SetBinding(Entry.ReturnCommandProperty, new Binding(nameof(ReturnCommand), BindingMode.TwoWay, source: this));
@@ -346,7 +399,7 @@ internal partial class NumericField : InputField
         {
             Value = null;
         }
-        else if (!int.TryParse(e.NewTextValue, out var intValue))
+        else if ((AllowNegatives && e.NewTextValue.Length == MaxDigits && !e.NewTextValue.StartsWith('-')) || !int.TryParse(e.NewTextValue, out var intValue))
         {
             EntryView.Text = e.OldTextValue;
             return;
@@ -387,13 +440,6 @@ internal partial class NumericField : InputField
         }
     }
 
-    protected override void CheckAndShowValidations()
-    {
-        Validations.Add();
-        base.CheckAndShowValidations();
-        Validations.Remove();
-    }
-
     protected override object GetValueForValidator()
     {
         return EntryView.Text;
@@ -428,25 +474,5 @@ internal partial class NumericField : InputField
     {
         EntryView.Text = string.Empty;
         base.ResetValidation();
-    }
-
-    private sealed class NumberBetweenValidator : IValidation
-    {
-        private readonly int min;
-        private readonly int max;
-
-        public NumberBetweenValidator(int min, int max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-
-        public string Message => throw new NotImplementedException();
-
-        public bool Validate(object value)
-        {
-            var intValue = value as int?;
-            return intValue is null || (intValue >= min && intValue <= max);
-        }
     }
 }
