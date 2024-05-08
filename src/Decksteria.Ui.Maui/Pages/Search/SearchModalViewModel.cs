@@ -1,8 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search;
 
+using System.Collections.Generic;
+using Decksteria.Core.Models;
+
 internal sealed class SearchModalViewModel
 {
-    public string TestString { get; set; } = string.Empty;
-
-    public int? TestInt { get; set; }
+    public IEnumerable<SearchFieldFilter> SearchFieldFilters { get; internal set; } = new List<SearchFieldFilter>();
 }

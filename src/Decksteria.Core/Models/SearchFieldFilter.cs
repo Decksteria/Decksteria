@@ -2,30 +2,52 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 /// <summary>
 /// Constructor for the UI Layer to create a SearchFieldFilter. Not called by the plug-ins.
 /// </summary>
-/// <param name="searchField">The <see cref="Decksteria.Core.Models.SearchField"/> provided by the Plug-In.</param>
-/// <param name="comparison">The Comparison type selected by the User.</param>
-/// <param name="value">The Search Value provided by the User.</param>
-public class SearchFieldFilter(SearchField searchField, ComparisonType comparison, object value)
+public class SearchFieldFilter
 {
-
     /// <summary>
     /// A <see cref="Decksteria.Core.Models.SearchField"/> provided by the plug-in.
     /// </summary>
-    public SearchField SearchField { get; } = searchField;
+    public SearchField SearchField { get; }
 
     /// <summary>
     /// The comparison type selected by the user.
     /// </summary>
-    public ComparisonType Comparison { get; set; } = comparison;
+    public ComparisonType Comparison { get; set; }
 
     /// <summary>
     /// The search value provided by the user.
     /// </summary>
-    public object? Value { get; set; } = value;
+    public object? Value { get; set; }
+
+    /// <param name="searchField">The <see cref="SearchField"/> provided by the Plug-In.</param>
+    /// <param name="comparison">The Comparison type selected by the User.</param>
+    public SearchFieldFilter(SearchField searchField, ComparisonType comparison)
+    {
+        SearchField = searchField;
+        Comparison = comparison;
+        Value = searchField.FieldType switch
+        {
+            FieldType.Text => string.Empty,
+            FieldType.Number => null,
+            FieldType.Selection => searchField.Options.First(),
+            _ => throw new NotImplementedException($"{searchField.FieldType} does not have an implementation.")
+        };
+    }
+
+    /// <param name="searchField">The <see cref="SearchField"/> provided by the Plug-In.</param>
+    /// <param name="comparison">The Comparison type selected by the User.</param>
+    /// <param name="value">The Search Value provided by the User.</param>
+    public SearchFieldFilter(SearchField searchField, ComparisonType comparison, object value)
+    {
+        SearchField = searchField;
+        Comparison = comparison;
+        Value = value;
+    }
 
     /// <summary>
     /// Default <see cref="string" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
