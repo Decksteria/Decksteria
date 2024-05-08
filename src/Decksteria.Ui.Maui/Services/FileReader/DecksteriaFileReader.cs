@@ -35,7 +35,7 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
         {
             return filePath;
         }
-        
+
         if (File.Exists(filePath) && await VerifyChecksum(filePath, md5Checksum))
         {
             return filePath;
@@ -139,7 +139,7 @@ internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory h
             VerifiedFiles.Add(filePath);
             return true;
         }
-        
+
         return false;
 
         static string StandardiseHash(string hash)

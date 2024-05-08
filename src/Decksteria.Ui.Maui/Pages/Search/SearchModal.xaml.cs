@@ -4,10 +4,10 @@ using UraniumUI.Pages;
 
 public partial class SearchModal : UraniumContentPage
 {
-	public SearchModal()
-	{
+    public SearchModal()
+    {
         InitializeComponent();
-	}
+    }
 
     public int? ValueTest { get; set; }
 }

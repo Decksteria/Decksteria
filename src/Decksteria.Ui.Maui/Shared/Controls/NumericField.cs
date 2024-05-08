@@ -1,25 +1,24 @@
 ﻿namespace Decksteria.Ui.Maui.Shared.Controls;
 
-using System.Collections.Generic;
 using System;
-using Microsoft.Maui.Controls;
-using Plainer.Maui.Controls;
-using UraniumUI.Pages;
-using UraniumUI.Views;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Input;
+using InputKit.Shared.Validations;
 using Microsoft.Maui;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Graphics;
-using UraniumUI.Resources;
-using System.ComponentModel;
-
-using System.Windows.Input;
+using Plainer.Maui.Controls;
 using UraniumUI.Material.Controls;
-using InputKit.Shared.Validations;
+using UraniumUI.Pages;
+using UraniumUI.Resources;
+using UraniumUI.Views;
 
 [ContentProperty(nameof(Validations))]
 internal partial class NumericField : InputField
 {
-    public EntryView EntryView => ( Content as EntryView )!;
+    public EntryView EntryView => (Content as EntryView)!;
 
     public override View Content { get; set; } = new EntryView
     {
@@ -142,7 +141,7 @@ internal partial class NumericField : InputField
             {
                 return;
             }
-             
+
             numericField.EntryView.IsPassword = (bool) newValue;
         });
 

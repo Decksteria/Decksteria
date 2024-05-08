@@ -2,12 +2,10 @@
 
 using System;
 using CommunityToolkit.Maui;
-using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Microsoft.Extensions.DependencyInjection;
