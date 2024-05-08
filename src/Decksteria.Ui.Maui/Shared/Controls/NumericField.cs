@@ -14,7 +14,6 @@ using System.ComponentModel;
 
 using System.Windows.Input;
 using UraniumUI.Material.Controls;
-using CommunityToolkit.Maui.Behaviors;
 
 [ContentProperty(nameof(Validations))]
 internal partial class NumericField : InputField
@@ -51,7 +50,11 @@ internal partial class NumericField : InputField
             var value = (string) GetValue(ValueProperty);
             return int.TryParse(value, out var intResult) ? intResult : null;
         }
-        set => SetValue(ValueProperty, value is null ? string.Empty : value.ToString());
+        set
+        {
+            SetValue(ValueProperty, value);
+            EntryView.Text = value.ToString() ?? string.Empty;
+        }
     }
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
@@ -202,17 +205,25 @@ internal partial class NumericField : InputField
             }
         });
 
-    public int MaxLength { get => (int) GetValue(MaxLengthProperty); set => SetValue(MaxLengthProperty, value); }
+    public int Min { get => (int) GetValue(MinProperty); set => SetValue(MinProperty, value); }
 
-    public static readonly BindableProperty MaxLengthProperty = BindableProperty.Create(
-        nameof(MaxLength),
+    public static readonly BindableProperty MinProperty = BindableProperty.Create(
+        nameof(Min),
+        typeof(int),
+        typeof(NumericField),
+        defaultBindingMode: BindingMode.TwoWay);
+
+    public int Max { get => (int) GetValue(MaxProperty); set => SetValue(MaxProperty, value); }
+
+    public static readonly BindableProperty MaxProperty = BindableProperty.Create(
+        nameof(Max),
         typeof(int),
         typeof(NumericField),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is NumericField numericField)
             {
-                numericField.EntryView.MaxLength = (int) newValue;
+                numericField.EntryView.MaxLength = newValue.ToString()?.Length ?? int.MaxValue.ToString().Length;
             }
         });
 
@@ -297,20 +308,12 @@ internal partial class NumericField : InputField
 
         UpdateClearIconState();
 
-        EntryView.SetBinding(Entry.TextProperty, new Binding(nameof(EntryView.Text), BindingMode.TwoWay, source: this));
-        EntryView.SetBinding(Entry.ReturnCommandParameterProperty, new Binding(nameof(EntryView.ReturnCommandParameter), BindingMode.TwoWay, source: this));
-        EntryView.SetBinding(Entry.ReturnCommandProperty, new Binding(nameof(EntryView.ReturnCommand), BindingMode.TwoWay, source: this));
-        EntryView.SetBinding(Entry.SelectionLengthProperty, new Binding(nameof(EntryView.SelectionLength), BindingMode.TwoWay, source: this));
-        EntryView.SetBinding(Entry.CursorPositionProperty, new Binding(nameof(EntryView.CursorPosition), BindingMode.TwoWay, source: this));
-        EntryView.SetBinding(IsEnabledProperty, new Binding(nameof(EntryView.IsEnabled), BindingMode.OneWay, source: this));
-        EntryView.SetBinding(InputView.IsReadOnlyProperty, new Binding(nameof(EntryView.IsReadOnly), BindingMode.OneWay, source: this));
-
-        AfterConstructor();
-    }
-
-    private void AfterConstructor()
-    {
-        EntryBehaviors.Add(new NumericValidationBehavior());
+        EntryView.SetBinding(Entry.ReturnCommandParameterProperty, new Binding(nameof(ReturnCommandParameter), BindingMode.TwoWay, source: this));
+        EntryView.SetBinding(Entry.ReturnCommandProperty, new Binding(nameof(ReturnCommand), BindingMode.TwoWay, source: this));
+        EntryView.SetBinding(Entry.SelectionLengthProperty, new Binding(nameof(SelectionLength), BindingMode.TwoWay, source: this));
+        EntryView.SetBinding(Entry.CursorPositionProperty, new Binding(nameof(CursorPosition), BindingMode.TwoWay, source: this));
+        EntryView.SetBinding(IsEnabledProperty, new Binding(nameof(IsEnabled), BindingMode.OneWay, source: this));
+        EntryView.SetBinding(InputView.IsReadOnlyProperty, new Binding(nameof(IsReadOnly), BindingMode.OneWay, source: this));
     }
 
     protected override void OnHandlerChanged()
@@ -338,6 +341,20 @@ internal partial class NumericField : InputField
 
     private void EntryView_TextChanged(object? sender, TextChangedEventArgs e)
     {
+        if (string.IsNullOrEmpty(e.NewTextValue))
+        {
+            Value = null;
+        }
+        else if (!int.TryParse(e.NewTextValue, out var intValue))
+        {
+            EntryView.Text = e.OldTextValue;
+            return;
+        }
+        else
+        {
+            Value = intValue;
+        }
+
         if (string.IsNullOrEmpty(e.OldTextValue) || string.IsNullOrEmpty(e.NewTextValue))
         {
             UpdateState();
