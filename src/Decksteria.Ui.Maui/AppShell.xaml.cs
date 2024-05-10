@@ -11,9 +11,4 @@ public partial class AppShell : Shell
         InitializeComponent();
         ShellContent_Main.Content = pageService.CreateHomePageInstance();
     }
-
-    private void Shell_Loaded(object sender, EventArgs e)
-    {
-
-    }
 }
