@@ -9,7 +9,7 @@
              xmlns:validation="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
              x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
              x:DataType="search:SearchModalViewModel"
-             Title="Advanced Filters"
+             Title="Advanced Search"
              MaximumWidthRequest="400"
              MaximumHeightRequest="700">
     <uranium:UraniumContentPage.Resources>
@@ -19,6 +19,7 @@
     </uranium:UraniumContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="45" />
             <RowDefinition Height="*" />
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
@@ -26,7 +27,15 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <VerticalStackLayout x:Name="Layout_Filters" Grid.ColumnSpan="2" />
+        <Label StyleClass="Elevation1" Text="Advanced Search" FontSize="Title" />
+        <VerticalStackLayout x:Name="Layout_Filters" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid ColumnDefinitions="*,*">
+                <material:PickerField Title="Comparison Option">
+                </material:PickerField>
+                <shared:NumericField Grid.Column="1" Title="Cost" Max="100">
+                </shared:NumericField>
+            </Grid>
+        </VerticalStackLayout>
         <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Pressed" />
         <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" />
     </Grid>
