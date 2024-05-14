@@ -28,6 +28,6 @@ public partial class SearchModal : UraniumContentPage
 
     private void UraniumContentPage_Loaded(object sender, System.EventArgs e)
     {
-        PickerField_Main.ItemsSource = viewModel.TestOptions;
+        //PickerField_Main.ItemsSource = viewModel.TestOptions;
     }
 }

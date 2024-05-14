@@ -5,6 +5,7 @@
              xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
              xmlns:local="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
              xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
+             xmlns:fields="clr-namespace:Decksteria.Ui.Maui.Pages.Search.Fields"
              xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
              xmlns:validation="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
              x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
@@ -28,9 +29,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <VerticalStackLayout x:Name="Layout_Filters" Grid.ColumnSpan="2">
-            <Grid ColumnDefinitions="*,*">
-                <material:TextField Grid.ColumnSpan="2">
-                </material:TextField>
+            <Grid ColumnDefinitions="*">
+                <fields:FilterTextField Title="Test Field" />
             </Grid>
         </VerticalStackLayout>
         <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Pressed" />
