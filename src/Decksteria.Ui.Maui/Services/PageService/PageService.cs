@@ -30,7 +30,7 @@ internal sealed class PageService(Lazy<AppShell> appShell, IServiceProvider serv
         cancellationToken.ThrowIfCancellationRequested();
 
         var newPage = GetPageInstance<T>();
-        await AppShellNavigation.PushModalAsync(newPage, true);
+        await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
     }
 
     public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage

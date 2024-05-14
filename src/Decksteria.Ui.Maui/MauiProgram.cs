@@ -61,7 +61,12 @@ public static class MauiProgram
         });
         services.AddHttpClient();
         services.TryAddScoped<IDialogService, DialogService>();
+        // Use a different implementation for the Paging Service that turns Modals into a new Window.
+#if WINDOWS
         services.TryAddScoped<IPageService, PageService>();
+#else
+        services.TryAddScoped<IPageService, PageService>();
+#endif
 
         return services;
     }

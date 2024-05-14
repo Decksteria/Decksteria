@@ -18,10 +18,16 @@ public partial class SearchModal : UraniumContentPage
         InitializeComponent();
         viewModel.SearchFieldFilters = gameFormat.Format.SearchFields.Select(s => new SearchFieldFilter(s, ComparisonType.Equals));
         this.pageService = pageService;
+        this.BindingContext = viewModel;
     }
 
     private async void Button_Pressed(object sender, System.EventArgs e)
     {
         await pageService.PopModalAsync<SearchModal>();
+    }
+
+    private void UraniumContentPage_Loaded(object sender, System.EventArgs e)
+    {
+        PickerField_Main.ItemsSource = viewModel.TestOptions;
     }
 }

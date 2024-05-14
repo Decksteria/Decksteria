@@ -11,7 +11,8 @@
              x:DataType="search:SearchModalViewModel"
              Title="Advanced Search"
              MaximumWidthRequest="400"
-             MaximumHeightRequest="700">
+             MaximumHeightRequest="700"
+             Loaded="UraniumContentPage_Loaded">
     <uranium:UraniumContentPage.Resources>
         <DataTemplate x:Key="Filter_ItemTemplate">
             
@@ -19,7 +20,6 @@
     </uranium:UraniumContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45" />
             <RowDefinition Height="*" />
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
@@ -27,13 +27,10 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label StyleClass="Elevation1" Text="Advanced Search" FontSize="Title" />
-        <VerticalStackLayout x:Name="Layout_Filters" Grid.Row="1" Grid.ColumnSpan="2">
+        <VerticalStackLayout x:Name="Layout_Filters" Grid.ColumnSpan="2">
             <Grid ColumnDefinitions="*,*">
-                <material:PickerField Title="Comparison Option">
-                </material:PickerField>
-                <shared:NumericField Grid.Column="1" Title="Cost" Max="100">
-                </shared:NumericField>
+                <material:TextField Grid.ColumnSpan="2">
+                </material:TextField>
             </Grid>
         </VerticalStackLayout>
         <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Pressed" />
