@@ -20,14 +20,14 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 
     private readonly ILogger<DecksteriaFileReader> logger;
 
-    private List<string> VerifiedFiles;
+    private readonly List<string> VerifiedFiles;
 
     public DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
     {
         this.httpClient = httpClientFactory.CreateClient();
         this.gameName = gameName;
         this.logger = logger;
-        VerifiedFiles = new();
+        VerifiedFiles = [];
     }
 
     public string BuildConnectionString(string fileName, IDictionary<string, string> connectionProperties, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
