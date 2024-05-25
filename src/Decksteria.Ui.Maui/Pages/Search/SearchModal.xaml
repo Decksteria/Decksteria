@@ -5,18 +5,55 @@
              xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
              xmlns:local="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
              xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
-             xmlns:fields="clr-namespace:Decksteria.Ui.Maui.Pages.Search.Fields"
-             xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
+             xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search.Model"
              xmlns:validation="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+             xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+             xmlns:core="clr-namespace:Decksteria.Core.Models;assembly=Decksteria.Core"
              x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
-             x:DataType="search:SearchModalViewModel"
+             x:DataType="local:SearchModalViewModel"
              Title="Advanced Search"
              MaximumWidthRequest="400"
              MaximumHeightRequest="700"
              Loaded="UraniumContentPage_Loaded">
     <uranium:UraniumContentPage.Resources>
-        <DataTemplate x:Key="Filter_ItemTemplate">
-            
+        <DataTemplate x:Key="Filter_NumberTemplate" x:DataType="search:NumberSearchFilter">
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <shared:NumericField
+                    Min="{Binding Minimum,Mode=OneWay}"
+                    Max="{Binding MaximumValue}"
+                    Title="Min"
+                    Margin="5,0"
+                    MinimumWidthRequest="{Binding MinimumWidthRequest,Mode=OneWay}"
+                    WidthRequest="{Binding WidthRequest,Mode=OneWay}"
+                    Value="{Binding MinimumValue}" />
+                <Label
+                    Text="≤"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
+                    FontSize="Medium"
+                    FontAttributes="Bold"
+                    Margin="5,5" />
+                <Label
+                    Text="{Binding Title,Mode=OneWay}"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
+                    FontSize="Medium"
+                    FontAttributes="Bold"
+                    Margin="5,5" />
+                <Label
+                    Text="≤"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
+                    FontSize="Medium"
+                    FontAttributes="Bold"
+                    Margin="5,5" />
+                <shared:NumericField
+                    Min="{Binding MinimumValue}"
+                    Max="{Binding Maximum,Mode=OneWay}"
+                    Title="Max"
+                    Margin="5,0"
+                    MinimumWidthRequest="{Binding WidthRequest,Mode=OneWay}"  />
+            </HorizontalStackLayout>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <Grid>
@@ -28,11 +65,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <VerticalStackLayout x:Name="Layout_Filters" Grid.ColumnSpan="2">
-            <Grid ColumnDefinitions="*">
-                <fields:FilterTextField Title="Test Field" />
-            </Grid>
-        </VerticalStackLayout>
+        <VerticalStackLayout x:Name="Layout_SearchFilters" Grid.ColumnSpan="2" />
         <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Pressed" />
         <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" />
     </Grid>

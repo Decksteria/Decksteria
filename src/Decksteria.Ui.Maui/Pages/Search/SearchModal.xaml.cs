@@ -23,11 +23,13 @@ public partial class SearchModal : UraniumContentPage
 
     private async void Button_Pressed(object sender, System.EventArgs e)
     {
-        await pageService.PopModalAsync<SearchModal>();
+        _ = await pageService.PopModalAsync<SearchModal>();
     }
 
     private void UraniumContentPage_Loaded(object sender, System.EventArgs e)
     {
+        Layout_SearchFilters.Clear();
+        
         //PickerField_Main.ItemsSource = viewModel.TestOptions;
     }
 }
