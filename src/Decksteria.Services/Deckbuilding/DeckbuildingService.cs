@@ -83,13 +83,8 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public Task<IEnumerable<CardArt>?> GetDeckCardsAsync(string deckName, CancellationToken cancellationToken = default)
     {
-        if (!decklist.ContainsKey(deckName))
-        {
-            return Task.FromResult<IEnumerable<CardArt>?>(null);
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult<IEnumerable<CardArt>?>(decklist[deckName]);
+        _ = decklist.TryGetValue(deckName, out var value);
+        return Task.FromResult<IEnumerable<CardArt>?>(value);
     }
 
     public Decklist CreateDecklist() => new(game.GetType().Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));

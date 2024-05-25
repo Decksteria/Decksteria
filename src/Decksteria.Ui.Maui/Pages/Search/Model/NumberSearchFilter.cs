@@ -48,8 +48,6 @@ internal sealed class NumberSearchFilter
     /// </summary>
     public string Title => _searchField.FieldName;
 
-    public double MinimumWidthRequest => MinimumFieldWidth;
-
     public double WidthRequest { get; }
 
     private bool MinimumIsChanged => Minimum != MinimumValue;

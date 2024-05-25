@@ -233,6 +233,7 @@ dotnet_diagnostic.IDE0058.severity = none
 # IDE0059: Unnecessary assignment of a value
 dotnet_diagnostic.IDE0059.severity = warning
 csharp_style_prefer_readonly_struct_member = true:warning
+dotnet_diagnostic.CA2016.severity = warning
 
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
@@ -248,7 +249,7 @@ dotnet_style_prefer_inferred_tuple_names = false:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_compound_assignment = true:warning
 dotnet_style_explicit_tuple_names = true:warning
-dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = false:silent
 dotnet_style_prefer_conditional_expression_over_assignment = true:warning
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 dotnet_style_collection_initializer = true:warning
@@ -275,5 +276,7 @@ indent_style = space
 dotnet_diagnostic.CA1001.severity = warning
 dotnet_diagnostic.CA1010.severity = warning
 dotnet_diagnostic.CA1040.severity = warning
+dotnet_diagnostic.CA2250.severity = warning
+dotnet_diagnostic.CA1068.severity = warning
 [*.vb]
 dotnet_diagnostic.CA1047.severity = warning
