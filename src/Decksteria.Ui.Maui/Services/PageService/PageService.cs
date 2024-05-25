@@ -7,11 +7,17 @@ using Decksteria.Ui.Maui.Pages.LoadPlugIn;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 
-internal sealed class PageService(Lazy<AppShell> appShell, IServiceProvider services) : IPageService
+internal sealed class PageService : IPageService
 {
-    private readonly Lazy<AppShell> appShell = appShell;
+    private readonly Lazy<AppShell> appShell;
 
-    private readonly IServiceProvider services = services;
+    private readonly IServiceProvider services;
+
+    public PageService(Lazy<AppShell> appShell, IServiceProvider services)
+    {
+        this.appShell = appShell;
+        this.services = services;
+    }
 
     public async Task BackToHomeAsync(CancellationToken cancellationToken = default)
     {

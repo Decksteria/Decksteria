@@ -12,15 +12,23 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Networking;
 using Microsoft.Maui.Storage;
 
-internal sealed class DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger) : IDecksteriaFileReader
+internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 {
-    private readonly HttpClient httpClient = httpClientFactory.CreateClient();
+    private readonly HttpClient httpClient;
 
-    private readonly string gameName = gameName;
+    private readonly string gameName;
 
-    private readonly ILogger<DecksteriaFileReader> logger = logger;
+    private readonly ILogger<DecksteriaFileReader> logger;
 
-    private List<string> VerifiedFiles = new();
+    private readonly List<string> VerifiedFiles;
+
+    public DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
+    {
+        this.httpClient = httpClientFactory.CreateClient();
+        this.gameName = gameName;
+        this.logger = logger;
+        VerifiedFiles = [];
+    }
 
     public string BuildConnectionString(string fileName, IDictionary<string, string> connectionProperties, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 

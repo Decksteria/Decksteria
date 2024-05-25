@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Decksteria.Core.Models;
 using Decksteria.Services.FileService.Models;
 
-internal sealed class DecksteriaFileService() : IDecksteriaFileService
+internal sealed class DecksteriaFileService : IDecksteriaFileService
 {
     public async Task<Decklist> LoadDecksteriaFileAsync(Stream stream)
     {

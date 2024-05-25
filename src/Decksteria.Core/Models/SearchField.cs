@@ -35,7 +35,7 @@ public record SearchField
     /// Default constructor for initialising a selection-based advanced filter field.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
-    /// <param name="options">Options available to the user..</param>
+    /// <param name="options">Options available to the user. The first option will always be the default filter.</param>
     public SearchField(string fieldName, IEnumerable<string> options)
     {
         FieldName = fieldName;

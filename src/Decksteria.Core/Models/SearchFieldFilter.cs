@@ -1,7 +1,6 @@
 ﻿namespace Decksteria.Core.Models;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 /// <summary>
@@ -10,7 +9,7 @@ using System.Linq;
 public class SearchFieldFilter
 {
     /// <summary>
-    /// A <see cref="Decksteria.Core.Models.SearchField"/> provided by the plug-in.
+    /// A <see cref="Models.SearchField"/> provided by the plug-in.
     /// </summary>
     public SearchField SearchField { get; }
 
@@ -55,7 +54,6 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(string? cardProperty)
     {
         if (SearchField.FieldType == FieldType.Number)
@@ -90,7 +88,6 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(int? cardProperty)
     {
         if (SearchField.FieldType != FieldType.Number)
@@ -117,7 +114,6 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Does not improve code readability due to multiple if Statements.")]
     public bool MatchesFilter(int cardProperty)
     {
         if (SearchField.FieldType != FieldType.Number)
