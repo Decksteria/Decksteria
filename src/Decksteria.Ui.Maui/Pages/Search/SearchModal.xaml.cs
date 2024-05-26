@@ -65,6 +65,12 @@ public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModa
         }
     }
 
+    private async void Button_Submit_Pressed(object sender, EventArgs e)
+    {
+        IsSubmitted = true;
+        _ = await pageService.PopModalAsync<SearchModal>();
+    }
+
     private async void Button_Cancel_Pressed(object sender, EventArgs e)
     {
         _ = await pageService.PopModalAsync<SearchModal>();

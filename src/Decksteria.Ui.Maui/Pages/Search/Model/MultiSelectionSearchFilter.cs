@@ -39,7 +39,7 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
 
     public ObservableCollection<string> Values { get; set; }
 
-    private bool IsChanged => Values.Count == SelectableItems.Length;
+    private bool IsChanged => Values.Count != SelectableItems.Length;
 
     public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
 

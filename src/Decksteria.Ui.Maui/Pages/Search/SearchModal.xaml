@@ -24,7 +24,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Cancel_Pressed" />
-                <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" />
+                <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" Pressed="Button_Submit_Pressed" />
             </Grid>
         </VerticalStackLayout>
     </ScrollView>
