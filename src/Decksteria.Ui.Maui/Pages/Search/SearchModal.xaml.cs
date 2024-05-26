@@ -6,9 +6,10 @@ using Decksteria.Core.Models;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.Search.Model;
 using Decksteria.Ui.Maui.Services.PageService;
+using Decksteria.Ui.Maui.Shared.Pages;
 using UraniumUI.Pages;
 
-public partial class SearchModal : UraniumContentPage
+public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModal>
 {
     private readonly SearchModalViewModel viewModel = new();
 
@@ -23,6 +24,8 @@ public partial class SearchModal : UraniumContentPage
         this.BindingContext = viewModel;
         this.searchFields = gameFormat.Format.SearchFields;
     }
+
+    public bool IsSubmitted { get; internal set; } = false;
 
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
