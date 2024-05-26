@@ -10,11 +10,23 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 {
     private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
 
+    private bool _searching = false;
+
     public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
 
     public ObservableCollection<CardArt> FilteredCards { get; set; } = [];
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool Searching
+    {
+        get => _searching;
+        set
+        {
+            _searching = value;
+            OnPropertyChanged(nameof(Searching));
+        }
+    }
 
     public string SearchText { get; set; } = "";
 

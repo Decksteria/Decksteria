@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<uranium:UraniumContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             xmlns:local="clr-namespace:Decksteria.Ui.Maui.Pages.Search"
+             xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
+             xmlns:search="clr-namespace:Decksteria.Ui.Maui.Pages.Search.Model"
+             xmlns:validation="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+             xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
+             xmlns:core="clr-namespace:Decksteria.Core.Models;assembly=Decksteria.Core"
+             x:Class="Decksteria.Ui.Maui.Pages.Search.SearchModal"
+             x:DataType="local:SearchModalViewModel"
+             Title="Advanced Search"
+             MaximumWidthRequest="450"
+             MaximumHeightRequest="700"
+             Loaded="ContentPage_Loaded">
+    <ScrollView Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
+        <VerticalStackLayout>
+            <VerticalStackLayout x:Name="Layout_SearchFilters" />
+            <Grid HeightRequest="45">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Cancel_Pressed" />
+                <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" Pressed="Button_Submit_Pressed" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</uranium:UraniumContentPage>

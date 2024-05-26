@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Decksteria.Core;
 using Decksteria.Ui.Maui.Shared.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 public sealed class DecksteriaPlugIn
 {

@@ -15,6 +15,7 @@
     Loaded="ContentPage_LoadedAsync"
     Unloaded="ContentPage_UnloadedAsync">
     <uranium:UraniumContentPage.Resources>
+        <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill"/>
         </DataTemplate>
@@ -30,46 +31,65 @@
             SizeChanged="AdaptiveGrid_Main_SizeChanged">
             <Grid Grid.Row="0" Grid.Column="1" MinimumHeightRequest="300">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="45"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <ActivityIndicator
+                    Grid.RowSpan="2"
+                    IsRunning="{Binding Searching}"
+                    Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
                         <ColumnDefinition Width="40*"/>
-                        <ColumnDefinition Width="38" />
-                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="45" />
+                        <ColumnDefinition Width="45" />
                     </Grid.ColumnDefinitions>
                     <Label
                         Grid.Column="0"
                         Text="Search:"
                         FontSize="Micro"
+                        Margin="5,1"
+                        Padding="1"
                         HorizontalTextAlignment="End"
                         VerticalTextAlignment="Center"/>
                     <Entry
                         Grid.Column="1"
                         Placeholder="Search"
                         VerticalTextAlignment="Center"
-                        HeightRequest="25"
+                        Margin="1"
                         Text="{Binding SearchText}"
-                        Completed="Entry_Completed"/>
+                        Completed="TextSearch_Entered"/>
                     <ImageButton
+                        StyleClass="FilledTonalButton"
                         Grid.Column="2"
-                        Margin="3,0"
+                        Margin="5"
+                        Padding="1"
                         BorderWidth="1"
                         CornerRadius="5"
-                        Pressed="Entry_Completed">
+                        Pressed="TextSearch_Entered">
                         <ImageButton.Source>
-                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.MagnifyingGlass}"/>
+                            <FontImageSource
+                                Size="28"
+                                FontFamily="FASolid"
+                                Glyph="{x:Static fa:Solid.MagnifyingGlass}"
+                                Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
                         </ImageButton.Source>
                     </ImageButton>
                     <ImageButton
+                        StyleClass="FilledTonalButton"
                         Grid.Column="3"
-                        Margin="3,0"
+                        Margin="5"
+                        Padding="1"
                         BorderWidth="1"
-                        CornerRadius="5">
+                        CornerRadius="5"
+                        Pressed="AdvancedFilter_Pressed">
                         <ImageButton.Source>
-                            <FontImageSource Size="28" FontFamily="FASolid" Glyph="{x:Static fa:Solid.Filter}" />
+                            <FontImageSource
+                                Size="28"
+                                FontFamily="FASolid"
+                                Glyph="{x:Static fa:Solid.Filter}"
+                                Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                         </ImageButton.Source>
                     </ImageButton>
                 </Grid>

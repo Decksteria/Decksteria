@@ -7,5 +7,6 @@ public enum FieldType
 {
     Text = 0,
     Number = 1,
-    Selection = 2,
+    SingleSelect = 2,
+    MultiSelect = 3
 }

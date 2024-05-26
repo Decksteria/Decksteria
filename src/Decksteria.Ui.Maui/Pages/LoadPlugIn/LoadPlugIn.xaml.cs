@@ -117,7 +117,7 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = ( sender as ViewCell )?.BindingContext;
+        var senderBinding = (sender as ViewCell)?.BindingContext;
         if (senderBinding is not PlugInTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
@@ -140,7 +140,7 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
-        var senderBinding = ( sender as ViewCell )?.BindingContext;
+        var senderBinding = (sender as ViewCell)?.BindingContext;
         if (senderBinding is not FormatTile)
         {
             DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
