@@ -1,7 +1,5 @@
 ﻿namespace Decksteria.Services.Deckbuilding.Models;
 
-using System;
-using System.Diagnostics;
 using Decksteria.Core.Models;
 
 /// <summary>

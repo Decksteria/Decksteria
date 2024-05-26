@@ -2,7 +2,9 @@
 
 using Decksteria.Services.Deckbuilding.Models;
 
-internal interface ISearchFilter
+internal interface IMauiSearchFilter
 {
+    public string Title { get; }
+
     SearchFieldFilter[] AsSearchFieldFilterArray();
 }

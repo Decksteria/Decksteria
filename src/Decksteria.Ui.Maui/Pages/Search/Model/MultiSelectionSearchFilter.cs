@@ -1,14 +1,14 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
+using CommunityToolkit.Maui.Core.Extensions;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
-internal class MultiSelectionSearchFilter : ISearchFilter
+internal class MultiSelectionSearchFilter : IMauiSearchFilter
 {
     private const int DefaultValue = 0;
 
@@ -27,13 +27,15 @@ internal class MultiSelectionSearchFilter : ISearchFilter
         }
 
         _searchField = searchField;
-        Values = searchField.Options.ToList();
+        Values = searchField.Options.ToObservableCollection();
         SelectableItems = searchField.Options.ToArray();
     }
 
     public string[] SelectableItems { get; init; }
 
-    public IList<string> Values { get; set; }
+    public string Title => _searchField.FieldName;
+
+    public ObservableCollection<string> Values { get; set; }
 
     private bool IsChanged => Values.Count == SelectableItems.Length;
 

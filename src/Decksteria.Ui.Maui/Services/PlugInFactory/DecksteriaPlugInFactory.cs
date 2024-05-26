@@ -86,13 +86,21 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
         return true;
     }
 
-    private static Type? GetPlugInInterface(string filePath)
+    private Type? GetPlugInInterface(string filePath)
     {
-        var assemblyBytes = File.ReadAllBytes(filePath);
-        var assembly = Assembly.Load(assemblyBytes);
-        var types = assembly.GetTypes();
-        var plugInType = types.FirstOrDefault(t => typeof(IDecksteriaGame).IsAssignableFrom(t));
-        return plugInType;
+        try
+        {
+            var assemblyBytes = File.ReadAllBytes(filePath);
+            var assembly = Assembly.Load(assemblyBytes);
+            var types = assembly.GetTypes();
+            var plugInType = types.FirstOrDefault(t => typeof(IDecksteriaGame).IsAssignableFrom(t));
+            return plugInType;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message);
+            return null;
+        }
     }
 
     private IDecksteriaGame? InitializeSelectedGame(Type? type)

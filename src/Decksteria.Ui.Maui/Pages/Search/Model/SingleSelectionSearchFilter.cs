@@ -5,7 +5,7 @@ using Decksteria.Services.Deckbuilding.Models;
 using System;
 using System.Linq;
 
-internal class SingleSelectionSearchFilter : ISearchFilter
+internal class SingleSelectionSearchFilter : IMauiSearchFilter
 {
     private readonly SearchField _searchField;
 
@@ -18,7 +18,12 @@ internal class SingleSelectionSearchFilter : ISearchFilter
 
         _searchField = searchField;
         Value = searchField.DefaultSelect ?? searchField.Options.First();
+        SelectableItems = searchField.Options.ToArray();
     }
+
+    public string[] SelectableItems { get; init; }
+
+    public string Title => _searchField.FieldName;
 
     public string Value { get; set; }
 

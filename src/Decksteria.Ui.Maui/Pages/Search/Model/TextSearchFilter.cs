@@ -4,7 +4,7 @@ using System;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 
-internal class TextSearchFilter : ISearchFilter
+internal class TextSearchFilter : IMauiSearchFilter
 {
     private const double MinimumFieldWidth = 60;
 
@@ -18,14 +18,12 @@ internal class TextSearchFilter : ISearchFilter
         }
 
         _searchField = searchField;
-        var preferredWidth = _searchField.Length * (double) 20;
-        WidthRequest = Math.Max(preferredWidth, MinimumFieldWidth);
         Value = string.Empty;
     }
 
-    public string Value { get; set; }
+    public string Title => _searchField.FieldName;
 
-    public double WidthRequest { get; }
+    public string Value { get; set; }
 
     public int MaxLength => _searchField.Length;
 
