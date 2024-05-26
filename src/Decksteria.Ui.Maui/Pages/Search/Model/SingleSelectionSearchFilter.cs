@@ -16,10 +16,10 @@ internal class SingleSelectionSearchFilter : ISearchFilter
         }
 
         _searchField = searchField;
-        Value = searchField.DefaultSelect;
+        Value = searchField.DefaultSelect ?? searchField.Options.First();
     }
 
-    public string[] Value { get; set; }
+    public string Value { get; set; }
 
     private bool IsChanged => Value.Length == _searchField.Options.Count();
 

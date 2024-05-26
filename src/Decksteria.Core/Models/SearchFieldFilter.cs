@@ -60,28 +60,48 @@ public class SearchFieldFilter
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(string? cardProperty)
     {
-        if (Value is string[] arrayValue)
+        if (Value is string stringValue)
         {
-            if (arrayValue.Length == 0 || string.IsNullOrEmpty(cardProperty))
-            {
-                return false;
-            }
-
-            return arrayValue.Any(item => StringMatching(cardProperty, item));
-        }
-        else if (Value is string stringValue)
-        {
-            if (string.IsNullOrEmpty(stringValue))
+            if (string.IsNullOrWhiteSpace(stringValue))
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(cardProperty))
+            if (string.IsNullOrWhiteSpace(cardProperty))
             {
                 return false;
             }
 
             return StringMatching(cardProperty, stringValue);
+        }
+        else if (Value is int intValue)
+        {
+            if (Value is null)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrWhiteSpace(cardProperty))
+            {
+                return false;
+            }
+
+            var intProperty = -1;
+            if (SearchField.FieldType is FieldType.Number && !int.TryParse(cardProperty, out intProperty))
+            {
+                return false;
+            }
+            else if (SearchField.FieldType is FieldType.MultiSelect
+                && !(SearchField.OptionMapping?.TryGetValue(cardProperty, out intProperty) ?? throw new NullReferenceException($"{nameof(SearchField.OptionMapping)} is null.")))
+            {
+                return false;
+            }
+            else if (intProperty == -1)
+            {
+                return false;
+            }
+
+            return IntMatching(intProperty, intValue);
         }
 
         return false;
@@ -137,10 +157,23 @@ public class SearchFieldFilter
     /// <summary>
     /// Default implementation for matching <see cref="int"/> against its own value.
     /// </summary>
-    /// <param name="cardProperty"></param>
+    /// <param name="cardProperty">The value from the card.</param>
+    /// <param name="intValue">The value provided by the user.</param>
     /// <returns></returns>
     private bool IntMatching(int cardProperty, int intValue)
     {
+        if (SearchField.FieldType is FieldType.MultiSelect)
+        {
+            return Comparison switch
+            {
+                ComparisonType.Equals => (cardProperty & intValue) == intValue,
+                ComparisonType.NotEquals => (cardProperty & intValue) != intValue,
+                ComparisonType.Contains => (cardProperty & intValue) > 0,
+                ComparisonType.NotContains => (cardProperty & intValue) > 0,
+                _ => false
+            };
+        }
+
         return Comparison switch
         {
             ComparisonType.Equals => cardProperty == intValue,
@@ -153,6 +186,12 @@ public class SearchFieldFilter
         };
     }
 
+    /// <summary>
+    /// Default implementation for matching <see cref="string"/> against its own value.
+    /// </summary>
+    /// <param name="cardProperty">The value from the card.</param>
+    /// <param name="intValue">The value provided by the user.</param>
+    /// <returns></returns>
     private bool StringMatching(string cardProperty, string matchValue)
     {
         return Comparison switch
