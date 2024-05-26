@@ -3,7 +3,7 @@
 using System;
 using Decksteria.Core.Models;
 
-internal sealed class NumberSearchFilter
+internal sealed class NumberSearchFilter : ISearchFilter
 {
     private const double MinimumFieldWidth = 60;
 
@@ -54,26 +54,26 @@ internal sealed class NumberSearchFilter
 
     private bool MaximumIsChanged => Maximum != MaximumValue;
 
-    public static implicit operator SearchFieldFilter[] (NumberSearchFilter numberSearchFilter)
+    public SearchFieldFilter[] AsSearchFieldFilterArray()
     {
-        if (!numberSearchFilter.MinimumIsChanged || !numberSearchFilter.MaximumIsChanged)
+        if (!MinimumIsChanged || !MaximumIsChanged)
         {
             return [];
         }
 
-        if (numberSearchFilter.MinimumIsChanged)
+        if (MinimumIsChanged)
         {
-            return [new SearchFieldFilter(numberSearchFilter._searchField, ComparisonType.GreaterThanOrEqual, numberSearchFilter.Minimum),];
+            return [new SearchFieldFilter(_searchField, ComparisonType.GreaterThanOrEqual, Minimum),];
         }
 
-        if (numberSearchFilter.MaximumIsChanged)
+        if (MaximumIsChanged)
         {
-            return [new SearchFieldFilter(numberSearchFilter._searchField, ComparisonType.LessThanOrEqual, numberSearchFilter.Maximum)];
+            return [new SearchFieldFilter(_searchField, ComparisonType.LessThanOrEqual, Maximum)];
         }
 
         return [
-            new SearchFieldFilter(numberSearchFilter._searchField, ComparisonType.GreaterThanOrEqual, numberSearchFilter.Minimum),
-            new SearchFieldFilter(numberSearchFilter._searchField, ComparisonType.LessThanOrEqual, numberSearchFilter.Maximum),
+            new SearchFieldFilter(_searchField, ComparisonType.GreaterThanOrEqual, Minimum),
+            new SearchFieldFilter(_searchField, ComparisonType.LessThanOrEqual, Maximum),
         ];
     }
 }

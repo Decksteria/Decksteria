@@ -33,6 +33,7 @@ public record SearchField
 
     /// <summary>
     /// Default constructor for initialising a selection-based advanced filter field.
+    /// It will always be a multi-select field.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="options">Options available to the user. The first option will always be the default filter.</param>
@@ -55,17 +56,17 @@ public record SearchField
     public FieldType FieldType { get; }
 
     /// <summary>
-    /// The maximum length of a <see cref="FieldType.Text"/> field
+    /// The maximum length of a <see cref="FieldType.Text"/> field.
     /// </summary>
     public int Length { get; }
 
     /// <summary>
-    /// The minimum value of a <see cref="FieldType.Number"/> field
+    /// The minimum value of a <see cref="FieldType.Number"/> field.
     /// </summary>
     public int MinValue { get; }
 
     /// <summary>
-    /// The maximum value of a <see cref="FieldType.Number"/> field
+    /// The maximum value of a <see cref="FieldType.Number"/> field.
     /// </summary>
     public int MaxValue { get; }
 

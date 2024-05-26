@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Core.Models;
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 /// <summary>
@@ -20,6 +21,9 @@ public class SearchFieldFilter
 
     /// <summary>
     /// The search value provided by the user.
+    /// It will be a<see cref="int"/> when it is <see cref="FieldType.Number"/>
+    /// It will be a<see cref="string"/> when it is <see cref="FieldType.Text"/>
+    /// It will be a<see cref="string[]"/> when it is <see cref="FieldType.Selection"/>
     /// </summary>
     public object? Value { get; set; }
 
@@ -33,7 +37,7 @@ public class SearchFieldFilter
         {
             FieldType.Text => string.Empty,
             FieldType.Number => null,
-            FieldType.Selection => searchField.Options.First(),
+            FieldType.Selection => searchField.Options.ToArray(),
             _ => throw new NotImplementedException($"{searchField.FieldType} does not have an implementation.")
         };
     }
@@ -56,30 +60,31 @@ public class SearchFieldFilter
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(string? cardProperty)
     {
-        if (SearchField.FieldType == FieldType.Number)
+        if (Value is string[] arrayValue)
         {
-            return false;
+            if (arrayValue.Length == 0 || string.IsNullOrEmpty(cardProperty))
+            {
+                return false;
+            }
+
+            return arrayValue.Any(item => StringMatching(cardProperty, item));
+        }
+        else if (Value is string stringValue)
+        {
+            if (string.IsNullOrEmpty(stringValue))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(cardProperty))
+            {
+                return false;
+            }
+
+            return StringMatching(cardProperty, stringValue);
         }
 
-        var stringValue = Value?.ToString();
-        if (string.IsNullOrEmpty(stringValue))
-        {
-            return true;
-        }
-
-        if (string.IsNullOrEmpty(cardProperty))
-        {
-            return false;
-        }
-
-        return Comparison switch
-        {
-            ComparisonType.Equals => cardProperty == stringValue,
-            ComparisonType.NotEquals => cardProperty != stringValue,
-            ComparisonType.Contains => stringValue != null && cardProperty.Contains(stringValue),
-            ComparisonType.NotContains => stringValue != null && !cardProperty.Contains(stringValue),
-            _ => false,
-        };
+        return false;
     }
 
     /// <summary>
@@ -90,7 +95,7 @@ public class SearchFieldFilter
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(int? cardProperty)
     {
-        if (SearchField.FieldType != FieldType.Number)
+        if (SearchField.FieldType is not FieldType.Number)
         {
             return false;
         }
@@ -105,7 +110,7 @@ public class SearchFieldFilter
             return false;
         }
 
-        return IntMatching(cardProperty.Value);
+        return IntMatching(cardProperty.Value, Convert.ToInt32(Value));
     }
 
     /// <summary>
@@ -116,7 +121,7 @@ public class SearchFieldFilter
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(int cardProperty)
     {
-        if (SearchField.FieldType != FieldType.Number)
+        if (SearchField.FieldType is not FieldType.Number)
         {
             return false;
         }
@@ -126,7 +131,7 @@ public class SearchFieldFilter
             return true;
         }
 
-        return IntMatching(cardProperty);
+        return IntMatching(cardProperty, Convert.ToInt32(Value));
     }
 
     /// <summary>
@@ -134,16 +139,30 @@ public class SearchFieldFilter
     /// </summary>
     /// <param name="cardProperty"></param>
     /// <returns></returns>
-    private bool IntMatching(int cardProperty)
+    private bool IntMatching(int cardProperty, int intValue)
     {
         return Comparison switch
         {
-            ComparisonType.Equals => cardProperty == Convert.ToInt32(Value),
-            ComparisonType.NotEquals => cardProperty != Convert.ToInt32(Value),
-            ComparisonType.GreaterThan => cardProperty > Convert.ToInt32(Value),
-            ComparisonType.GreaterThanOrEqual => cardProperty >= Convert.ToInt32(Value),
-            ComparisonType.LessThan => cardProperty < Convert.ToInt32(Value),
-            ComparisonType.LessThanOrEqual => cardProperty <= Convert.ToInt32(Value),
+            ComparisonType.Equals => cardProperty == intValue,
+            ComparisonType.NotEquals => cardProperty != intValue,
+            ComparisonType.GreaterThan => cardProperty > intValue,
+            ComparisonType.GreaterThanOrEqual => cardProperty >= intValue,
+            ComparisonType.LessThan => cardProperty < intValue,
+            ComparisonType.LessThanOrEqual => cardProperty <= intValue,
+            _ => false,
+        };
+    }
+
+    private bool StringMatching(string cardProperty, string matchValue)
+    {
+        return Comparison switch
+        {
+            ComparisonType.Equals => cardProperty == matchValue,
+            ComparisonType.NotEquals => cardProperty != matchValue,
+            ComparisonType.Contains => cardProperty.Contains(matchValue),
+            ComparisonType.NotContains => !cardProperty.Contains(matchValue),
+            ComparisonType.StartsWith => cardProperty.StartsWith(matchValue),
+            ComparisonType.EndsWith => cardProperty.EndsWith(matchValue),
             _ => false,
         };
     }
