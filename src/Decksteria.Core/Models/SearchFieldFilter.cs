@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 /// <summary>
 /// Constructor for the UI Layer to create a SearchFieldFilter. Not called by the plug-ins.
@@ -115,7 +116,7 @@ public class SearchFieldFilter
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(int? cardProperty)
     {
-        if (SearchField.FieldType is not FieldType.Number)
+        if (SearchField.FieldType is not FieldType.Number or FieldType.MultiSelect)
         {
             return false;
         }
@@ -125,12 +126,12 @@ public class SearchFieldFilter
             return true;
         }
 
-        if (!cardProperty.HasValue)
+        if (Value is not int intValue || !cardProperty.HasValue)
         {
             return false;
         }
 
-        return IntMatching(cardProperty.Value, Convert.ToInt32(Value));
+        return IntMatching(cardProperty.Value, intValue);
     }
 
     /// <summary>
@@ -155,25 +156,13 @@ public class SearchFieldFilter
     }
 
     /// <summary>
-    /// Default implementation for matching <see cref="int"/> against its own value.
+    /// Default implementation for matching <see cref="int"/> and <see cref="FieldType.Number"/> against its own value.
     /// </summary>
     /// <param name="cardProperty">The value from the card.</param>
     /// <param name="intValue">The value provided by the user.</param>
-    /// <returns></returns>
+    /// <returns>The property successfully fulfils the conditions.</returns>
     private bool IntMatching(int cardProperty, int intValue)
     {
-        if (SearchField.FieldType is FieldType.MultiSelect)
-        {
-            return Comparison switch
-            {
-                ComparisonType.Equals => (cardProperty & intValue) == intValue,
-                ComparisonType.NotEquals => (cardProperty & intValue) != intValue,
-                ComparisonType.Contains => (cardProperty & intValue) > 0,
-                ComparisonType.NotContains => (cardProperty & intValue) > 0,
-                _ => false
-            };
-        }
-
         return Comparison switch
         {
             ComparisonType.Equals => cardProperty == intValue,
@@ -187,11 +176,41 @@ public class SearchFieldFilter
     }
 
     /// <summary>
-    /// Default implementation for matching <see cref="string"/> against its own value.
+    /// Default implementation for matching <see cref="int"/> and <see cref="FieldType.MultiSelect"/> against its own value.
     /// </summary>
     /// <param name="cardProperty">The value from the card.</param>
     /// <param name="intValue">The value provided by the user.</param>
-    /// <returns></returns>
+    /// <returns>The property successfully fulfils the conditions.</returns>
+    private bool BitwiseMatching(int cardProperty, int intValue)
+    {
+        if (intValue <= 0)
+        {
+            return true;
+        }
+
+        if (cardProperty <= 0)
+        {
+            return false;
+        }
+
+        return Comparison switch
+        {
+            ComparisonType.Equals => cardProperty == intValue,
+            ComparisonType.NotEquals => cardProperty != intValue,
+            ComparisonType.Contains => (cardProperty & intValue) > 0,
+            ComparisonType.NotContains => (cardProperty & intValue) > 0,
+            ComparisonType.GreaterThanOrEqual => (cardProperty & intValue) >= intValue,
+            ComparisonType.LessThan => (cardProperty & intValue) == 0,
+            _ => false
+        };
+    }
+
+    /// <summary>
+    /// Default implementation for matching <see cref="string"/> against its own value.
+    /// </summary>
+    /// <param name="cardProperty">The value from the card.</param>
+    /// <param name="matchValue">The value provided by the user.</param>
+    /// <returns>The property successfully fulfils the conditions.</returns>
     private bool StringMatching(string cardProperty, string matchValue)
     {
         return Comparison switch
