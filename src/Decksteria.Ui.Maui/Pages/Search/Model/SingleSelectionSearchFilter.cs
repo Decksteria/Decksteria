@@ -4,19 +4,19 @@ using Decksteria.Core.Models;
 using System;
 using System.Linq;
 
-internal class SelectionSearchFilter : ISearchFilter
+internal class SingleSelectionSearchFilter : ISearchFilter
 {
     private readonly SearchField _searchField;
 
-    public SelectionSearchFilter(SearchField searchField)
+    public SingleSelectionSearchFilter(SearchField searchField)
     {
-        if (searchField.FieldType is not FieldType.Selection)
+        if (searchField.FieldType is not FieldType.SingleSelect)
         {
             throw new InvalidCastException("Only Selection Fields can be a SelectionSearchFilter.");
         }
 
         _searchField = searchField;
-        Value = searchField.Options.ToArray();
+        Value = searchField.DefaultSelect;
     }
 
     public string[] Value { get; set; }
@@ -25,7 +25,7 @@ internal class SelectionSearchFilter : ISearchFilter
 
     public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
 
-    public static implicit operator SearchFieldFilter(SelectionSearchFilter textSearchField)
+    public static implicit operator SearchFieldFilter(SingleSelectionSearchFilter textSearchField)
     {
         return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Equals, textSearchField.Value);
     }

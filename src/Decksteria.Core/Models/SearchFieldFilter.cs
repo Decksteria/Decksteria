@@ -23,7 +23,7 @@ public class SearchFieldFilter
     /// The search value provided by the user.
     /// It will be a<see cref="int"/> when it is <see cref="FieldType.Number"/>
     /// It will be a<see cref="string"/> when it is <see cref="FieldType.Text"/>
-    /// It will be a<see cref="string[]"/> when it is <see cref="FieldType.Selection"/>
+    /// It will be a<see cref="string[]"/> when it is <see cref="FieldType.SingleSelect"/>
     /// </summary>
     public object? Value { get; set; }
 
@@ -37,7 +37,7 @@ public class SearchFieldFilter
         {
             FieldType.Text => string.Empty,
             FieldType.Number => null,
-            FieldType.Selection => searchField.Options.ToArray(),
+            FieldType.SingleSelect => searchField.OptionLabels.ToArray(),
             _ => throw new NotImplementedException($"{searchField.FieldType} does not have an implementation.")
         };
     }

@@ -2,11 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public record SearchField
 {
     /// <summary>
-    /// Default constructor for initialising a text-based advanced filter field.
+    /// Default constructor for initialising a <see cref="FieldType.Text"/> advanced filter field.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="length">Maximum length of the text field.</param>
@@ -18,7 +19,7 @@ public record SearchField
     }
 
     /// <summary>
-    /// Default constructor for initialising a number-based advanced filter field.
+    /// Default constructor for initialising a <see cref="FieldType.Number"/> advanced filter field.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="minValue">Minimum value of the integer.</param>
@@ -32,16 +33,37 @@ public record SearchField
     }
 
     /// <summary>
-    /// Default constructor for initialising a selection-based advanced filter field.
-    /// It will always be a multi-select field.
+    /// Default constructor for initialising a <see cref="FieldType.SingleSelect"/> advanced filter field.
+    /// The first item in the array will be the default and perform no filtering.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="options">Options available to the user. The first option will always be the default filter.</param>
-    public SearchField(string fieldName, IEnumerable<string> options)
+    /// <param name="defaultSelect">The default option</param>
+    public SearchField(string fieldName, List<string> options, string? defaultSelect = null)
     {
         FieldName = fieldName;
-        FieldType = FieldType.Selection;
+        FieldType = FieldType.SingleSelect;
+        DefaultSelect = defaultSelect ?? options.First();
+
+        if (defaultSelect is not null && !options.Contains(defaultSelect))
+        {
+            options.Insert(0, defaultSelect);
+        }
+
         Options = options;
+    }
+
+    /// <summary>
+    /// Default constructor for initialising a <see cref="FieldType.MultiSelect"/> advanced filter field.
+    /// </summary>
+    /// <param name="fieldName">Label and name of the advanced filter field.</param>
+    /// <param name="options">Options mapped to an integer that is a power 2 (1, 2, 4, etc.). Values will be compared via bitwise.</param>
+    public SearchField(string fieldName, IReadOnlyDictionary<string, int> options)
+    {
+        FieldName = fieldName;
+        FieldType = FieldType.MultiSelect;
+        Options = options.Keys;
+        OptionMapping = options;
     }
 
     /// <summary>
@@ -71,7 +93,17 @@ public record SearchField
     public int MaxValue { get; }
 
     /// <summary>
-    /// All of the allowable values of <see cref="FieldType.Selection"/> field
+    /// All of the allowable values of <see cref="FieldType.SingleSelect"/> or <see cref="FieldType.MultiSelect"/> field
     /// </summary>
     public IEnumerable<string> Options { get; } = Array.Empty<string>();
+
+    /// <summary>
+    /// The option that will perform no filtering for a <see cref="FieldType.SingleSelect"/>.
+    /// </summary>
+    public string? DefaultSelect { get; }
+
+    /// <summary>
+    /// Map of all 
+    /// </summary>
+    public IReadOnlyDictionary<string, int>? OptionMapping { get; }
 }
