@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
@@ -25,12 +27,15 @@ public partial class Deckbuilder : UraniumContentPage
 
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
+    private IEnumerable<SearchFieldFilter> searchFieldFilters;
+
     public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.pageService = pageService;
+        this.searchFieldFilters = Array.Empty<SearchFieldFilter>();
     }
 
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)
@@ -94,14 +99,26 @@ public partial class Deckbuilder : UraniumContentPage
             return;
         }
 
-        viewModel.Searching = true;
-        var results = await deckbuilder.GetCardsAsync(viewModel.SearchText);
-        viewModel.FilteredCards.ReplaceData(results);
-        viewModel.Searching = false;
+        await PerformSearch();
     }
 
     private async void AdvancedFilter_Pressed(object sender, EventArgs e)
     {
-        await pageService.OpenModalAsync<SearchModal>();
+        await pageService.OpenModalAsync<SearchModal>(OnSubmitAsync, null);
+
+        async Task OnSubmitAsync(SearchModal searchModal, CancellationToken cancellationToken)
+        {
+            searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
+            cancellationToken.ThrowIfCancellationRequested();
+            await PerformSearch(cancellationToken);
+        }
+    }
+
+    private async Task PerformSearch(CancellationToken cancellationToken = default)
+    {
+        viewModel.Searching = true;
+        var results = await deckbuilder.GetCardsAsync(viewModel.SearchText, searchFieldFilters, cancellationToken);
+        viewModel.FilteredCards.ReplaceData(results);
+        viewModel.Searching = false;
     }
 }

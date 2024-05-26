@@ -40,7 +40,7 @@ internal sealed class PageService : IPageService
         await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
     }
 
-    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task> OnPopAsync, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>
+    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -49,7 +49,7 @@ internal sealed class PageService : IPageService
         await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
     }
 
-    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task> OnSubmitAsync, Func<T, CancellationToken, Task> OnPopAsync, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>
+    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 

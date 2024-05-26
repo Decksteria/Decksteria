@@ -14,9 +14,9 @@ public interface IPageService
 
     Task OpenModalAsync<T>(CancellationToken cancellationToken = default) where T : Page;
 
-    Task OpenModalAsync<T>(Func<T, CancellationToken, Task> OnPopAsync, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>;
+    Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>;
 
-    Task OpenModalAsync<T>(Func<T, CancellationToken, Task> OnSubmitAsync, Func<T, CancellationToken, Task> OnPopAsync, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>;
+    Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? onSubmitAsync = null, Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>;
 
     Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage;
 

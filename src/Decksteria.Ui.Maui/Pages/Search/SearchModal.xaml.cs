@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Decksteria.Core.Models;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.Search.Model;
@@ -11,8 +13,6 @@ using UraniumUI.Pages;
 
 public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModal>
 {
-    private readonly SearchModalViewModel viewModel = new();
-
     private readonly IPageService pageService;
 
     private readonly IEnumerable<SearchField> searchFields;
@@ -21,16 +21,22 @@ public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModa
     {
         InitializeComponent();
         this.pageService = pageService;
-        this.BindingContext = viewModel;
+        this.BindingContext = ViewModel;
         this.searchFields = gameFormat.Format.SearchFields;
     }
 
     public bool IsSubmitted { get; internal set; } = false;
 
+    public Func<SearchModal, CancellationToken, Task>? OnSubmitAsync { get; set; } = null;
+
+    public Func<SearchModal, CancellationToken, Task>? OnPopAsync { get; set; } = null;
+
+    internal SearchModalViewModel ViewModel { get; } = new();
+
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
         Layout_SearchFilters.Clear();
-        viewModel.SearchFieldFilters = CreateSearchFields(searchFields);
+        ViewModel.SearchFieldFilters = CreateSearchFields(searchFields);
 
         IEnumerable<IMauiSearchFilter> CreateSearchFields(IEnumerable<SearchField> searchFields)
         {
