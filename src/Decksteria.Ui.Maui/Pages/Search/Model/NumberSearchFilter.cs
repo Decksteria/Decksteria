@@ -3,6 +3,9 @@
 using System;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
+using Decksteria.Ui.Maui.Shared.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
 
 internal sealed class NumberSearchFilter : IMauiSearchFilter
 {
@@ -76,5 +79,75 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
             new SearchFieldFilter(_searchField, ComparisonType.GreaterThanOrEqual, Minimum),
             new SearchFieldFilter(_searchField, ComparisonType.LessThanOrEqual, Maximum),
         ];
+    }
+
+    public VisualElement GetVisualElement()
+    {
+        var horizontalStack = new HorizontalStackLayout
+        {
+            HorizontalOptions = LayoutOptions.Center
+        };
+
+        var stackControlMargins = new Thickness(5, 0);
+        var lowerRangeField = new NumericField
+        {
+            Margin = stackControlMargins,
+            //Value = _searchField.MinValue,
+            Title = "Min"
+        };
+        lowerRangeField.SetBinding(NumericField.MinProperty, new Binding(nameof(NumberSearchFilter.Minimum), BindingMode.OneWay, source: this));
+        lowerRangeField.SetBinding(NumericField.MaxProperty, new Binding(nameof(NumberSearchFilter.MaximumValue), BindingMode.OneWay, source: this));
+        lowerRangeField.SetBinding(NumericField.WidthRequestProperty, new Binding(nameof(NumberSearchFilter.WidthRequest), BindingMode.OneWay, source: this));
+        lowerRangeField.SetBinding(NumericField.MinimumWidthRequestProperty, new Binding(nameof(NumberSearchFilter.WidthRequest), BindingMode.OneWay, source: this));
+        lowerRangeField.SetBinding(NumericField.ValueProperty, new Binding(nameof(NumberSearchFilter.MinimumValue), BindingMode.TwoWay, source: this));
+
+        var lessThanSymbolLabel = new Label
+        {
+            Text = "\u2264",
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center,
+            FontAttributes = FontAttributes.Bold,
+            Margin = stackControlMargins
+        };
+
+        var titleLabel = new Label
+        {
+            Margin = stackControlMargins,
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center,
+            FontAttributes = FontAttributes.Bold,
+        };
+
+        titleLabel.SetValue(Label.FontSizeProperty, "Medium");
+        titleLabel.SetBinding(Label.TextProperty, new Binding(nameof(NumberSearchFilter.Title), BindingMode.OneWay, source: this));
+
+        var lessThanSymbolLabel2 = new Label
+        {
+            Text = "\u2264",
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center,
+            FontAttributes = FontAttributes.Bold,
+            Margin = stackControlMargins
+        };
+
+        var upperRangeField = new NumericField
+        {
+            Margin = stackControlMargins,
+            //Value = _searchField.MaxValue,
+            Title = "Min"
+        };
+        upperRangeField.SetBinding(NumericField.MinProperty, new Binding(nameof(NumberSearchFilter.MinimumValue), BindingMode.OneWay, source: this));
+        upperRangeField.SetBinding(NumericField.MaxProperty, new Binding(nameof(NumberSearchFilter.Maximum), BindingMode.OneWay, source: this));
+        upperRangeField.SetBinding(NumericField.WidthRequestProperty, new Binding(nameof(NumberSearchFilter.WidthRequest), BindingMode.OneWay, source: this));
+        upperRangeField.SetBinding(NumericField.MinimumWidthRequestProperty, new Binding(nameof(NumberSearchFilter.WidthRequest), BindingMode.OneWay, source: this));
+        upperRangeField.SetBinding(NumericField.ValueProperty, new Binding(nameof(NumberSearchFilter.MaximumValue), BindingMode.TwoWay, source: this));
+
+        horizontalStack.Add(lowerRangeField);
+        horizontalStack.Add(lessThanSymbolLabel);
+        horizontalStack.Add(titleLabel);
+        horizontalStack.Add(lessThanSymbolLabel2);
+        horizontalStack.Add(upperRangeField);
+
+        return horizontalStack;
     }
 }

@@ -7,13 +7,10 @@ using System.Windows.Input;
 using InputKit.Shared.Validations;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Graphics;
 using Plainer.Maui.Controls;
 using UraniumUI.Material.Controls;
-using UraniumUI.Pages;
 using UraniumUI.Resources;
-using UraniumUI.Views;
 
 [ContentProperty(nameof(Validations))]
 internal partial class NumericField : InputField
@@ -25,47 +22,33 @@ internal partial class NumericField : InputField
         Margin = new Thickness(10, 0),
         BackgroundColor = Colors.Transparent,
         Keyboard = Keyboard.Numeric,
-        VerticalOptions = LayoutOptions.Center
-    };
-
-    protected StatefulContentView iconClear = new()
-    {
         VerticalOptions = LayoutOptions.Center,
-        HorizontalOptions = LayoutOptions.End,
-        IsVisible = false,
-        Padding = new Thickness(5, 0),
-        Margin = new Thickness(0, 0, 5, 0),
-        Content = new Path
-        {
-            StyleClass = new[] { "NumericField.ClearIcon" },
-            Data = UraniumShapes.X,
-            Fill = ColorResource.GetColor("OnBackground", "OnBackgroundDark", Colors.DarkGray).WithAlpha(.5f),
-        }
+        Text = "0"
     };
 
     protected MinValueValidation minValueValidation = new();
 
     protected MaxValueValidation maxValueValidation = new();
 
-    public int? Value
+    public int Value
     {
         get
         {
-            var value = (string) GetValue(ValueProperty);
-            return int.TryParse(value, out var intResult) ? intResult : null;
+            var value = (int) GetValue(ValueProperty);
+            return value;
         }
         set
         {
             SetValue(ValueProperty, value);
-            EntryView.Text = value.ToString() ?? string.Empty;
+            EntryView.Text = value.ToString();
         }
     }
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
-        typeof(string),
+        typeof(int),
         typeof(NumericField),
-        string.Empty,
+        0,
         BindingMode.TwoWay,
         propertyChanging: (bindable, oldValue, newValue) =>
         {
@@ -74,7 +57,10 @@ internal partial class NumericField : InputField
                 return;
             }
 
-            numericField.UpdateClearIconState();
+            if (newValue is int intNewValue)
+            {
+                numericField.Value = intNewValue;
+            }
         });
 
     public Color TextColor { get => (Color) GetValue(TextColorProperty); set => SetValue(TextColorProperty, value); }
@@ -109,40 +95,6 @@ internal partial class NumericField : InputField
 
             numericField.EntryView.FontFamily = (string) newValue;
             numericField.labelTitle.FontFamily = (string) newValue;
-        });
-
-    public ClearButtonVisibility ClearButtonVisibility { get => (ClearButtonVisibility) GetValue(ClearButtonVisibilityProperty); set => SetValue(ClearButtonVisibilityProperty, value); }
-
-    public static readonly BindableProperty ClearButtonVisibilityProperty = BindableProperty.Create(
-        nameof(ClearButtonVisibility),
-        typeof(ClearButtonVisibility),
-        typeof(NumericField),
-        ClearButtonVisibility.WhileEditing,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.EntryView.ClearButtonVisibility = (ClearButtonVisibility) newValue;
-        });
-
-    public bool IsPassword { get => (bool) GetValue(IsPasswordProperty); set => SetValue(IsPasswordProperty, value); }
-
-    public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(
-        nameof(IsPassword),
-        typeof(bool),
-        typeof(NumericField),
-        false,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.EntryView.IsPassword = (bool) newValue;
         });
 
     public object ReturnCommandParameter { get => GetValue(ReturnCommandParameterProperty); set => SetValue(ReturnCommandParameterProperty, value); }
@@ -225,7 +177,19 @@ internal partial class NumericField : InputField
             numericField.EntryView.IsTextPredictionEnabled = (bool) newValue;
         });
 
-    public int Min { get => (int) GetValue(MinProperty); set => SetValue(MinProperty, value); }
+    public int Min
+    {
+        get => (int) GetValue(MinProperty);
+        set
+        {
+            SetValue(MinProperty, value);
+            
+            if (Value < value)
+            {
+                Value = value;
+            }
+        }
+    }
 
     public static readonly BindableProperty MinProperty = BindableProperty.Create(
         nameof(Min),
@@ -233,7 +197,19 @@ internal partial class NumericField : InputField
         typeof(NumericField),
         defaultBindingMode: BindingMode.TwoWay);
 
-    public int Max { get => (int) GetValue(MaxProperty); set => SetValue(MaxProperty, value); }
+    public int Max
+    {
+        get => (int) GetValue(MaxProperty);
+        set
+        {
+            SetValue(MaxProperty, value);
+
+            if (Value > value)
+            {
+                Value = value;
+            }
+        }
+    }
 
     public static readonly BindableProperty MaxProperty = BindableProperty.Create(
         nameof(Max),
@@ -250,22 +226,6 @@ internal partial class NumericField : InputField
         });
 
     protected int MaxDigits => Max.ToString().Length + (AllowNegatives ? 1 : 0);
-
-    public bool AllowClear { get => (bool) GetValue(AllowClearProperty); set => SetValue(AllowClearProperty, value); }
-
-    public static BindableProperty AllowClearProperty = BindableProperty.Create(
-        nameof(AllowClear),
-        typeof(bool), typeof(NumericField),
-        false,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.OnAllowClearChanged();
-        });
 
     public bool AllowNegatives { get => (bool) GetValue(AllowNegativesProperty); set => SetValue(AllowNegativesProperty, value); }
 
@@ -352,10 +312,6 @@ internal partial class NumericField : InputField
 
     public NumericField()
     {
-        iconClear.TappedCommand = new Command(OnClearTapped);
-
-        UpdateClearIconState();
-
         minValueValidation.SetBinding(MinValueValidation.MinValueProperty, new Binding(nameof(Min), BindingMode.TwoWay, source: this));
         maxValueValidation.SetBinding(MaxValueValidation.MaxValueProperty, new Binding(nameof(Max), BindingMode.TwoWay, source: this));
         Validations.Add(minValueValidation);
@@ -396,7 +352,7 @@ internal partial class NumericField : InputField
     {
         if (string.IsNullOrEmpty(e.NewTextValue))
         {
-            Value = null;
+            Value = Min;
         }
         else if ((AllowNegatives && e.NewTextValue.Length == MaxDigits && !e.NewTextValue.StartsWith('-')) || !int.TryParse(e.NewTextValue, out var intValue))
         {
@@ -418,11 +374,6 @@ internal partial class NumericField : InputField
             CheckAndShowValidations();
         }
 
-        if (AllowClear)
-        {
-            iconClear.IsVisible = !string.IsNullOrEmpty(e.NewTextValue);
-        }
-
         TextChanged?.Invoke(this, e);
     }
 
@@ -435,7 +386,7 @@ internal partial class NumericField : InputField
     {
         if (IsEnabled)
         {
-            Value = null;
+            Value = Min;
         }
     }
 
@@ -447,26 +398,6 @@ internal partial class NumericField : InputField
     protected virtual void OnClearTapped()
     {
         EntryView.Text = string.Empty;
-    }
-
-    protected virtual void OnAllowClearChanged()
-    {
-        UpdateClearIconState();
-    }
-
-    protected virtual void UpdateClearIconState()
-    {
-        if (AllowClear)
-        {
-            if (!endIconsContainer.Contains(iconClear))
-            {
-                endIconsContainer.Add(iconClear);
-            }
-        }
-        else
-        {
-            endIconsContainer.Remove(iconClear);
-        }
     }
 
     public override void ResetValidation()

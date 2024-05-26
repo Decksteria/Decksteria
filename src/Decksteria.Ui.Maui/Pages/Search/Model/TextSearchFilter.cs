@@ -3,6 +3,8 @@
 using System;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
+using Microsoft.Maui.Controls;
+using UraniumUI.Material.Controls;
 
 internal class TextSearchFilter : IMauiSearchFilter
 {
@@ -30,6 +32,17 @@ internal class TextSearchFilter : IMauiSearchFilter
     private bool IsChanged => !string.IsNullOrWhiteSpace(Value);
 
     public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+
+    public VisualElement GetVisualElement()
+    {
+        var textField = new TextField
+        {
+            Title = this.Title
+        };
+        textField.SetBinding(TextField.MaxLengthProperty, new Binding(nameof(TextSearchFilter.MaxLength), BindingMode.OneWay, source: this));
+        textField.SetBinding(TextField.TextProperty, new Binding(nameof(TextSearchFilter.Value), BindingMode.TwoWay, source: this));
+        return textField;
+    }
 
     public static implicit operator SearchFieldFilter(TextSearchFilter textSearchField)
     {

@@ -14,7 +14,7 @@
              Title="Advanced Search"
              MaximumWidthRequest="450"
              MaximumHeightRequest="700"
-             Loaded="UraniumContentPage_Loaded">
+             Loaded="ContentPage_Loaded">
     <ScrollView Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Never" VerticalScrollBarVisibility="Default">
         <VerticalStackLayout>
             <VerticalStackLayout x:Name="Layout_SearchFilters" />
@@ -23,7 +23,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Pressed" />
+                <Button Grid.Row="1" Grid.Column="0" StyleClass="OutlinedButton" Text="Cancel" Pressed="Button_Cancel_Pressed" />
                 <Button Grid.Row="1" Grid.Column="1" StyleClass="FilledTonalButton" Text="Apply Filters" />
             </Grid>
         </VerticalStackLayout>

@@ -3,10 +3,12 @@
 using CommunityToolkit.Maui.Core.Extensions;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using UraniumUI.Material.Controls;
 
 internal class MultiSelectionSearchFilter : IMauiSearchFilter
 {
@@ -40,6 +42,17 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
     private bool IsChanged => Values.Count == SelectableItems.Length;
 
     public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+
+    public VisualElement GetVisualElement()
+    {
+        var multiPickerField = new MultiplePickerField
+        {
+            Title = this.Title
+        };
+        multiPickerField.SetBinding(MultiplePickerField.ItemsSourceProperty, new Binding(nameof(MultiSelectionSearchFilter.SelectableItems), BindingMode.OneWay, source: this));
+        multiPickerField.SetBinding(MultiplePickerField.SelectedItemsProperty, new Binding(nameof(MultiSelectionSearchFilter.Values), BindingMode.TwoWay, source: this));
+        return multiPickerField;
+    }
 
     public static implicit operator SearchFieldFilter(MultiSelectionSearchFilter textSearchField)
     {
