@@ -14,7 +14,7 @@ internal class TextSearchFilter : ISearchFilter
     {
         if (searchField.FieldType is not FieldType.Text)
         {
-            throw new InvalidCastException("Only Text Fields can be a TextSearchFilter.");
+            throw new InvalidCastException($"Only {FieldType.Text} can be a {nameof(TextSearchFilter)}.");
         }
 
         _searchField = searchField;

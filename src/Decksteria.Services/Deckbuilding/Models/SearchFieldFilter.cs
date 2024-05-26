@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Services.Deckbuilding.Models;
 
 using System;
+using System.Diagnostics;
 using Decksteria.Core.Models;
 
 /// <summary>
@@ -29,51 +30,44 @@ public class SearchFieldFilter : ISearchFieldFilter
 
     public bool MatchesFilter(string? cardProperty)
     {
-        if (Value is string stringValue)
+        if (Value is null)
         {
-            if (string.IsNullOrWhiteSpace(stringValue))
-            {
-                return true;
-            }
-
-            if (string.IsNullOrWhiteSpace(cardProperty))
-            {
-                return false;
-            }
-
-            return StringMatching(cardProperty, stringValue);
-        }
-        else if (Value is int intValue)
-        {
-            if (Value is null)
-            {
-                return true;
-            }
-
-            if (string.IsNullOrWhiteSpace(cardProperty))
-            {
-                return false;
-            }
-
-            var intProperty = -1;
-            if (SearchField.FieldType is FieldType.Number && !int.TryParse(cardProperty, out intProperty))
-            {
-                return false;
-            }
-            else if (SearchField.FieldType is FieldType.MultiSelect
-                && !(SearchField.OptionMapping?.TryGetValue(cardProperty, out intProperty) ?? throw new NullReferenceException($"{nameof(SearchField.OptionMapping)} is null.")))
-            {
-                return false;
-            }
-            else if (intProperty == -1)
-            {
-                return false;
-            }
-
-            return IntMatching(intProperty, intValue);
+            return true;
         }
 
-        return false;
+        switch (Value)
+        {
+            case null:
+                return true;
+            case string stringValue:
+                if (string.IsNullOrWhiteSpace(stringValue))
+                {
+                    return true;
+                }
+
+                if (string.IsNullOrWhiteSpace(cardProperty))
+                {
+                    return false;
+                }
+
+                return StringMatching(cardProperty, stringValue);
+            case int intValue:
+                if (string.IsNullOrWhiteSpace(cardProperty))
+                {
+                    return false;
+                }
+
+                return int.TryParse(cardProperty, out var intProperty) && IntMatching(intProperty, intValue);
+            case uint uintValue:
+                if (string.IsNullOrWhiteSpace(cardProperty) || SearchField.OptionMapping is null)
+                {
+                    return false;
+                }
+
+                return SearchField.OptionMapping.TryGetValue(cardProperty, out var uintProperty) && BitwiseMatching(uintProperty, uintValue);
+            default:
+                return false;
+        }
     }
 
     public bool MatchesFilter(int? cardProperty)
@@ -88,28 +82,35 @@ public class SearchFieldFilter : ISearchFieldFilter
             return true;
         }
 
-        if (Value is not int intValue || !cardProperty.HasValue)
+        if (!cardProperty.HasValue)
         {
             return false;
         }
 
-        return IntMatching(cardProperty.Value, intValue);
+        return Value switch
+        {
+            int intValue => IntMatching(cardProperty.Value, intValue),
+            uint uintValue => BitwiseMatching((uint) cardProperty.Value, uintValue),
+            _ => false,
+        };
     }
 
     public bool MatchesFilter(int cardProperty)
     {
-        if (SearchField.FieldType is not FieldType.Number)
+        if (SearchField.FieldType is not FieldType.Number or FieldType.MultiSelect)
         {
             return false;
         }
 
-        if (Value is null)
+        return Value switch
         {
-            return true;
-        }
-
-        return IntMatching(cardProperty, Convert.ToInt32(Value));
+            int intValue => IntMatching(cardProperty, intValue),
+            uint uintValue => BitwiseMatching((uint) cardProperty, uintValue),
+            _ => false,
+        };
     }
+
+    public bool MatchesFilter(uint cardProperty) => SearchField.FieldType is FieldType.MultiSelect && Value is uint uintValue && BitwiseMatching((uint) cardProperty, uintValue);
 
     /// <summary>
     /// Default implementation for matching <see cref="int"/> and <see cref="FieldType.Number"/> against its own value.
@@ -132,14 +133,14 @@ public class SearchFieldFilter : ISearchFieldFilter
     }
 
     /// <summary>
-    /// Default implementation for matching <see cref="int"/> and <see cref="FieldType.MultiSelect"/> against its own value.
+    /// Default implementation for matching <see cref="uint"/> against its own value.
     /// </summary>
     /// <param name="cardProperty">The value from the card.</param>
-    /// <param name="intValue">The value provided by the user.</param>
+    /// <param name="uintValue">The value provided by the user.</param>
     /// <returns>The property successfully fulfils the conditions.</returns>
-    private bool BitwiseMatching(int cardProperty, int intValue)
+    private bool BitwiseMatching(uint cardProperty, uint uintValue)
     {
-        if (intValue <= 0)
+        if (uintValue <= 0)
         {
             return true;
         }
@@ -151,12 +152,12 @@ public class SearchFieldFilter : ISearchFieldFilter
 
         return Comparison switch
         {
-            ComparisonType.Equals => cardProperty == intValue,
-            ComparisonType.NotEquals => cardProperty != intValue,
-            ComparisonType.Contains => (cardProperty & intValue) > 0,
-            ComparisonType.NotContains => (cardProperty & intValue) > 0,
-            ComparisonType.GreaterThanOrEqual => (cardProperty & intValue) >= intValue,
-            ComparisonType.LessThan => (cardProperty & intValue) == 0,
+            ComparisonType.Equals => cardProperty == uintValue,
+            ComparisonType.NotEquals => cardProperty != uintValue,
+            ComparisonType.Contains => (cardProperty & uintValue) > 0,
+            ComparisonType.NotContains => (cardProperty & uintValue) > 0,
+            ComparisonType.GreaterThanOrEqual => (cardProperty & uintValue) >= uintValue,
+            ComparisonType.LessThan => (cardProperty & uintValue) == 0,
             _ => false
         };
     }

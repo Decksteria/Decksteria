@@ -3,6 +3,10 @@
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 internal class MultiSelectionSearchFilter : ISearchFilter
 {
@@ -12,23 +16,47 @@ internal class MultiSelectionSearchFilter : ISearchFilter
 
     public MultiSelectionSearchFilter(SearchField searchField)
     {
-        if (searchField.FieldType is not FieldType.SingleSelect)
+        if (searchField.FieldType is not FieldType.MultiSelect)
         {
-            throw new InvalidCastException("Only Selection Fields can be a SelectionSearchFilter.");
+            throw new InvalidCastException($"Only {FieldType.MultiSelect} can be a {nameof(MultiSelectionSearchFilter)}.");
+        }
+
+        if (searchField.OptionMapping is null)
+        {
+            throw new UnreachableException($"{nameof(_searchField.OptionMapping)} is null for a Multi-Select Field.");
         }
 
         _searchField = searchField;
-        Value = DefaultValue;
+        Values = searchField.Options.ToList();
+        SelectableItems = searchField.Options.ToArray();
     }
 
-    public int Value { get; set; }
+    public string[] SelectableItems { get; init; }
 
-    private bool IsChanged => Value != DefaultValue;
+    public IList<string> Values { get; set; }
+
+    private bool IsChanged => Values.Count == SelectableItems.Length;
 
     public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
 
     public static implicit operator SearchFieldFilter(MultiSelectionSearchFilter textSearchField)
     {
-        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Contains, textSearchField.Value);
+        if (textSearchField._searchField.OptionMapping is null)
+        {
+            throw new UnreachableException($"{nameof(_searchField.OptionMapping)} is null for a Multi-Select Field.");
+        }
+
+        uint orSum = 0;
+        foreach (var item in textSearchField.Values)
+        {
+            if (!textSearchField._searchField.OptionMapping.TryGetValue(item, out var value))
+            {
+                throw new UnreachableException($"The user selected a item that does not exist in .");
+            }
+
+            orSum |= value;
+        }
+
+        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Contains, orSum);
     }
 }

@@ -14,7 +14,7 @@ internal sealed class NumberSearchFilter : ISearchFilter
     {
         if (searchField.FieldType is not FieldType.Number)
         {
-            throw new InvalidCastException("Only Number Fields can be a NumberSearchFilter.");
+            throw new InvalidCastException($"Only {FieldType.Number} can be a {nameof(NumberSearchFilter)}.");
         }
 
         _searchField = searchField;

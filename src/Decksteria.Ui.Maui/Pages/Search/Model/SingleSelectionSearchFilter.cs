@@ -13,7 +13,7 @@ internal class SingleSelectionSearchFilter : ISearchFilter
     {
         if (searchField.FieldType is not FieldType.SingleSelect)
         {
-            throw new InvalidCastException("Only Selection Fields can be a SelectionSearchFilter.");
+            throw new InvalidCastException($"Only {FieldType.SingleSelect} can be a {nameof(SingleSelectionSearchFilter)}.");
         }
 
         _searchField = searchField;
