@@ -2,6 +2,7 @@
 
 using System;
 using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
 
 internal sealed class NumberSearchFilter : ISearchFilter
 {

@@ -16,7 +16,7 @@ public partial class SearchModal : UraniumContentPage
     public SearchModal(GameFormat gameFormat, IPageService pageService)
     {
         InitializeComponent();
-        viewModel.SearchFieldFilters = gameFormat.Format.SearchFields.Select(s => new SearchFieldFilter(s, ComparisonType.Equals));
+        viewModel.SearchFieldFilters = gameFormat.Format.SearchFields.Select(s => new SearchFieldFilter(s, ComparisonType.Equals, 0));
         this.pageService = pageService;
         this.BindingContext = viewModel;
     }

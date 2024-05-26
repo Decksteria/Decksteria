@@ -10,7 +10,7 @@ public enum ComparisonType
     /// <para>Used for <see cref="FieldType.Text"/>, <see cref="FieldType.Number"/>, or
     /// <see cref="FieldType.SingleSelect"/>, or <see cref="FieldType.MultiSelect"/> if the property is exactly equal
     /// to the user input
-    /// (<see cref="SearchFieldFilter.Value"/> == <see cref="object"/>).
+    /// (<see cref="ISearchFieldFilter.Value"/> == <see cref="object"/>).
     /// </para>
     /// </summary>
     Equals,
@@ -19,29 +19,29 @@ public enum ComparisonType
     /// Used for <see cref="FieldType.Text"/>, <see cref="FieldType.Number"/>, or
     /// <see cref="FieldType.SingleSelect"/>, if the property is not equal to the the
     /// user input 
-    /// (<see cref="SearchFieldFilter.Value"/> !=<see cref="object"/>).
+    /// (<see cref="ISearchFieldFilter.Value"/> !=<see cref="object"/>).
     /// </para>
     /// </summary>
     NotEquals,
     /// <summary>
     /// <para>
     /// Used for <see cref="FieldType.Text"/> if the property contains
-    /// the user input (<see cref="string.Contains(SearchFieldFilter.Value)"/>.
+    /// the user input (<see cref="string.Contains(ISearchFieldFilter.Value)"/>.
     /// </para>
     /// <para>
     /// Used for <see cref="FieldType.MultiSelect"/> if the property includes any of the user inputs
-    /// (<see cref="int"/> &amp; <see cref="SearchFieldFilter.Value"/> &gt; 0).
+    /// (<see cref="int"/> &amp; <see cref="ISearchFieldFilter.Value"/> &gt; 0).
     /// </para>
     /// </summary>
     Contains,
     /// <summary>
     /// <para>
     /// Used for <see cref="FieldType.Text"/> if the property does
-    /// not contain the user input (!<see cref="string.Contains(SearchFieldFilter.Value)"/>.
+    /// not contain the user input (!<see cref="string.Contains(ISearchFieldFilter.Value)"/>.
     /// </para>
     /// <para>
     /// Used for <see cref="FieldType.MultiSelect"/> if the property includes none of the user inputs
-    /// (<see cref="int"/> &amp; <see cref="SearchFieldFilter.Value"/> == 0).
+    /// (<see cref="int"/> &amp; <see cref="ISearchFieldFilter.Value"/> == 0).
     /// </para>
     /// </summary>
     NotContains,
@@ -66,7 +66,7 @@ public enum ComparisonType
     /// <para>
     /// Used for <see cref="FieldType.MultiSelect"/> to see if the property does not contain
     /// all of the user inputs
-    /// (<see cref="int"/> &amp; <see cref="SearchFieldFilter.Value"/> >= <see cref="SearchFieldFilter.Value"/>).
+    /// (<see cref="int"/> &amp; <see cref="ISearchFieldFilter.Value"/> >= <see cref="ISearchFieldFilter.Value"/>).
     /// </para>
     /// </summary>
     GreaterThanOrEqual,
@@ -77,7 +77,7 @@ public enum ComparisonType
     /// <para>
     /// Used for <see cref="FieldType.MultiSelect"/> to see if the property does not contain
     /// all of the user inputs
-    /// (<see cref="int"/> &amp; <see cref="SearchFieldFilter.Value"/> == 0).
+    /// (<see cref="int"/> &amp; <see cref="ISearchFieldFilter.Value"/> == 0).
     /// </para>
     /// </summary>
     LessThan,

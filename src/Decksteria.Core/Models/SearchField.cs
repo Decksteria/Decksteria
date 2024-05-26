@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 public record SearchField
@@ -38,12 +39,18 @@ public record SearchField
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="options">Options available to the user. The first option will always be the default filter.</param>
-    /// <param name="defaultSelect">The default option</param>
+    /// <param name="defaultSelect">The default option that will perform no filter.</param>
     public SearchField(string fieldName, List<string> options, string? defaultSelect = null)
     {
         FieldName = fieldName;
         FieldType = FieldType.SingleSelect;
         DefaultSelect = defaultSelect ?? options.First();
+
+        if (options.Count == 0 && defaultSelect is null)
+        {
+            // Prevent an empty Options List.
+            defaultSelect = "Anything";
+        }
 
         if (defaultSelect is not null && !options.Contains(defaultSelect))
         {

@@ -1,7 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search;
 
 using System.Collections.Generic;
-using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
 
 internal sealed class SearchModalViewModel
 {

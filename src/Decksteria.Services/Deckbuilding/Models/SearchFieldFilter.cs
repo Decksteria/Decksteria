@@ -1,48 +1,35 @@
-﻿namespace Decksteria.Core.Models;
+﻿namespace Decksteria.Services.Deckbuilding.Models;
 
 using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+using Decksteria.Core.Models;
 
 /// <summary>
 /// Constructor for the UI Layer to create a SearchFieldFilter. Not called by the plug-ins.
 /// </summary>
-public class SearchFieldFilter
+public class SearchFieldFilter : ISearchFieldFilter
 {
     /// <summary>
     /// A <see cref="Models.SearchField"/> provided by the plug-in.
     /// </summary>
-    public SearchField SearchField { get; }
+    public SearchField SearchField { get; init; }
 
     /// <summary>
     /// The comparison type selected by the user.
     /// </summary>
-    public ComparisonType Comparison { get; set; }
+    public ComparisonType Comparison { get; init; }
 
     /// <summary>
     /// The search value provided by the user.
-    /// It will be a<see cref="int"/> when it is <see cref="FieldType.Number"/>
-    /// It will be a<see cref="string"/> when it is <see cref="FieldType.Text"/>
-    /// It will be a<see cref="string[]"/> when it is <see cref="FieldType.SingleSelect"/>
+    /// It will be a <see cref="int"/> when it is <see cref="FieldType.Number"/>.
+    /// It will be a <see cref="string"/> when it is <see cref="FieldType.Text"/>.
+    /// It will be a <see cref="string"/> when it is <see cref="FieldType.SingleSelect"/>.
+    /// It will be a <see cref="int"/> when it is <see cref="FieldType.MultiSelect"/>.
     /// </summary>
-    public object? Value { get; set; }
+    public object? Value { get; init; }
 
-    /// <param name="searchField">The <see cref="SearchField"/> provided by the Plug-In.</param>
-    /// <param name="comparison">The Comparison type selected by the User.</param>
-    public SearchFieldFilter(SearchField searchField, ComparisonType comparison)
-    {
-        SearchField = searchField;
-        Comparison = comparison;
-        Value = searchField.FieldType switch
-        {
-            FieldType.Text => string.Empty,
-            FieldType.Number => null,
-            FieldType.SingleSelect => searchField.OptionLabels.ToArray(),
-            _ => throw new NotImplementedException($"{searchField.FieldType} does not have an implementation.")
-        };
-    }
-
+    /// <summary>
+    /// Constructor that takes in the value that will be used in comparison.
+    /// </summary>
     /// <param name="searchField">The <see cref="SearchField"/> provided by the Plug-In.</param>
     /// <param name="comparison">The Comparison type selected by the User.</param>
     /// <param name="value">The Search Value provided by the User.</param>

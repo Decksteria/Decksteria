@@ -55,7 +55,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// <param name="filters">A set of filters used to determine if a card should be returned. All cards will be returned if no filters are defined.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
     /// <returns>An implementation of the IQueryable that allows additional filtering based on IDecksteriaCard.</returns>
-    public Task<IQueryable<IDecksteriaCard>> GetCardsAsync(IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
+    public Task<IQueryable<IDecksteriaCard>> GetCardsAsync(IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a single card based on its ID.

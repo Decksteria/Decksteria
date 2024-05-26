@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
 using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
 using System;
 using System.Linq;
 
