@@ -1,13 +1,13 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
-using CommunityToolkit.Maui.Core.Extensions;
-using Decksteria.Core.Models;
-using Decksteria.Services.Deckbuilding.Models;
-using Microsoft.Maui.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using CommunityToolkit.Maui.Core.Extensions;
+using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
+using Microsoft.Maui.Controls;
 using UraniumUI.Material.Controls;
 
 internal class MultiSelectionSearchFilter : IMauiSearchFilter

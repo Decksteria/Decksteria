@@ -6,10 +6,6 @@ using Decksteria.Core.Models;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.Search.Model;
 using Decksteria.Ui.Maui.Services.PageService;
-using Decksteria.Ui.Maui.Shared.Controls;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 
 public partial class SearchModal : UraniumContentPage

@@ -1,6 +1,5 @@
 ﻿namespace Decksteria.Ui.Maui;
 
-using System;
 using Decksteria.Ui.Maui.Services.PageService;
 using Microsoft.Maui.Controls;
 

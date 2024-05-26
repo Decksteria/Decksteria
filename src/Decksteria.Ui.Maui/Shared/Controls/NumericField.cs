@@ -183,7 +183,7 @@ internal partial class NumericField : InputField
         set
         {
             SetValue(MinProperty, value);
-            
+
             if (Value < value)
             {
                 Value = value;

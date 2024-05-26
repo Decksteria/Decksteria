@@ -1,10 +1,10 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
+using System;
+using System.Linq;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Microsoft.Maui.Controls;
-using System;
-using System.Linq;
 using UraniumUI.Material.Controls;
 
 internal class SingleSelectionSearchFilter : IMauiSearchFilter
