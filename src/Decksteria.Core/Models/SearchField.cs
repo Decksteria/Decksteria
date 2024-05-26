@@ -40,7 +40,7 @@ public record SearchField
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
     /// <param name="options">Options available to the user. The first option will always be the default filter.</param>
     /// <param name="defaultSelect">The default option that will perform no filter.</param>
-    public SearchField(string fieldName, List<string> options, string? defaultSelect = null)
+    public SearchField(string fieldName, List<string> options, string? defaultSelect)
     {
         FieldName = fieldName;
         FieldType = FieldType.SingleSelect;
@@ -62,10 +62,45 @@ public record SearchField
 
     /// <summary>
     /// Default constructor for initialising a <see cref="FieldType.MultiSelect"/> advanced filter field.
+    /// If there are more than 30 items in <paramref name="options"/>, it becomes a <see cref="FieldType.SingleSelect"/> instead.
     /// </summary>
     /// <param name="fieldName">Label and name of the advanced filter field.</param>
-    /// <param name="options">Options mapped to an integer that is a power 2 (1, 2, 4, etc.). Values will be compared via bitwise.</param>
-    public SearchField(string fieldName, IReadOnlyDictionary<string, int> options)
+    /// <param name="options">Options available to the user. There must be 32 or less items in the collection.</param>
+    public SearchField(string fieldName, IEnumerable<string> options)
+    {
+        var uniqueItems = options.Distinct();
+        if (uniqueItems.Count() > 32)
+        {
+            FieldName = fieldName;
+            FieldType = FieldType.SingleSelect;
+            DefaultSelect = "Anything";
+            var optionsList = options.ToList();
+            optionsList.Insert(0, DefaultSelect);
+            Options = optionsList;
+            return;
+        }
+
+        FieldName = fieldName;
+        FieldType = FieldType.MultiSelect;
+        Options = uniqueItems;
+
+        var dictionary = new Dictionary<string, uint>();
+        uint value = 1;
+        foreach (var option in uniqueItems)
+        {
+            dictionary.Add(option, value);
+            value *= 2;
+        }
+
+        OptionMapping = dictionary;
+    }
+
+    /// <summary>
+    /// Default constructor for initialising a <see cref="FieldType.MultiSelect"/> advanced filter field.
+    /// </summary>
+    /// <param name="fieldName">Label and name of the advanced filter field.</param>
+    /// <param name="options">Options mapped to an unsigned integer that is a power 2 (1, 2, 4, etc.). Values will be compared via bitwise.</param>
+    public SearchField(string fieldName, IReadOnlyDictionary<string, uint> options)
     {
         FieldName = fieldName;
         FieldType = FieldType.MultiSelect;
@@ -112,5 +147,5 @@ public record SearchField
     /// <summary>
     /// Map of all 
     /// </summary>
-    public IReadOnlyDictionary<string, int>? OptionMapping { get; }
+    public IReadOnlyDictionary<string, uint>? OptionMapping { get; }
 }

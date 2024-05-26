@@ -3,6 +3,7 @@ namespace Decksteria.Ui.Maui.Pages.Search;
 using System.Collections.Generic;
 using System.Linq;
 using Decksteria.Core.Models;
+using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.PageService;
 using UraniumUI.Pages;

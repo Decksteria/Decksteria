@@ -8,23 +8,10 @@ using Decksteria.Core.Models;
 /// </summary>
 public class SearchFieldFilter : ISearchFieldFilter
 {
-    /// <summary>
-    /// A <see cref="Models.SearchField"/> provided by the plug-in.
-    /// </summary>
     public SearchField SearchField { get; init; }
 
-    /// <summary>
-    /// The comparison type selected by the user.
-    /// </summary>
     public ComparisonType Comparison { get; init; }
 
-    /// <summary>
-    /// The search value provided by the user.
-    /// It will be a <see cref="int"/> when it is <see cref="FieldType.Number"/>.
-    /// It will be a <see cref="string"/> when it is <see cref="FieldType.Text"/>.
-    /// It will be a <see cref="string"/> when it is <see cref="FieldType.SingleSelect"/>.
-    /// It will be a <see cref="int"/> when it is <see cref="FieldType.MultiSelect"/>.
-    /// </summary>
     public object? Value { get; init; }
 
     /// <summary>
@@ -40,12 +27,6 @@ public class SearchFieldFilter : ISearchFieldFilter
         Value = value;
     }
 
-    /// <summary>
-    /// Default <see cref="string" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
-    /// Don't call this if you need a different implementation.
-    /// </summary>
-    /// <param name="cardProperty">The value you specifically want to match.</param>
-    /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(string? cardProperty)
     {
         if (Value is string stringValue)
@@ -95,12 +76,6 @@ public class SearchFieldFilter : ISearchFieldFilter
         return false;
     }
 
-    /// <summary>
-    /// Default nullable <see cref="int?" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
-    /// Don't call this if you need a different implementation.
-    /// </summary>
-    /// <param name="cardProperty">The value you specifically want to match.</param>
-    /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(int? cardProperty)
     {
         if (SearchField.FieldType is not FieldType.Number or FieldType.MultiSelect)
@@ -121,12 +96,6 @@ public class SearchFieldFilter : ISearchFieldFilter
         return IntMatching(cardProperty.Value, intValue);
     }
 
-    /// <summary>
-    /// Default <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
-    /// Don't call this if you need a different implementation.
-    /// </summary>
-    /// <param name="cardProperty">The value you specifically want to match.</param>
-    /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
     public bool MatchesFilter(int cardProperty)
     {
         if (SearchField.FieldType is not FieldType.Number)
