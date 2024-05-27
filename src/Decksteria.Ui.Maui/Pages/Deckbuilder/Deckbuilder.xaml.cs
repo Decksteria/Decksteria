@@ -29,6 +29,8 @@ public partial class Deckbuilder : UraniumContentPage
 
     private IEnumerable<SearchFieldFilter> searchFieldFilters;
 
+    private bool firstLoaded = false;
+
     public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService)
     {
         InitializeComponent();
@@ -40,12 +42,18 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)
     {
+        if (firstLoaded)
+        {
+            return;
+        }
+
         var decks = await deckbuilder.ReInitializeAsync();
         var deckInfo = deckbuilder.GetDeckInformation();
         DecksLayout.Items.Clear();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
         Title = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
+        firstLoaded = true;
 
         CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
         {
@@ -85,11 +93,6 @@ public partial class Deckbuilder : UraniumContentPage
     private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
     {
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
-    }
-
-    private void ContentPage_UnloadedAsync(object sender, EventArgs e)
-    {
-        DecksLayout.Items.Clear();
     }
 
     private async void TextSearch_Entered(object sender, EventArgs e)
