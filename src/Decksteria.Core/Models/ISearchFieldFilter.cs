@@ -8,12 +8,12 @@ public interface ISearchFieldFilter
     /// <summary>
     /// The comparison type selected by the user.
     /// </summary>
-    ComparisonType Comparison { get; init; }
+    ComparisonType Comparison { get; }
 
     /// <summary>
     /// A <see cref="Models.SearchField"/> provided by the plug-in.
     /// </summary>
-    SearchField SearchField { get; init; }
+    SearchField SearchField { get; }
 
     /// <summary>
     /// The search value provided by the user.
@@ -22,7 +22,7 @@ public interface ISearchFieldFilter
     /// It will be a <see cref="string"/> when it is <see cref="FieldType.SingleSelect"/>.
     /// It will be a <see cref="int"/> when it is <see cref="FieldType.MultiSelect"/>.
     /// </summary>
-    object? Value { get; init; }
+    object? Value { get; }
 
     /// <summary>
     /// Default <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
