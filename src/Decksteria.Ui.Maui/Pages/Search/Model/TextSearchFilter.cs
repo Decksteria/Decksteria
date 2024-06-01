@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
 using System;
+using System.ComponentModel;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Microsoft.Maui.Controls;
@@ -16,7 +17,7 @@ internal class TextSearchFilter : IMauiSearchFilter
     {
         if (searchField.FieldType is not FieldType.Text)
         {
-            throw new InvalidCastException($"Only {FieldType.Text} can be a {nameof(TextSearchFilter)}.");
+            throw new InvalidEnumArgumentException($"Only {FieldType.Text} can be a {nameof(TextSearchFilter)}.");
         }
 
         _searchField = searchField;
@@ -31,7 +32,7 @@ internal class TextSearchFilter : IMauiSearchFilter
 
     private bool IsChanged => !string.IsNullOrWhiteSpace(Value);
 
-    public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+    public ISearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [(TextFieldFilter) this] : [];
 
     public VisualElement GetVisualElement()
     {
@@ -44,8 +45,8 @@ internal class TextSearchFilter : IMauiSearchFilter
         return textField;
     }
 
-    public static implicit operator SearchFieldFilter(TextSearchFilter textSearchField)
+    public static implicit operator TextFieldFilter(TextSearchFilter textSearchField)
     {
-        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Contains, textSearchField.Value);
+        return new TextFieldFilter(ComparisonType.Contains, textSearchField._searchField, textSearchField.Value);
     }
 }

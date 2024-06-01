@@ -16,6 +16,8 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
 
     private readonly SearchField _searchField;
 
+    private MultiplePickerField? _multiPickerField;
+
     public MultiSelectionSearchFilter(SearchField searchField)
     {
         if (searchField.FieldType is not FieldType.MultiSelect)
@@ -29,7 +31,7 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
         }
 
         _searchField = searchField;
-        Values = searchField.Options.ToObservableCollection();
+        Values = searchField.Options.Cast<object>().ToObservableCollection();
         SelectableItems = searchField.Options.ToArray();
     }
 
@@ -37,11 +39,11 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
 
     public string Title => _searchField.FieldName;
 
-    public ObservableCollection<string> Values { get; set; }
+    public ObservableCollection<object> Values { get; set; }
 
     private bool IsChanged => Values.Count != SelectableItems.Length;
 
-    public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+    public ISearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [(MultiSelectFieldFilter) this] : [];
 
     public VisualElement GetVisualElement()
     {
@@ -51,10 +53,11 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
         };
         multiPickerField.SetBinding(MultiplePickerField.ItemsSourceProperty, new Binding(nameof(MultiSelectionSearchFilter.SelectableItems), BindingMode.OneWay, source: this));
         multiPickerField.SetBinding(MultiplePickerField.SelectedItemsProperty, new Binding(nameof(MultiSelectionSearchFilter.Values), BindingMode.TwoWay, source: this));
+        _multiPickerField = multiPickerField;
         return multiPickerField;
     }
 
-    public static implicit operator SearchFieldFilter(MultiSelectionSearchFilter textSearchField)
+    public static implicit operator MultiSelectFieldFilter(MultiSelectionSearchFilter textSearchField)
     {
         if (textSearchField._searchField.OptionMapping is null)
         {
@@ -64,7 +67,7 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
         uint orSum = 0;
         foreach (var item in textSearchField.Values)
         {
-            if (!textSearchField._searchField.OptionMapping.TryGetValue(item, out var value))
+            if (!textSearchField._searchField.OptionMapping.TryGetValue(item.ToString() ?? string.Empty, out var value))
             {
                 throw new UnreachableException($"The user selected a item that does not exist in .");
             }
@@ -72,6 +75,6 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
             orSum |= value;
         }
 
-        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Contains, orSum);
+        return new MultiSelectFieldFilter(ComparisonType.Contains, textSearchField._searchField, orSum);
     }
 }

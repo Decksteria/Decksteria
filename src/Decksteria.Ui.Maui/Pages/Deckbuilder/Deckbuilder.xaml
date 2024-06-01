@@ -12,8 +12,7 @@
     xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="Deckbuilder"
-    Loaded="ContentPage_LoadedAsync"
-    Unloaded="ContentPage_UnloadedAsync">
+    Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
@@ -34,10 +33,6 @@
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ActivityIndicator
-                    Grid.RowSpan="2"
-                    IsRunning="{Binding Searching}"
-                    Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
@@ -109,6 +104,12 @@
                         </CollectionView.ItemsLayout>
                     </CollectionView>
                 </Frame>
+                <ActivityIndicator
+                    x:Name="ActivityIndicator_Searching"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    IsRunning="{Binding Searching}"
+                    Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
             </Grid>
             <material:TabView
                 Grid.Row="1"

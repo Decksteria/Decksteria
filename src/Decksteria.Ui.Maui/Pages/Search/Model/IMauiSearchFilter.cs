@@ -1,13 +1,13 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
-using Decksteria.Services.Deckbuilding.Models;
+using Decksteria.Core.Models;
 using Microsoft.Maui.Controls;
 
 internal interface IMauiSearchFilter
 {
     string Title { get; }
 
-    SearchFieldFilter[] AsSearchFieldFilterArray();
+    ISearchFieldFilter[] AsSearchFieldFilterArray();
 
     VisualElement GetVisualElement();
 }

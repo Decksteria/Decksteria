@@ -17,6 +17,8 @@ public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModa
 
     private readonly IEnumerable<SearchField> searchFields;
 
+    private bool firstLoaded;
+
     public SearchModal(GameFormat gameFormat, IPageService pageService)
     {
         InitializeComponent();
@@ -35,8 +37,14 @@ public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModa
 
     private void ContentPage_Loaded(object sender, EventArgs e)
     {
+        if (firstLoaded)
+        {
+            return;
+        }
+
         Layout_SearchFilters.Clear();
         ViewModel.SearchFieldFilters = CreateSearchFields(searchFields);
+        firstLoaded = true;
 
         IEnumerable<IMauiSearchFilter> CreateSearchFields(IEnumerable<SearchField> searchFields)
         {

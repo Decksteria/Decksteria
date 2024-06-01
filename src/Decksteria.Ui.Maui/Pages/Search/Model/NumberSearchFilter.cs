@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Search.Model;
 
 using System;
+using System.ComponentModel;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Ui.Maui.Shared.Controls;
@@ -17,7 +18,7 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
     {
         if (searchField.FieldType is not FieldType.Number)
         {
-            throw new InvalidCastException($"Only {FieldType.Number} can be a {nameof(NumberSearchFilter)}.");
+            throw new InvalidEnumArgumentException($"Only {FieldType.Number} can be a {nameof(NumberSearchFilter)}.");
         }
 
         _searchField = searchField;
@@ -38,12 +39,12 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
     public int MaximumValue { get; set; }
 
     /// <summary>
-    /// The lower limit that the user is allowed to select for <see cref="Minimum"/>
+    /// The lower limit that the user is allowed to select for <see cref="MinimumValue"/>
     /// </summary>
     public int Minimum => _searchField.MinValue;
 
     /// <summary>
-    /// The upper limit that the user is allowed to select for <see cref="Maximum"/>
+    /// The upper limit that the user is allowed to select for <see cref="MaximumValue"/>
     /// </summary>
     public int Maximum => _searchField.MaxValue;
 
@@ -58,7 +59,7 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
 
     private bool MaximumIsChanged => Maximum != MaximumValue;
 
-    public SearchFieldFilter[] AsSearchFieldFilterArray()
+    public ISearchFieldFilter[] AsSearchFieldFilterArray()
     {
         if (!MinimumIsChanged || !MaximumIsChanged)
         {
@@ -67,17 +68,17 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
 
         if (MinimumIsChanged)
         {
-            return [new SearchFieldFilter(_searchField, ComparisonType.GreaterThanOrEqual, Minimum),];
+            return [new NumberFieldFilter(ComparisonType.GreaterThanOrEqual, _searchField, MinimumValue),];
         }
 
         if (MaximumIsChanged)
         {
-            return [new SearchFieldFilter(_searchField, ComparisonType.LessThanOrEqual, Maximum)];
+            return [new NumberFieldFilter(ComparisonType.LessThanOrEqual, _searchField, MaximumValue)];
         }
 
         return [
-            new SearchFieldFilter(_searchField, ComparisonType.GreaterThanOrEqual, Minimum),
-            new SearchFieldFilter(_searchField, ComparisonType.LessThanOrEqual, Maximum),
+            new NumberFieldFilter(ComparisonType.GreaterThanOrEqual, _searchField, MinimumValue),
+            new NumberFieldFilter(ComparisonType.LessThanOrEqual, _searchField, MaximumValue),
         ];
     }
 
