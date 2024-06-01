@@ -32,42 +32,42 @@ internal sealed class PageService : IPageService
         return GetPageInstance<LoadPlugIn>();
     }
 
-    public async Task OpenModalAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    public async Task OpenModalAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var newPage = GetPageInstance<T>();
-        await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
+        var page = newPage ?? GetPageInstance<T>();
+        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>
+    public async Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var newPage = GetPageInstance<T>();
-        newPage.OnPopAsync = OnPopAsync;
-        await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
+        var page = newPage ?? GetPageInstance<T>();
+        page.OnPopAsync = OnPopAsync;
+        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>
+    public async Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var newPage = GetPageInstance<T>();
-        newPage.OnPopAsync = OnPopAsync;
-        newPage.OnSubmitAsync = OnSubmitAsync;
-        await AppShellNavigation.PushModalAsync(new NavigationPage(newPage), true);
+        var page = newPage ?? GetPageInstance<T>();
+        page.OnPopAsync = OnPopAsync;
+        page.OnSubmitAsync = OnSubmitAsync;
+        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage
+    public async Task OpenPageAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : ContentPage
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var newPage = GetPageInstance<T>();
-        await AppShellNavigation.PushAsync(newPage, true);
+        var page = newPage ?? GetPageInstance<T>();
+        await AppShellNavigation.PushAsync(page, true);
     }
 
-    public async Task<T?> PopModalAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    public async Task<T?> PopModalAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page
     {
         cancellationToken.ThrowIfCancellationRequested();
 

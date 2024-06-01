@@ -12,13 +12,11 @@ public interface IPageService
 
     ContentPage CreateHomePageInstance();
 
-    Task OpenModalAsync<T>(CancellationToken cancellationToken = default) where T : Page;
+    Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>;
 
-    Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>;
+    Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? onSubmitAsync = null, Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>;
 
-    Task OpenModalAsync<T>(Func<T, CancellationToken, Task>? onSubmitAsync = null, Func<T, CancellationToken, Task>? onPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>;
+    Task OpenPageAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : ContentPage;
 
-    Task OpenPageAsync<T>(CancellationToken cancellationToken = default) where T : ContentPage;
-
-    Task<T?> PopModalAsync<T>(CancellationToken cancellationToken = default) where T : Page;
+    Task<T?> PopModalAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page;
 }
