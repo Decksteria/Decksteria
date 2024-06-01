@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
@@ -27,7 +28,7 @@ public partial class Deckbuilder : UraniumContentPage
 
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
-    private IEnumerable<SearchFieldFilter> searchFieldFilters;
+    private IEnumerable<ISearchFieldFilter> searchFieldFilters;
 
     private bool firstLoaded = false;
 
@@ -37,7 +38,7 @@ public partial class Deckbuilder : UraniumContentPage
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.pageService = pageService;
-        this.searchFieldFilters = Array.Empty<SearchFieldFilter>();
+        this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
     private async void ContentPage_LoadedAsync(object sender, EventArgs e)

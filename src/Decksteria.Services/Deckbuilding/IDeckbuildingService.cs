@@ -19,7 +19,7 @@ public interface IDeckbuildingService
 
     Decklist CreateDecklist();
 
-    Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<CardArt>?> GetDeckCardsAsync(string deckName, CancellationToken cancellationToken = default);
 

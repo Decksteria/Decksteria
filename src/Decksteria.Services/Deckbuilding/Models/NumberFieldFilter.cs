@@ -1,12 +1,25 @@
 ﻿namespace Decksteria.Services.Deckbuilding.Models;
 
+using System.ComponentModel;
 using Decksteria.Core.Models;
 
-internal sealed class NumberFieldFilter : ISearchFieldFilter
+public sealed class NumberFieldFilter : ISearchFieldFilter
 {
-    public ComparisonType Comparison { get; set; } = ComparisonType.Equals;
+    public NumberFieldFilter(ComparisonType comparison, SearchField searchField, int? intValue = null)
+    {
+        if (searchField.FieldType is not FieldType.Number)
+        {
+            throw new InvalidEnumArgumentException(nameof(searchField.FieldType), (int) searchField.FieldType, searchField.FieldType.GetType());
+        }
 
-    public required SearchField SearchField { get; init; }
+        Comparison = comparison;
+        SearchField = searchField;
+        IntValue = intValue ?? 0;
+    }
+
+    public ComparisonType Comparison { get; set; }
+
+    public SearchField SearchField { get; }
 
     public object? Value => IntValue;
 
@@ -28,6 +41,11 @@ internal sealed class NumberFieldFilter : ISearchFieldFilter
 
     public bool MatchesFilter(uint cardProperty) => IntMatching((int) cardProperty);
 
+    /// <summary>
+    /// Default implementation for matching <see cref="int"/> and <see cref="FieldType.Number"/> against its own value.
+    /// </summary>
+    /// <param name="cardProperty">The value from the card.</param>
+    /// <returns>The property successfully fulfils the conditions.</returns>
     private bool IntMatching(int cardProperty)
     {
         return Comparison switch

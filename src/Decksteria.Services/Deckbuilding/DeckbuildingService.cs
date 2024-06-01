@@ -60,7 +60,7 @@ internal sealed class DeckbuildingService : IDeckbuildingService
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<CardArt>> GetCardsAsync(string? searchText = null, IEnumerable<SearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CardArt>> GetCardsAsync(string? searchText = null, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
         var cards = await format.GetCardsAsync(filters, cancellationToken);
         if (!string.IsNullOrWhiteSpace(searchText))

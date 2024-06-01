@@ -43,7 +43,7 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
 
     private bool IsChanged => Values.Count != SelectableItems.Length;
 
-    public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+    public ISearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [(MultiSelectFieldFilter) this] : [];
 
     public VisualElement GetVisualElement()
     {
@@ -57,7 +57,7 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
         return multiPickerField;
     }
 
-    public static implicit operator SearchFieldFilter(MultiSelectionSearchFilter textSearchField)
+    public static implicit operator MultiSelectFieldFilter(MultiSelectionSearchFilter textSearchField)
     {
         if (textSearchField._searchField.OptionMapping is null)
         {
@@ -75,11 +75,6 @@ internal class MultiSelectionSearchFilter : IMauiSearchFilter
             orSum |= value;
         }
 
-        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Contains, orSum);
-    }
-
-    private void UpdateSelectedItems(object sender, EventArgs e)
-    {
-        Console.WriteLine("Test");
+        return new MultiSelectFieldFilter(ComparisonType.Contains, textSearchField._searchField, orSum);
     }
 }

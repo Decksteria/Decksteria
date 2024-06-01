@@ -31,7 +31,7 @@ internal class SingleSelectionSearchFilter : IMauiSearchFilter
 
     private bool IsChanged => Value.Length == _searchField.Options.Count();
 
-    public SearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [this] : [];
+    public ISearchFieldFilter[] AsSearchFieldFilterArray() => IsChanged ? [(TextFieldFilter) this] : [];
 
     public VisualElement GetVisualElement()
     {
@@ -44,8 +44,8 @@ internal class SingleSelectionSearchFilter : IMauiSearchFilter
         return pickerField;
     }
 
-    public static implicit operator SearchFieldFilter(SingleSelectionSearchFilter textSearchField)
+    public static implicit operator TextFieldFilter(SingleSelectionSearchFilter textSearchField)
     {
-        return new SearchFieldFilter(textSearchField._searchField, ComparisonType.Equals, textSearchField.Value);
+        return new TextFieldFilter(ComparisonType.Equals, textSearchField._searchField, textSearchField.Value);
     }
 }
