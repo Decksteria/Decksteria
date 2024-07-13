@@ -9,7 +9,15 @@
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
             <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
-            <Label Text="{Binding CardInfo.Details}" FontSize="Body" />
+            <Frame
+                CornerRadius="5"
+                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"
+            >
+                <Label
+                    Text="{Binding CardInfo.Details}"
+                    FontSize="Body"
+                />
+            </Frame>
             <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
             <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
         </VerticalStackLayout>

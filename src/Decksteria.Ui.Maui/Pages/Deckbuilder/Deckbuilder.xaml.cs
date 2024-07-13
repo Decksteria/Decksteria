@@ -16,7 +16,6 @@ using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using UraniumUI.Extensions;
 using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 
