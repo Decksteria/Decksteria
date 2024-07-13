@@ -8,14 +8,14 @@
              MaximumWidthRequest="400">
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
-            <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
+            <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="250" />
             <Frame
                 CornerRadius="5"
                 BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"
             >
                 <Label
                     Text="{Binding CardInfo.Details}"
-                    FontSize="Body"
+                    FontSize="Default"
                 />
             </Frame>
             <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
