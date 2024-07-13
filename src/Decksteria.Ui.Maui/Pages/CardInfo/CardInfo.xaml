@@ -2,8 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Decksteria.Ui.Maui.Pages.CardInfo.CardInfo"
-             Title="CardInfo">
+             xmlns:cardinfo="clr-namespace:Decksteria.Ui.Maui.Pages.CardInfo"
+             x:DataType="cardinfo:CardInfoViewModel"
+             Loaded="CardInfo_Loaded"
+             HeightRequest="500"
+             WidthRequest="300">
     <VerticalStackLayout>
-        <Image />
+        <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
+        <VerticalStackLayout x:Name="DecksLayout">
+            <Label Text="Stuff" FontSize="Subtitle" />
+        </VerticalStackLayout>
+        <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
     </VerticalStackLayout>
 </ContentPage>

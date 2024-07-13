@@ -8,6 +8,8 @@ using UraniumUI.Material.Controls;
 
 internal class DeckbuilderViewModel : INotifyPropertyChanged
 {
+    public string ActiveDeckTab { get; set; } = string.Empty;
+
     private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
 
     private bool _searching = false;

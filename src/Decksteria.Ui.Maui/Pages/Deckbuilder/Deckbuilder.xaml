@@ -16,7 +16,12 @@
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill"/>
+            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
+                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SecondaryTapped" />
+                </Image.GestureRecognizers>
+            </Image>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
@@ -117,6 +122,7 @@
                 x:Name="DecksLayout"
                 MinimumHeightRequest="300"
                 TabPlacement="{Binding TabViewTabPlacement}"
+                SelectedTabChanged="DecksLayout_SelectedTabChanged"
             />
         </clyout:AdaptiveGrid>
     </ScrollView>

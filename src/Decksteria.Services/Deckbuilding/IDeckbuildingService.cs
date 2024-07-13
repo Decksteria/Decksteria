@@ -9,21 +9,25 @@ using Decksteria.Services.FileService.Models;
 
 public interface IDeckbuildingService
 {
+    IEnumerable<DecksteriaDeck> DeckInformation { get; }
+
     string GameTitle { get; }
 
     string FormatTitle { get; }
 
     Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
 
+    Task<bool> CanAddCardAsync(long cardId, string? deckName = null, CancellationToken cancellationToken = default);
+
     Task ClearCardsAsync(CancellationToken cancellationToken = default);
 
     Decklist CreateDecklist();
 
+    int GetCardCountFromDeck(long cardId, string deckName);
+
     Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<CardArt>?> GetDeckCardsAsync(string deckName, CancellationToken cancellationToken = default);
-
-    IEnumerable<DecksteriaDeck> GetDeckInformation();
+    IEnumerable<CardArt>? GetDeckCards(string deckName);
 
     Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default);
 
