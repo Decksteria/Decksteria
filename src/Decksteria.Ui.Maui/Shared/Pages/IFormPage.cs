@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
-public interface IModalPage<T> where T : Page
+public interface IFormPage<T> where T : Page
 {
     Func<T, CancellationToken, Task>? OnPopAsync { get; set; }
 }

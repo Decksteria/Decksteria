@@ -19,6 +19,8 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     private ReadOnlyDictionary<string, List<CardArt>> decklist;
 
+    public IEnumerable<DecksteriaDeck> DeckInformation => format.Decks.Select(f => new DecksteriaDeck(f));
+
     public string GameTitle => game.DisplayName;
 
     public string FormatTitle => format.DisplayName;
@@ -32,14 +34,13 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
     {
-        var decks = SelectAsLong(decklist);
-        if (await format.CheckCardCountAsync(card.CardId, decks, cancellationToken))
+        if (!await CanAddCardAsync(card.CardId, deckName, cancellationToken))
         {
             return false;
         }
 
         var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(card.CardId, cancellationToken);
-        if (deck == null || await deck.IsCardCanBeAddedAsync(card.CardId, decks[deck.Name], cancellationToken))
+        if (deck is null)
         {
             return false;
         }
@@ -47,6 +48,23 @@ internal sealed class DeckbuildingService : IDeckbuildingService
         var cards = decklist[deck.Name];
         cards.Add(card);
         return true;
+    }
+
+    public async Task<bool> CanAddCardAsync(long cardId, string? deckName = null, CancellationToken cancellationToken = default)
+    {
+        var decks = SelectAsLong(decklist);
+        if (!await format.CheckCardCountAsync(cardId, decks, cancellationToken))
+        {
+            return false;
+        }
+
+        var deck = deckName != null ? format.GetDeckFromName(deckName) : await format.GetDefaultDeckAsync(cardId, cancellationToken);
+        if (deck is null)
+        {
+            return false;
+        }
+
+        return await deck.IsCardCanBeAddedAsync(cardId, decks[deck.Name], cancellationToken);
     }
 
     public Task ClearCardsAsync(CancellationToken cancellationToken = default)
@@ -76,15 +94,16 @@ internal sealed class DeckbuildingService : IDeckbuildingService
         }
     }
 
-    public IEnumerable<DecksteriaDeck> GetDeckInformation()
+    public int GetCardCountFromDeck(long cardId, string deckName)
     {
-        return format.Decks.Select(f => new DecksteriaDeck(f));
+        _ = decklist.TryGetValue(deckName, out var deck);
+        return deck?.Count(card => card.CardId == cardId) ?? -1;
     }
 
-    public Task<IEnumerable<CardArt>?> GetDeckCardsAsync(string deckName, CancellationToken cancellationToken = default)
+    public IEnumerable<CardArt>? GetDeckCards(string deckName)
     {
         _ = decklist.TryGetValue(deckName, out var value);
-        return Task.FromResult<IEnumerable<CardArt>?>(value);
+        return value;
     }
 
     public Decklist CreateDecklist() => new(game.GetType().Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Decksteria.Ui.Maui.Pages.CardInfo.CardInfo"
+             xmlns:cardinfo="clr-namespace:Decksteria.Ui.Maui.Pages.CardInfo"
+             x:DataType="cardinfo:CardInfoViewModel"
+             Loaded="CardInfo_Loaded"
+             MaximumWidthRequest="400">
+    <ScrollView>
+        <VerticalStackLayout x:Name="MainLayout">
+            <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="250" />
+            <Frame
+                CornerRadius="5"
+                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"
+            >
+                <Label
+                    Text="{Binding CardInfo.Details}"
+                    FontSize="Default"
+                />
+            </Frame>
+            <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
+            <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

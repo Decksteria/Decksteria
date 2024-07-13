@@ -10,6 +10,7 @@ using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
+using Decksteria.Ui.Maui.Pages.CardInfo;
 using Decksteria.Ui.Maui.Pages.Search;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
@@ -41,7 +42,7 @@ public partial class Deckbuilder : UraniumContentPage
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
-    private async void ContentPage_LoadedAsync(object sender, EventArgs e)
+    private async void ContentPage_LoadedAsync(object? sender, EventArgs e)
     {
         if (firstLoaded)
         {
@@ -49,7 +50,7 @@ public partial class Deckbuilder : UraniumContentPage
         }
 
         var decks = await deckbuilder.ReInitializeAsync();
-        var deckInfo = deckbuilder.GetDeckInformation();
+        var deckInfo = deckbuilder.DeckInformation;
         DecksLayout.Items.Clear();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
@@ -66,10 +67,19 @@ public partial class Deckbuilder : UraniumContentPage
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Default,
                 VerticalOptions = LayoutOptions.Start,
-                ItemTemplate = CollectionView_CardItem,
+                ItemTemplate = DeckView_CardItem,
                 ItemsSource = bindedCollection,
                 MinimumHeightRequest = 100.0,
+                ItemsLayout = new GridItemsLayout(ItemsLayoutOrientation.Vertical)
+                {
+                    HorizontalItemSpacing = 2,
+                    SnapPointsAlignment = SnapPointsAlignment.Center,
+                    Span = 4,
+                    VerticalItemSpacing = 2
+                }
             };
+            collectionView.SizeChanged += AdaptiveGrid_Main_SizeChanged;
+
             var frameView = new Frame
             {
                 Padding = 1,
@@ -91,30 +101,35 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
-    private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
+    private void AdaptiveGrid_Main_SizeChanged(object? sender, EventArgs e)
     {
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
     }
 
-    private async void TextSearch_Entered(object sender, EventArgs e)
+    private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
     {
-        if (viewModel.SearchText.Length < 3)
+        if (e.BindingContext is not DecksteriaDeck deck)
         {
             return;
         }
 
-        await PerformSearch();
+        viewModel.ActiveDeckTab = deck.Name;
     }
 
-    private async void AdvancedFilter_Pressed(object sender, EventArgs e)
+    private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
-        await pageService.OpenModalAsync<SearchModal>(OnSubmitAsync, null);
+        await pageService.OpenFormPage<SearchModal>(OnSubmitAsync, OnCancelAsync, null);
 
         async Task OnSubmitAsync(SearchModal searchModal, CancellationToken cancellationToken)
         {
             searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
             cancellationToken.ThrowIfCancellationRequested();
             await PerformSearch(cancellationToken);
+        }
+
+        Task OnCancelAsync(SearchModal searchModal, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 
@@ -124,5 +139,90 @@ public partial class Deckbuilder : UraniumContentPage
         var results = await deckbuilder.GetCardsAsync(viewModel.SearchText, searchFieldFilters, cancellationToken);
         viewModel.FilteredCards.ReplaceData(results);
         viewModel.Searching = false;
+    }
+
+    private async void TapGestureRecognizer_PrimaryTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Image image || image.BindingContext is not CardArt card)
+        {
+            return;
+        }
+
+        var cardInfo = new CardInfo(card, deckbuilder, pageService);
+        await pageService.OpenModalPage(CardInfoClosed, cardInfo);
+
+        Task CardInfoClosed(CardInfo cardInfo, CancellationToken cancellationToken)
+        {
+            if (!cardInfo.DecksChanged)
+            {
+                return Task.CompletedTask;
+            }
+
+            return UpdateDeckCollections(null, cancellationToken);
+        }
+    }
+
+    private async void TapGestureRecognizer_SearchSecondaryTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Image image || image.BindingContext is not CardArt card)
+        {
+            return;
+        }
+
+        // If it was right-clicked, attempt to add the card to the currently open deck automatically.
+        var modified = await deckbuilder.AddCardAsync(card, viewModel.ActiveDeckTab);
+        if (!modified)
+        {
+            return;
+        }
+
+        await UpdateDeckCollections(viewModel.ActiveDeckTab);
+    }
+
+    private async void TapGestureRecognizer_DeckSecondaryTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Image image || image.BindingContext is not CardArt card)
+        {
+            return;
+        }
+
+        // If it was right-clicked, attempt to add the card to the currently open deck automatically.
+        var modified = await deckbuilder.AddCardAsync(card, viewModel.ActiveDeckTab);
+        if (!modified)
+        {
+            return;
+        }
+
+        await UpdateDeckCollections(viewModel.ActiveDeckTab);
+    }
+
+    private async void TextSearch_Entered(object? sender, EventArgs e)
+    {
+        if (viewModel.SearchText.Length < 3)
+        {
+            return;
+        }
+
+        await PerformSearch();
+    }
+
+    private Task UpdateDeckCollections(string? deckName = null, CancellationToken cancellationToken = default)
+    {
+        if (deckName is null)
+        {
+            var collectionTasks = viewModel.Decks.Select(deck => UpdateDeckCollections(deck.Key));
+            return Task.WhenAll(collectionTasks);
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        var newData = deckbuilder.GetDeckCards(deckName);
+        if (newData is null || !viewModel.Decks.TryGetValue(deckName, out var collection) || deckViews is null || !deckViews.TryGetValue(deckName, out var collectionView))
+        {
+            return Task.CompletedTask;
+        }
+
+        collection.ReplaceData(newData);
+        collectionView.ItemsSource = collection;
+        return Task.CompletedTask;
     }
 }

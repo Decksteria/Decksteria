@@ -85,6 +85,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Pages\CardInfo\CardInfo.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
