@@ -5,7 +5,7 @@
              xmlns:cardinfo="clr-namespace:Decksteria.Ui.Maui.Pages.CardInfo"
              x:DataType="cardinfo:CardInfoViewModel"
              Loaded="CardInfo_Loaded"
-             WidthRequest="300">
+             MaximumWidthRequest="400">
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
             <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
