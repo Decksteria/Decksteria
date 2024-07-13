@@ -1,10 +1,11 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.CardInfo;
 
 using System;
+using System.ComponentModel;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 
-internal sealed class CardDeckInfo()
+internal sealed class CardDeckInfo
 {
     private const double AddRemoveButtonWidth = 25.0;
 

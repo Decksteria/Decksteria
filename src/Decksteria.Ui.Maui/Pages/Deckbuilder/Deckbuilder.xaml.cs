@@ -191,12 +191,13 @@ public partial class Deckbuilder : UraniumContentPage
 
         cancellationToken.ThrowIfCancellationRequested();
         var newData = deckbuilder.GetDeckCards(deckName);
-        if (newData is null || !viewModel.Decks.TryGetValue(deckName, out var collection))
+        if (newData is null || !viewModel.Decks.TryGetValue(deckName, out var collection) || deckViews is null || !deckViews.TryGetValue(deckName, out var collectionView))
         {
             return Task.CompletedTask;
         }
 
         collection.ReplaceData(newData);
+        collectionView.ItemsSource = collection;
         return Task.CompletedTask;
     }
 }

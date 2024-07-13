@@ -45,9 +45,9 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
                 CanAddCard = canAdd,
                 Count = count
             };
-            viewModel.DeckCounts.Add(deck.Name, cardDeckInfo);
 
-            DecksLayout.Add(cardDeckInfo.CreateVisualElement(deck.Label, CreateRemoveAction(deck.Name), CreateAddAction(deck.Name, cardDeckInfo)));
+            viewModel.DeckCounts.Add(deck.Name, cardDeckInfo);
+            DecksLayout.Add(cardDeckInfo.CreateVisualElement(deck.Label, CreateAddAction(deck.Name, cardDeckInfo), CreateRemoveAction(deck.Name, cardDeckInfo)));
         }
 
         Action<object?, EventArgs> CreateAddAction(string deckName, CardDeckInfo cardDeckInfo)
@@ -55,17 +55,26 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
             return async (sender, e) =>
             {
                 var cardInfo = viewModel.CardInfo;
-                await deckbuildingService.RemoveCardAsync(cardInfo, deckName);
+                await deckbuildingService.AddCardAsync(cardInfo, deckName);
+                cardDeckInfo.Count = deckbuildingService.GetCardCountFromDeck(cardInfo.CardId, deckName);
                 cardDeckInfo.CanAddCard = await deckbuildingService.CanAddCardAsync(cardInfo.CardId, deckName);
                 DecksChanged = true;
             };
         }
 
-        Action<object?, EventArgs> CreateRemoveAction(string deckName)
+        Action<object?, EventArgs> CreateRemoveAction(string deckName, CardDeckInfo cardDeckInfo)
         {
             return async (sender, e) =>
             {
-                await deckbuildingService.RemoveCardAsync(viewModel.CardInfo, deckName);
+                var cardInfo = viewModel.CardInfo;
+                var removed = await deckbuildingService.RemoveCardAsync(cardInfo, deckName);
+                if (!removed)
+                {
+                    return;
+                }
+
+                cardDeckInfo.Count = deckbuildingService.GetCardCountFromDeck(cardInfo.CardId, deckName);
+                cardDeckInfo.CanAddCard = await deckbuildingService.CanAddCardAsync(cardInfo.CardId, deckName);
                 DecksChanged = true;
             };
         }
