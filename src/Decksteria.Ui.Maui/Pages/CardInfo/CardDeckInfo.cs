@@ -7,7 +7,7 @@ using Microsoft.Maui.Controls;
 
 internal sealed class CardDeckInfo : INotifyPropertyChanged
 {
-    private const double AddRemoveButtonWidth = 25.0;
+    internal const double AddRemoveButtonHeight = 25.0;
 
     private bool canAddCard;
 
@@ -51,10 +51,10 @@ internal sealed class CardDeckInfo : INotifyPropertyChanged
 
         var removeButton = new Button
         {
-            HeightRequest = AddRemoveButtonWidth,
+            HeightRequest = AddRemoveButtonHeight,
             Padding = 0,
             Text = "-",
-            WidthRequest = AddRemoveButtonWidth
+            WidthRequest = AddRemoveButtonHeight
         };
         removeButton.Pressed += (sender, e) => RemoveAction(sender, e);
         removeButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanRemoveCard), BindingMode.OneWay, source: this));
@@ -68,11 +68,11 @@ internal sealed class CardDeckInfo : INotifyPropertyChanged
 
         var addButton = new Button
         {
-            HeightRequest = AddRemoveButtonWidth,
+            HeightRequest = AddRemoveButtonHeight,
             Padding = 0,
             StyleClass = ["FilledButton"],
             Text = "+",
-            WidthRequest = AddRemoveButtonWidth
+            WidthRequest = AddRemoveButtonHeight
         };
         addButton.Pressed += (sender, e) => AddAction(sender, e);
         addButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanAddCard), BindingMode.OneWay, source: this));

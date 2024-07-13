@@ -51,6 +51,7 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
             viewModel.DeckCounts.Add(deck.Name, cardDeckInfo);
             var view = cardDeckInfo.CreateVisualElement(deck.Label, CreateAddAction(deck.Name, cardDeckInfo), CreateRemoveAction(deck.Name, cardDeckInfo));
             DecksLayout.Add(view);
+            this.HeightRequest += CardDeckInfo.AddRemoveButtonHeight;
         }
 
         Action<object?, EventArgs> CreateAddAction(string deckName, CardDeckInfo cardDeckInfo)
