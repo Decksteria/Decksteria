@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 
-public interface IFormModalPage<T> : IModalPage<T> where T : Page
+public interface IActionFormPage<T> : IFormPage<T> where T : Page
 {
     bool IsSubmitted { get; }
 

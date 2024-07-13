@@ -11,7 +11,7 @@ using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Pages;
 using UraniumUI.Pages;
 
-public partial class SearchModal : UraniumContentPage, IFormModalPage<SearchModal>
+public partial class SearchModal : UraniumContentPage, IActionFormPage<SearchModal>
 {
     private readonly IPageService pageService;
 

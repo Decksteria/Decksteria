@@ -40,7 +40,7 @@ internal sealed class PageService : IPageService
         await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IModalPage<T>
+    public async Task OpenFormPage<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -49,7 +49,7 @@ internal sealed class PageService : IPageService
         await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenModalAsync<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormModalPage<T>
+    public async Task OpenFormPage<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IActionFormPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -57,6 +57,14 @@ internal sealed class PageService : IPageService
         page.OnPopAsync = OnPopAsync;
         page.OnSubmitAsync = OnSubmitAsync;
         await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
+    }
+
+    public async Task OpenModalPage<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var page = newPage ?? GetPageInstance<T>();
+        await AppShellNavigation.PushModalAsync(page, true);
     }
 
     public async Task OpenPageAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : ContentPage
@@ -73,12 +81,12 @@ internal sealed class PageService : IPageService
 
         var poppedPage = await AppShellNavigation.PopModalAsync(true) as T;
 
-        if (poppedPage is IModalPage<T> modalPage && modalPage.OnPopAsync is not null)
+        if (poppedPage is IFormPage<T> modalPage && modalPage.OnPopAsync is not null)
         {
             await modalPage.OnPopAsync(poppedPage, cancellationToken);
         }
 
-        if (poppedPage is IFormModalPage<T> formPage && formPage.OnSubmitAsync is not null && formPage.IsSubmitted)
+        if (poppedPage is IActionFormPage<T> formPage && formPage.OnSubmitAsync is not null && formPage.IsSubmitted)
         {
             await formPage.OnSubmitAsync(poppedPage, cancellationToken);
         }
