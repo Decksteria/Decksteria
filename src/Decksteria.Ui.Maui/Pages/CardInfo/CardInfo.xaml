@@ -9,9 +9,7 @@
              WidthRequest="300">
     <VerticalStackLayout>
         <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
-        <VerticalStackLayout x:Name="DecksLayout">
-            <Label Text="Stuff" FontSize="Subtitle" />
-        </VerticalStackLayout>
+        <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
         <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
     </VerticalStackLayout>
 </ContentPage>

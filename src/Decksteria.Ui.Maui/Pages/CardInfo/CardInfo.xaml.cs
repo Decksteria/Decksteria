@@ -1,6 +1,8 @@
 namespace Decksteria.Ui.Maui.Pages.CardInfo;
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Services.Deckbuilding;
@@ -47,18 +49,19 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
             };
 
             viewModel.DeckCounts.Add(deck.Name, cardDeckInfo);
-            DecksLayout.Add(cardDeckInfo.CreateVisualElement(deck.Label, CreateAddAction(deck.Name, cardDeckInfo), CreateRemoveAction(deck.Name, cardDeckInfo)));
+            var view = cardDeckInfo.CreateVisualElement(deck.Label, CreateAddAction(deck.Name, cardDeckInfo), CreateRemoveAction(deck.Name, cardDeckInfo));
+            DecksLayout.Add(view);
         }
 
         Action<object?, EventArgs> CreateAddAction(string deckName, CardDeckInfo cardDeckInfo)
         {
             return async (sender, e) =>
             {
-                var cardInfo = viewModel.CardInfo;
-                await deckbuildingService.AddCardAsync(cardInfo, deckName);
-                cardDeckInfo.Count = deckbuildingService.GetCardCountFromDeck(cardInfo.CardId, deckName);
-                cardDeckInfo.CanAddCard = await deckbuildingService.CanAddCardAsync(cardInfo.CardId, deckName);
-                DecksChanged = true;
+                var added = await deckbuildingService.AddCardAsync(viewModel.CardInfo, deckName);
+                if (added)
+                {
+                    UpdateDeckInformation(deckName, cardDeckInfo);
+                }
             };
         }
 
@@ -66,16 +69,12 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
         {
             return async (sender, e) =>
             {
-                var cardInfo = viewModel.CardInfo;
-                var removed = await deckbuildingService.RemoveCardAsync(cardInfo, deckName);
-                if (!removed)
+               
+                var removed = await deckbuildingService.RemoveCardAsync(viewModel.CardInfo, deckName);
+                if (removed)
                 {
-                    return;
+                    UpdateDeckInformation(deckName, cardDeckInfo);
                 }
-
-                cardDeckInfo.Count = deckbuildingService.GetCardCountFromDeck(cardInfo.CardId, deckName);
-                cardDeckInfo.CanAddCard = await deckbuildingService.CanAddCardAsync(cardInfo.CardId, deckName);
-                DecksChanged = true;
             };
         }
     }
@@ -83,5 +82,18 @@ public partial class CardInfo : ContentPage, IFormPage<CardInfo>
     private async void CloseButton_Pressed(object sender, EventArgs e)
     {
         await pageService.PopModalAsync<CardInfo>();
+    }
+
+    private async void UpdateDeckInformation(string deckName, CardDeckInfo? cardDeckInfo = null)
+    {
+        if (cardDeckInfo is null && !viewModel.DeckCounts.TryGetValue(deckName, out cardDeckInfo))
+        {
+            return;
+        }
+
+        var cardInfo = viewModel.CardInfo;
+        cardDeckInfo.Count = deckbuildingService.GetCardCountFromDeck(cardInfo.CardId, deckName);
+        cardDeckInfo.CanAddCard = await deckbuildingService.CanAddCardAsync(cardInfo.CardId, deckName);
+        DecksChanged = true;
     }
 }

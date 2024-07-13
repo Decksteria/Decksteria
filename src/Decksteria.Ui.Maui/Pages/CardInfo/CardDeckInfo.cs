@@ -5,15 +5,38 @@ using System.ComponentModel;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 
-internal sealed class CardDeckInfo
+internal sealed class CardDeckInfo : INotifyPropertyChanged
 {
     private const double AddRemoveButtonWidth = 25.0;
 
-    public bool CanAddCard { get; set; }
+    private bool canAddCard;
+
+    private int count;
+
+    public bool CanAddCard
+    {
+        get => canAddCard;
+        set
+        {
+            canAddCard = value;
+            OnPropertyChanged(nameof(CanAddCard));
+        }
+    }
 
     public bool CanRemoveCard => Count > 0;
 
-    public int Count { get; set; }
+    public int Count
+    {
+        get => count;
+        set
+        {
+            count = value;
+            OnPropertyChanged(nameof(Count));
+            OnPropertyChanged(nameof(CanRemoveCard));
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public VisualElement CreateVisualElement(string deckLabel, Action<object?, EventArgs> AddAction, Action<object?, EventArgs> RemoveAction)
     {
@@ -34,14 +57,14 @@ internal sealed class CardDeckInfo
             WidthRequest = AddRemoveButtonWidth
         };
         removeButton.Pressed += (sender, e) => RemoveAction(sender, e);
-        removeButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanRemoveCard), BindingMode.OneWay));
+        removeButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanRemoveCard), BindingMode.OneWay, source: this));
 
         var countLabel = new Label
         {
             HorizontalTextAlignment = TextAlignment.Center,
             VerticalTextAlignment = TextAlignment.Center
         };
-        countLabel.SetBinding(Label.TextProperty, new Binding(nameof(CardDeckInfo.Count), BindingMode.OneWay));
+        countLabel.SetBinding(Label.TextProperty, new Binding(nameof(CardDeckInfo.Count), BindingMode.OneWay, source: this));
 
         var addButton = new Button
         {
@@ -52,7 +75,7 @@ internal sealed class CardDeckInfo
             WidthRequest = AddRemoveButtonWidth
         };
         addButton.Pressed += (sender, e) => AddAction(sender, e);
-        addButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanAddCard), BindingMode.OneWay));
+        addButton.SetBinding(Button.IsEnabledProperty, new Binding(nameof(CardDeckInfo.CanAddCard), BindingMode.OneWay, source: this));
 
         var horizontalStack = new HorizontalStackLayout
         {
@@ -61,8 +84,12 @@ internal sealed class CardDeckInfo
             countLabel,
             addButton
         };
-        horizontalStack.BindingContext = this;
 
         return horizontalStack;
+    }
+
+    public void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 };
