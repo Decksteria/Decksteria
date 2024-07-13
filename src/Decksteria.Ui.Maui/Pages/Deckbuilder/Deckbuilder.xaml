@@ -15,11 +15,19 @@
     Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
-        <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView" x:DataType="decksteria:CardArt">
+        <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
             <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
-                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SecondaryTapped" />
+                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SearchSecondaryTapped" />
+                </Image.GestureRecognizers>
+            </Image>
+        </DataTemplate>
+        <DataTemplate x:Name="DeckView_CardItem" x:Key="CardView_Deck" x:DataType="decksteria:CardArt">
+            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
+                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_DeckSecondaryTapped" />
                 </Image.GestureRecognizers>
             </Image>
         </DataTemplate>
@@ -100,7 +108,7 @@
                     <CollectionView
                         x:Name="CollectionView_Search"
                         ItemsSource="{Binding FilteredCards}"
-                        ItemTemplate="{StaticResource Key=CardView}"
+                        ItemTemplate="{StaticResource Key=CardView_Search}"
                         SelectionMode="None"
                         VerticalOptions="FillAndExpand"
                         VerticalScrollBarVisibility="Default">

@@ -43,7 +43,7 @@ public partial class Deckbuilder : UraniumContentPage
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
-    private async void ContentPage_LoadedAsync(object sender, EventArgs e)
+    private async void ContentPage_LoadedAsync(object? sender, EventArgs e)
     {
         if (firstLoaded)
         {
@@ -68,10 +68,19 @@ public partial class Deckbuilder : UraniumContentPage
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Default,
                 VerticalOptions = LayoutOptions.Start,
-                ItemTemplate = CollectionView_CardItem,
+                ItemTemplate = DeckView_CardItem,
                 ItemsSource = bindedCollection,
                 MinimumHeightRequest = 100.0,
+                ItemsLayout = new GridItemsLayout(ItemsLayoutOrientation.Vertical)
+                {
+                    HorizontalItemSpacing = 2,
+                    SnapPointsAlignment = SnapPointsAlignment.Center,
+                    Span = 4,
+                    VerticalItemSpacing = 2
+                }
             };
+            collectionView.SizeChanged += AdaptiveGrid_Main_SizeChanged;
+
             var frameView = new Frame
             {
                 Padding = 1,
@@ -93,12 +102,12 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
-    private void AdaptiveGrid_Main_SizeChanged(object sender, EventArgs e)
+    private void AdaptiveGrid_Main_SizeChanged(object? sender, EventArgs e)
     {
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
     }
 
-    private void DecksLayout_SelectedTabChanged(object _, TabItem e)
+    private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
     {
         if (e.BindingContext is not DecksteriaDeck deck)
         {
@@ -108,7 +117,7 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.ActiveDeckTab = deck.Name;
     }
 
-    private async void AdvancedFilter_Pressed(object sender, EventArgs e)
+    private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
         await pageService.OpenFormPage<SearchModal>(OnSubmitAsync, OnCancelAsync, null);
 
@@ -133,7 +142,7 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.Searching = false;
     }
 
-    private async void TapGestureRecognizer_PrimaryTapped(object sender, TappedEventArgs e)
+    private async void TapGestureRecognizer_PrimaryTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not Image image || image.BindingContext is not CardArt card)
         {
@@ -154,7 +163,7 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
-    private async void TapGestureRecognizer_SecondaryTapped(object sender, TappedEventArgs e)
+    private async void TapGestureRecognizer_SearchSecondaryTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not Image image || image.BindingContext is not CardArt card)
         {
@@ -171,7 +180,24 @@ public partial class Deckbuilder : UraniumContentPage
         await UpdateDeckCollections(viewModel.ActiveDeckTab);
     }
 
-    private async void TextSearch_Entered(object sender, EventArgs e)
+    private async void TapGestureRecognizer_DeckSecondaryTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Image image || image.BindingContext is not CardArt card)
+        {
+            return;
+        }
+
+        // If it was right-clicked, attempt to add the card to the currently open deck automatically.
+        var modified = await deckbuilder.AddCardAsync(card, viewModel.ActiveDeckTab);
+        if (!modified)
+        {
+            return;
+        }
+
+        await UpdateDeckCollections(viewModel.ActiveDeckTab);
+    }
+
+    private async void TextSearch_Entered(object? sender, EventArgs e)
     {
         if (viewModel.SearchText.Length < 3)
         {
