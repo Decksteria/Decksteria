@@ -5,12 +5,13 @@
              xmlns:cardinfo="clr-namespace:Decksteria.Ui.Maui.Pages.CardInfo"
              x:DataType="cardinfo:CardInfoViewModel"
              Loaded="CardInfo_Loaded"
-             HeightRequest="300"
              WidthRequest="300">
-    <VerticalStackLayout x:Name="MainLayout">
-        <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
-        <Label Text="{Binding CardInfo.Details}" FontSize="Body" />
-        <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
-        <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout x:Name="MainLayout">
+            <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="150" />
+            <Label Text="{Binding CardInfo.Details}" FontSize="Body" />
+            <VerticalStackLayout x:Name="DecksLayout" HorizontalOptions="Center" />
+            <Button StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
