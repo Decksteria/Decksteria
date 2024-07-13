@@ -9,5 +9,5 @@ public interface IActionFormPage<T> : IFormPage<T> where T : Page
 {
     bool IsSubmitted { get; }
 
-    Func<T, CancellationToken, Task>? OnSubmitAsync { get; set; }
+    Func<T, CancellationToken, Task> OnSubmitAsync { get; set; }
 }

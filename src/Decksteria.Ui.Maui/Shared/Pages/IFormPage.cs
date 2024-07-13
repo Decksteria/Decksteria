@@ -7,5 +7,5 @@ using Microsoft.Maui.Controls;
 
 public interface IFormPage<T> where T : Page
 {
-    Func<T, CancellationToken, Task>? OnPopAsync { get; set; }
+    Func<T, CancellationToken, Task> OnPopAsync { get; set; }
 }

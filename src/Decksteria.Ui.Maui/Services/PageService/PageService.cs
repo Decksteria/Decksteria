@@ -32,15 +32,7 @@ internal sealed class PageService : IPageService
         return GetPageInstance<LoadPlugIn>();
     }
 
-    public async Task OpenModalAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var page = newPage ?? GetPageInstance<T>();
-        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
-    }
-
-    public async Task OpenFormPage<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IFormPage<T>
+    public async Task OpenFormPage<T>(Func<T, CancellationToken, Task> OnPopAsync, T? newPage = null, CancellationToken cancellationToken = default) where T : Page, IFormPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -49,7 +41,7 @@ internal sealed class PageService : IPageService
         await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
     }
 
-    public async Task OpenFormPage<T>(T? newPage = null, Func<T, CancellationToken, Task>? OnSubmitAsync = null, Func<T, CancellationToken, Task>? OnPopAsync = null, CancellationToken cancellationToken = default) where T : Page, IActionFormPage<T>
+    public async Task OpenFormPage<T>(Func<T, CancellationToken, Task> OnSubmitAsync, Func<T, CancellationToken, Task> OnPopAsync, T? newPage = null, CancellationToken cancellationToken = default) where T : Page, IActionFormPage<T>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -81,12 +73,12 @@ internal sealed class PageService : IPageService
 
         var poppedPage = await AppShellNavigation.PopModalAsync(true) as T;
 
-        if (poppedPage is IFormPage<T> modalPage && modalPage.OnPopAsync is not null)
+        if (poppedPage is IFormPage<T> modalPage)
         {
             await modalPage.OnPopAsync(poppedPage, cancellationToken);
         }
 
-        if (poppedPage is IActionFormPage<T> formPage && formPage.OnSubmitAsync is not null && formPage.IsSubmitted)
+        if (poppedPage is IActionFormPage<T> formPage && formPage.IsSubmitted)
         {
             await formPage.OnSubmitAsync(poppedPage, cancellationToken);
         }
