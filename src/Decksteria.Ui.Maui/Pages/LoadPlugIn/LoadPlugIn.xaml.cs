@@ -225,9 +225,7 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
-        // TODO: Create Deckbuilder Page
         plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         pageService.OpenPageAsync<Deckbuilder>();
-        Console.WriteLine("New Deck Button Clicked");
     }
 }

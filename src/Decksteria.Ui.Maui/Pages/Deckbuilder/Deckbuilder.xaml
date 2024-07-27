@@ -11,7 +11,7 @@
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
-    Title="Deckbuilder"
+    Title="{Binding WindowTitle}"
     Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
@@ -32,6 +32,32 @@
             </Image>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
+    <Shell.TitleView>
+        <HorizontalStackLayout VerticalOptions="Fill">
+            <Label
+                Text="{Binding WindowTitle}"
+                FontSize="Title"
+            />
+            <Button Text="⋮" FontSize="Title">
+                <FlyoutBase.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Text="Sort"
+                            CommandParameter="Black" />
+                        <MenuFlyoutItem
+                            Text="Save"
+                            CommandParameter="Black" />
+                        <MenuFlyoutItem
+                            Text="Export"
+                            CommandParameter="Black" />
+                        <MenuFlyoutItem
+                            Text="Export"
+                            CommandParameter="Black" />
+                    </MenuFlyout>
+                </FlyoutBase.ContextFlyout>
+            </Button>
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
         <clyout:AdaptiveGrid
             x:Name="AdaptiveGrid_Main"

@@ -14,6 +14,8 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 
     private bool _searching = false;
 
+    private string _windowTitle = string.Empty;
+
     public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
 
     public ObservableCollection<CardArt> FilteredCards { get; set; } = [];
@@ -42,6 +44,15 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
                 _tabPlacement = value;
                 OnPropertyChanged(nameof(TabViewTabPlacement));
             }
+        }
+    }
+
+    public string WindowTitle {
+        get => _windowTitle;
+        set
+        {
+            _windowTitle = value;
+            OnPropertyChanged(nameof(WindowTitle));
         }
     }
 
