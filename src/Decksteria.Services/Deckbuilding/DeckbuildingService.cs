@@ -9,13 +9,13 @@ using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
-using Decksteria.Services.PlugInFactory.Models;
 
-internal sealed class DeckbuildingService : IDeckbuildingService
+internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
+    where T : IDecksteriaFormat
 {
     private readonly IDecksteriaGame game;
 
-    private readonly IDecksteriaFormat format;
+    private readonly T format;
 
     private ReadOnlyDictionary<string, List<CardArt>> decklist;
 
@@ -25,11 +25,11 @@ internal sealed class DeckbuildingService : IDeckbuildingService
 
     public string FormatTitle => format.DisplayName;
 
-    public DeckbuildingService(GameFormat selectedFormat)
+    public DeckbuildingService(IDecksteriaGame game, T format)
     {
-        game = selectedFormat.Game;
-        format = selectedFormat.Format;
-        decklist = selectedFormat.Format.Decks.ToDictionary(deck => deck.Name, _ => new List<CardArt>()).AsReadOnly();
+        this.game = game;
+        this.format = format;
+        decklist = format.Decks.ToDictionary(deck => deck.Name, _ => new List<CardArt>()).AsReadOnly();
     }
 
     public async Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default)
