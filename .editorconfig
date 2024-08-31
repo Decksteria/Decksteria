@@ -278,5 +278,6 @@ dotnet_diagnostic.CA1010.severity = warning
 dotnet_diagnostic.CA1040.severity = warning
 dotnet_diagnostic.CA2250.severity = warning
 dotnet_diagnostic.CA1068.severity = warning
+dotnet_diagnostic.CA2254.severity = silent
 [*.vb]
 dotnet_diagnostic.CA1047.severity = warning
