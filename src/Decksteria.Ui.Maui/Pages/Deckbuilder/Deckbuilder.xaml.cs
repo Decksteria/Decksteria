@@ -106,6 +106,28 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
     }
 
+    private async void ButtonSave_Pressed(object sender, EventArgs e)
+    {
+        const string save = "Save";
+        const string saveAs = "Save As";
+        var action = saveAs;
+        if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
+        {
+            action = await DisplayActionSheet("Save as new?", "Cancel", null, save, saveAs);
+        }
+
+        switch (action)
+        {
+            case save:
+                break;
+            case saveAs:
+                var deckname = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", default, default, viewModel.DecklistName, 20, Keyboard.Default);
+                break;
+            default:
+                return;
+        }
+    }
+
     private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
     {
         if (e.BindingContext is not DecksteriaDeck deck)

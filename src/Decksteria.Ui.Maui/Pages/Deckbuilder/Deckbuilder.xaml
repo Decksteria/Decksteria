@@ -32,33 +32,7 @@
             </Image>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
-    <!--<Shell.TitleView>
-        <HorizontalStackLayout VerticalOptions="Fill">
-            <Label
-                Text="{Binding WindowTitle}"
-                FontSize="Title"
-            />
-            <Button Text="⋮" FontSize="Title" Pressed="Button_Pressed">
-                <FlyoutBase.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Text="Sort"
-                            CommandParameter="Black" />
-                        <MenuFlyoutItem
-                            Text="Save"
-                            CommandParameter="Black" />
-                        <MenuFlyoutItem
-                            Text="Export"
-                            CommandParameter="Black" />
-                        <MenuFlyoutItem
-                            Text="Export"
-                            CommandParameter="Black" />
-                    </MenuFlyout>
-                </FlyoutBase.ContextFlyout>
-            </Button>
-        </HorizontalStackLayout>
-    </Shell.TitleView>-->
-    <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
+    <ScrollView Orientation="Vertical" VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
         <clyout:AdaptiveGrid
             x:Name="AdaptiveGrid_Main"
             RowCount="2"
@@ -157,12 +131,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ScrollView Grid.Row="0">
-                    <HorizontalStackLayout HorizontalOptions="EndAndExpand">
+                <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
                         <Button
                             StyleClass="OutlinedButton"
                             Text="Save"
-                            ToolTipProperties.Text="Save Decklist">
+                            ToolTipProperties.Text="Save Decklist"
+                            Pressed="ButtonSave_Pressed">
                             <Button.ImageSource>
                                 <FontImageSource
                                     Size="20"
@@ -173,7 +148,6 @@
                         </Button>
                         <Button
                             StyleClass="TextButton"
-                            Margin="5,0"
                             Text="Import"
                             ToolTipProperties.Text="Import Decklist">
                             <Button.ImageSource>
@@ -186,7 +160,6 @@
                         </Button>
                         <Button
                             StyleClass="TextButton"
-                            Margin="5,0"
                             Text="Export"
                             ToolTipProperties.Text="Export Decklist">
                             <Button.ImageSource>
@@ -199,7 +172,6 @@
                         </Button>
                         <Button
                             StyleClass="TextButton"
-                            Margin="5,0"
                             Text="Sort"
                             ToolTipProperties.Text="Sort Deck">
                             <Button.ImageSource>
