@@ -12,6 +12,7 @@ using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
 using Decksteria.Ui.Maui.Pages.Search;
+using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
@@ -27,18 +28,21 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IPageService pageService;
 
+    private readonly IDeckFileService deckFileService;
+
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
     private IEnumerable<ISearchFieldFilter> searchFieldFilters;
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService)
+    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService, IDeckFileService deckFileService)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.pageService = pageService;
+        this.deckFileService = deckFileService;
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
@@ -116,15 +120,22 @@ public partial class Deckbuilder : UraniumContentPage
             action = await DisplayActionSheet("Save as new?", "Cancel", null, save, saveAs);
         }
 
-        switch (action)
+        var deckName = viewModel.DecklistName;
+        if (action == saveAs)
         {
-            case save:
-                break;
-            case saveAs:
-                var deckname = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", default, default, viewModel.DecklistName, 20, Keyboard.Default);
-                break;
-            default:
-                return;
+            deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", default, default, viewModel.DecklistName, 20, Keyboard.Default);
+        }
+
+        await deckFileService.SaveDecklistAsync(deckName, ConvertToCardArtIdDictionary(viewModel.Decks));
+
+        // Create Decklist in CardArtId format.
+        static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string,ObservableCollection<CardArt>> decklist)
+        {
+            return decklist.ToDictionary
+            (
+                keyValue => keyValue.Key,
+                keyValue => keyValue.Value.Select(card => new CardArtId(card.CardId, card.ArtId))
+            );
         }
     }
 
