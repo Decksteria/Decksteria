@@ -2,4 +2,4 @@
 
 using Decksteria.Core;
 
-public record GameFormat(IDecksteriaGame Game, IDecksteriaFormat Format);
+public record GameFormat(string GameName, IDecksteriaGame Game, IDecksteriaFormat Format);

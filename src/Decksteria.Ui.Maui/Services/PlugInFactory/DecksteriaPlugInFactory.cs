@@ -57,9 +57,14 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public GameFormat GetSelectedFormat()
     {
-        var game = InitializeSelectedGame(selectedPlugIn?.PlugInType) ?? throw new ArgumentNullException("Valid plug-in has not been selected.");
-        var format = game.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid format has not been selected.");
-        return new(game, format);
+        IDecksteriaGame? initializedGame;
+        if (selectedPlugIn is null || (initializedGame = InitializeSelectedGame(selectedPlugIn?.PlugInType)) is null)
+        {
+            throw new ArgumentNullException("Valid plug-in has not been selected.");
+        }
+
+        var format = initializedGame.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid format has not been selected.");
+        return new(selectedPlugIn!.Name, initializedGame, format);
     }
 
     public void SelectGame(string gameName, string formatName)

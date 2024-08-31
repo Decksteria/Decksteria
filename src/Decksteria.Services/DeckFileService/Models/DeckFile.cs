@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Services.FileService.Models;
+﻿namespace Decksteria.Services.DeckFileService.Models;
 
 using System;
 using System.Collections.Generic;
