@@ -5,6 +5,7 @@ using CommunityToolkit.Maui;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
+using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
@@ -61,6 +62,7 @@ public static class MauiProgram
         });
         services.AddHttpClient();
         services.TryAddScoped<IDialogService, DialogService>();
+        services.TryAddScoped<IDeckFileService, DeckFileService>();
         // Use a different implementation for the Paging Service that turns Modals into a new Window.
 #if WINDOWS
         services.TryAddScoped<IPageService, PageService>();

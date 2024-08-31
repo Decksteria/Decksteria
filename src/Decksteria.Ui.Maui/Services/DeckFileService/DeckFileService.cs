@@ -25,6 +25,11 @@ internal sealed class DeckFileService : IDeckFileService
         this.deckFileService = deckFileService;
     }
 
+    public async Task ExportDecklistAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+    }
+
     public async Task<Decklist> ReadDecklistAsync(string deckName, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
