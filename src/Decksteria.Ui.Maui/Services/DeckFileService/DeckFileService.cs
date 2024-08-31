@@ -54,7 +54,7 @@ internal sealed class DeckFileService : IDeckFileService
         await memoryStream.CopyToAsync(fileStream, cancellationToken);
     }
 
-    public async Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default)
+    public async Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
