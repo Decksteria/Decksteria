@@ -1,12 +1,8 @@
 namespace Decksteria.Ui.Maui.Shared.Models;
 
-using System.IO;
-
-public readonly struct DeckTile(string filePath)
+public readonly struct DeckTile(string deckName, bool isValid)
 {
-    public string FileLocation { get; init; } = filePath;
+    public string DeckName { get; init; } = deckName;
 
-    public string FileName { get; init; } = Path.GetFileName(filePath);
-
-    public string DeckName { get; init; } = Path.GetFileNameWithoutExtension(filePath);
+    public bool IsValid { get; init; } = isValid;
 }

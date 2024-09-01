@@ -54,6 +54,20 @@ internal sealed class DeckFileService : IDeckFileService
         await memoryStream.CopyToAsync(fileStream, cancellationToken);
     }
 
+    public Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var baseDirectory = GetDeckFilePath();
+        var filePaths = Directory.EnumerateFiles(baseDirectory, "*.json", new EnumerationOptions
+        {
+            MatchType = MatchType.Simple,
+            MatchCasing = MatchCasing.CaseInsensitive,
+            RecurseSubdirectories = false
+        });
+        var deckNames = filePaths.Select(s => Path.GetFileNameWithoutExtension(s));
+        return Task.FromResult(deckNames);
+    }
+
     public async Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -107,8 +121,14 @@ internal sealed class DeckFileService : IDeckFileService
         return directoryPath;
     }
 
-    private string GetDeckFilePath(string deckName)
+    private string GetDeckFilePath(string? deckName = null)
     {
-        return @$"{FileSystem.AppDataDirectory}\{gameName}\{formatName}\{deckName}.json";
+        var baseDirectory = @$"{FileSystem.AppDataDirectory}\{gameName}\{formatName}\";
+        if (deckName is null)
+        {
+            return baseDirectory;
+        }
+
+        return $@"{baseDirectory}\{deckName}.json";
     }
 }
