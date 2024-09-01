@@ -11,7 +11,7 @@
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
-    Title="Deckbuilder"
+    Title="{Binding WindowTitle}"
     Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
@@ -32,7 +32,7 @@
             </Image>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
-    <ScrollView VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
+    <ScrollView Orientation="Vertical" VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">
         <clyout:AdaptiveGrid
             x:Name="AdaptiveGrid_Main"
             RowCount="2"
@@ -75,6 +75,7 @@
                         Padding="1"
                         BorderWidth="1"
                         CornerRadius="5"
+                        ToolTipProperties.Text="Search"
                         Pressed="TextSearch_Entered">
                         <ImageButton.Source>
                             <FontImageSource
@@ -91,6 +92,7 @@
                         Padding="1"
                         BorderWidth="1"
                         CornerRadius="5"
+                        ToolTipProperties.Text="Filter"
                         Pressed="AdvancedFilter_Pressed">
                         <ImageButton.Source>
                             <FontImageSource
@@ -124,14 +126,73 @@
                     IsRunning="{Binding Searching}"
                     Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
             </Grid>
-            <material:TabView
-                Grid.Row="1"
-                Grid.Column="0"
-                x:Name="DecksLayout"
-                MinimumHeightRequest="300"
-                TabPlacement="{Binding TabViewTabPlacement}"
-                SelectedTabChanged="DecksLayout_SelectedTabChanged"
-            />
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+                        <Button
+                            StyleClass="OutlinedButton"
+                            Text="Save"
+                            ToolTipProperties.Text="Save Decklist"
+                            Pressed="ButtonSave_Pressed">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    Size="20"
+                                    FontFamily="FASolid"
+                                    Glyph="{x:Static fa:Solid.FloppyDisk}"
+                                    Color="{AppThemeBinding Light={StaticResource OnPrimaryContainer}, Dark={StaticResource OnPrimaryContainerDark}}"/>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button
+                            StyleClass="TextButton"
+                            Text="Import"
+                            ToolTipProperties.Text="Import Decklist">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    Size="20"
+                                    FontFamily="FASolid"
+                                    Glyph="{x:Static fa:Solid.FileImport}"
+                                    Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"/>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button
+                            StyleClass="TextButton"
+                            Text="Export"
+                            ToolTipProperties.Text="Export Decklist">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    Size="20"
+                                    FontFamily="FASolid"
+                                    Glyph="{x:Static fa:Solid.FileExport}"
+                                    Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"/>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button
+                            StyleClass="TextButton"
+                            Text="Sort"
+                            ToolTipProperties.Text="Sort Deck">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    Size="20"
+                                    FontFamily="FASolid"
+                                    Glyph="{Binding SortDeckIcon}"
+                                    Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"/>
+                            </Button.ImageSource>
+                        </Button>
+                    </HorizontalStackLayout>
+                </ScrollView>
+                <material:TabView
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    x:Name="DecksLayout"
+                    MinimumHeightRequest="300"
+                    TabPlacement="{Binding TabViewTabPlacement}"
+                    SelectedTabChanged="DecksLayout_SelectedTabChanged"
+                />
+            </Grid>
         </clyout:AdaptiveGrid>
     </ScrollView>
 </uranium:UraniumContentPage>

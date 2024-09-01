@@ -109,7 +109,6 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
             {
                 await DownloadAsync();
                 var checksumValid = await ValidateChecksum();
-
                 if (checksumValid)
                 {
                     return;

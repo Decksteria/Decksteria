@@ -3,6 +3,7 @@ namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
 using Decksteria.Ui.Maui.Pages.Search;
+using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
@@ -27,18 +29,21 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IPageService pageService;
 
+    private readonly IDeckFileService deckFileService;
+
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
     private IEnumerable<ISearchFieldFilter> searchFieldFilters;
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService)
+    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService, IDeckFileService deckFileService)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.pageService = pageService;
+        this.deckFileService = deckFileService;
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
@@ -54,7 +59,7 @@ public partial class Deckbuilder : UraniumContentPage
         DecksLayout.Items.Clear();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
-        Title = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
+        viewModel.WindowTitle = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
         firstLoaded = true;
 
         CollectionView RenderCollectionView(DecksteriaDeck decksteriaDeck)
@@ -104,6 +109,66 @@ public partial class Deckbuilder : UraniumContentPage
     private void AdaptiveGrid_Main_SizeChanged(object? sender, EventArgs e)
     {
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
+    }
+
+    private async void ButtonSave_Pressed(object sender, EventArgs e)
+    {
+        const string save = "Save";
+        const string saveAs = "Save As";
+        var action = saveAs;
+        if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
+        {
+            action = await DisplayActionSheet("Save as new?", "Cancel", null, save, saveAs);
+        }
+
+        // Return if action selection was cancelled.
+        if (action is null)
+        {
+            return;
+        }
+
+        var deckName = viewModel.DecklistName;
+        if (action == saveAs)
+        {
+            var isValidFileName = true;
+            do
+            {
+                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", null, default, viewModel.DecklistName, 20, Keyboard.Default);
+
+                // If prompt was cancelled, exit out of the function.
+                if (deckName is null)
+                {
+                    return;
+                }
+
+                // Check that file name is valid.
+                isValidFileName = IsValidFileName(deckName);
+                if (!isValidFileName)
+                {
+                    await DisplayAlert("Error", "Deck name cannot contain any of these characters.\n\\/:*?\"<>|", "OK");
+                }
+            } while (!isValidFileName);
+        }
+
+        await deckFileService.SaveDecklistAsync(deckName, ConvertToCardArtIdDictionary(viewModel.Decks));
+        await DisplayAlert("Deck Saved", $"Your deck {deckName} has been saved.", "OK");
+
+        // Create Decklist in CardArtId format.
+        static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string,ObservableCollection<CardArt>> decklist)
+        {
+            return decklist.ToDictionary
+            (
+                keyValue => keyValue.Key,
+                keyValue => keyValue.Value.Select(card => new CardArtId(card.CardId, card.ArtId))
+            );
+        }
+
+        static bool IsValidFileName(string fileName)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var arrayIntersect = invalidChars.Intersect(fileName.ToCharArray());
+            return arrayIntersect.Count() == 0;
+        }
     }
 
     private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
