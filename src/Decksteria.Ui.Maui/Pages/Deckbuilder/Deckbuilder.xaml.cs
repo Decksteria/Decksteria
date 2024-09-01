@@ -3,6 +3,7 @@ namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -120,13 +121,37 @@ public partial class Deckbuilder : UraniumContentPage
             action = await DisplayActionSheet("Save as new?", "Cancel", null, save, saveAs);
         }
 
+        // Return if action selection was cancelled.
+        if (action is null)
+        {
+            return;
+        }
+
         var deckName = viewModel.DecklistName;
         if (action == saveAs)
         {
-            deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", default, default, viewModel.DecklistName, 20, Keyboard.Default);
+            var isValidFileName = true;
+            do
+            {
+                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", null, default, viewModel.DecklistName, 20, Keyboard.Default);
+
+                // If prompt was cancelled, exit out of the function.
+                if (deckName is null)
+                {
+                    return;
+                }
+
+                // Check that file name is valid.
+                isValidFileName = IsValidFileName(deckName);
+                if (!isValidFileName)
+                {
+                    await DisplayAlert("Error", "Deck name cannot contain any of these characters.\n\\/:*?\"<>|", "OK");
+                }
+            } while (!isValidFileName);
         }
 
         await deckFileService.SaveDecklistAsync(deckName, ConvertToCardArtIdDictionary(viewModel.Decks));
+        await DisplayAlert("Deck Saved", $"Your deck {deckName} has been saved.", "OK");
 
         // Create Decklist in CardArtId format.
         static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string,ObservableCollection<CardArt>> decklist)
@@ -136,6 +161,13 @@ public partial class Deckbuilder : UraniumContentPage
                 keyValue => keyValue.Key,
                 keyValue => keyValue.Value.Select(card => new CardArtId(card.CardId, card.ArtId))
             );
+        }
+
+        static bool IsValidFileName(string fileName)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var arrayIntersect = invalidChars.Intersect(fileName.ToCharArray());
+            return arrayIntersect.Count() == 0;
         }
     }
 
