@@ -25,6 +25,8 @@ public interface IDeckbuildingService
 
     int GetCardCountFromDeck(long cardId, string deckName);
 
+    Task<CardArt> GetCardAsync(CardArtId cardArtId, CancellationToken cancellationToken = default);
+
     Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
     IEnumerable<CardArt>? GetDeckCards(string deckName);

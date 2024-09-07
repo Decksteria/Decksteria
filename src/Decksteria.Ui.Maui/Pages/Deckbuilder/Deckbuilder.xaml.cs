@@ -49,9 +49,25 @@ public partial class Deckbuilder : UraniumContentPage
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
-    public async Task LoadDecklistAsync(string deckName)
+    public async Task LoadDecklistAsync(string deckName, CancellationToken cancellationToken = default)
     {
-        var decklist = await deckFileService.ReadDecklistAsync(deckName);
+        var decklist = await deckFileService.ReadDecklistAsync(deckName, cancellationToken);
+        foreach (var deck in decklist.Decks)
+        {
+            viewModel.Decks.TryGetValue(deck.Key, out var mauiDeck);
+            if (mauiDeck is null)
+            {
+                continue;
+            }
+
+            var deckCards = deck.Value.Select(GetCardArtFromId);
+            mauiDeck.ReplaceData(await Task.WhenAll(deckCards));
+        }
+
+        Task<CardArt> GetCardArtFromId(CardArtId cardArtId)
+        {
+            return deckbuilder.GetCardAsync(cardArtId, cancellationToken);
+        }
     }
 
     private async void ContentPage_LoadedAsync(object? sender, EventArgs e)

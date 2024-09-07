@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,6 +80,13 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         return Task.CompletedTask;
     }
 
+    public async Task<CardArt> GetCardAsync(CardArtId cardArtId, CancellationToken cancellationToken = default)
+    {
+        var card = await format.GetCardAsync(cardArtId.CardId, cancellationToken);
+        var art = card.Arts.FirstOrDefault(a => a.ArtId == cardArtId.ArtId) ?? throw new NullReferenceException("An artwork with the specified ID could not be found.");
+        return GetCardArtFromCard(card, art);
+    }
+
     public async Task<IEnumerable<CardArt>> GetCardsAsync(string? searchText = null, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
         var cards = await format.GetCardsAsync(filters, cancellationToken);
@@ -91,7 +99,7 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
 
         IEnumerable<CardArt> ToCardArts(IDecksteriaCard cardInfo)
         {
-            return cardInfo.Arts.Select(art => new CardArt(cardInfo.CardId, art.ArtId, art.DownloadUrl, art.FileName, cardInfo.Details));
+            return cardInfo.Arts.Select(art => GetCardArtFromCard(cardInfo, art));
         }
     }
 
@@ -144,5 +152,10 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
 
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<List<CardArt>?>(decklist[deckName]);
+    }
+
+    private CardArt GetCardArtFromCard(IDecksteriaCard cardInfo, IDecksteriaCardArt art)
+    {
+        return new CardArt(cardInfo.CardId, art.ArtId, art.DownloadUrl, art.FileName, cardInfo.Details);
     }
 }

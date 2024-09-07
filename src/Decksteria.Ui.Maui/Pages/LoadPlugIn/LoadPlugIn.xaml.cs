@@ -183,17 +183,16 @@ public partial class LoadPlugIn : UraniumContentPage
         ProcessingInProgress = false;
     }
 
-    private void ListView_DeckSelect_Open_Clicked(object sender, EventArgs e)
+    private async void ListView_DeckSelect_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-        if (ListView_DeckSelect.SelectedItem is not DeckTile)
+        if (ListView_DeckSelect.SelectedItem is not DeckTile selectedItem)
         {
             return;
         }
 
-        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
-        var selectedItem = (DeckTile) ListView_DeckSelect.SelectedItem;
         // Open Deckbuilder Window
-        pageService.OpenPageAsync<Deckbuilder>();
+        var deckbuilderPage = await pageService.OpenPageAsync<Deckbuilder>(null, false);
+        await deckbuilderPage.LoadDecklistAsync(selectedItem.DeckName);
     }
 
     private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)
