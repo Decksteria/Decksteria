@@ -191,16 +191,25 @@ public partial class Deckbuilder : UraniumContentPage
     private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
         searchModal = await pageService.OpenFormPage<SearchModal>(searchModal);
-        if (searchModal.IsSubmitted)
+        if (!searchModal.IsSubmitted)
         {
-            viewModel.AdvancedFiltersApplied = true;
-            searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
-            await PerformSearch();
+            return;
         }
+
+        if (!searchModal.ViewModel.SearchFieldFilters.Any())
+        {
+            ClearAdvancedFilter_Pressed(sender, e);
+            return;
+        }
+        
+        viewModel.AdvancedFiltersApplied = true;
+        searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
+        await PerformSearch();
     }
 
     private async void ClearAdvancedFilter_Pressed(object? sender, EventArgs e)
     {
+        searchModal = null;
         searchFieldFilters = Array.Empty<ISearchFieldFilter>();
         viewModel.AdvancedFiltersApplied = false;
         await PerformSearch();

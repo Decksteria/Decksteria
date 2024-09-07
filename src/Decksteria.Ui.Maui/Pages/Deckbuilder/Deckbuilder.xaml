@@ -110,7 +110,7 @@
                         Padding="1"
                         BorderWidth="1"
                         CornerRadius="5"
-                        ToolTipProperties.Text="Filter"
+                        ToolTipProperties.Text="Clear Filters"
                         IsEnabled="{Binding AdvancedFiltersApplied}"
                         Pressed="ClearAdvancedFilter_Pressed">
                         <ImageButton.Source>
