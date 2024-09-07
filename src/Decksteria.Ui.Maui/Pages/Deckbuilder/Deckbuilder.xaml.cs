@@ -190,20 +190,27 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
-        var searchModal = await pageService.OpenFormPage<SearchModal>();
-
+        searchModal = await pageService.OpenFormPage<SearchModal>(searchModal);
         if (searchModal.IsSubmitted)
         {
+            viewModel.AdvancedFiltersApplied = true;
             searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
             await PerformSearch();
         }
+    }
+
+    private async void ClearAdvancedFilter_Pressed(object? sender, EventArgs e)
+    {
+        searchFieldFilters = Array.Empty<ISearchFieldFilter>();
+        viewModel.AdvancedFiltersApplied = false;
+        await PerformSearch();
     }
 
     private async Task PerformSearch(CancellationToken cancellationToken = default)
     {
         viewModel.Searching = true;
         var results = await deckbuilder.GetCardsAsync(viewModel.SearchText, searchFieldFilters, cancellationToken);
-        viewModel.FilteredCards.ReplaceData(results);
+        viewModel.FilteredCards.UpdateData(results);
         viewModel.Searching = false;
     }
 
