@@ -37,13 +37,13 @@ public partial class Deckbuilder : UraniumContentPage
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService, IDeckFileService deckFileService)
+    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService, IDeckFileServiceFactory deckFileServiceFactory)
     {
         InitializeComponent();
         BindingContext = viewModel;
         this.deckbuilder = deckbuilder;
         this.pageService = pageService;
-        this.deckFileService = deckFileService;
+        this.deckFileService = deckFileServiceFactory.GetDeckFileService();
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
@@ -167,7 +167,7 @@ public partial class Deckbuilder : UraniumContentPage
         {
             var invalidChars = Path.GetInvalidFileNameChars();
             var arrayIntersect = invalidChars.Intersect(fileName.ToCharArray());
-            return arrayIntersect.Count() == 0;
+            return !arrayIntersect.Any();
         }
     }
 

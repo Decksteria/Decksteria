@@ -125,7 +125,7 @@ internal sealed class DeckFileService : IDeckFileService
     {
         var baseDirectory = @$"{FileSystem.AppDataDirectory}\{gameName}\{formatName}\";
         if (deckName is null)
-        {
+    {
             return baseDirectory;
         }
 

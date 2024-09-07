@@ -130,7 +130,7 @@
             <ListView
                 x:Name="ListView_DeckSelect"
                 ItemsSource="{Binding DeckTiles}"
-                RowHeight="100"
+                RowHeight="50"
                 SelectionMode="Single"
                 Opacity="0"
                 IsVisible="{Binding DecksExpanded}">
@@ -189,7 +189,9 @@
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate  x:DataType="models:DeckTile">
-                        <TextCell Text="{Binding DeckName}"/>
+                        <ViewCell>
+                            <Label Text="{Binding DeckName}" Margin="10,0" FontSize="Large" VerticalTextAlignment="Center" />
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

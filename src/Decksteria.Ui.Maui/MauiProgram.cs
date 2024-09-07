@@ -55,14 +55,14 @@ public static class MauiProgram
     private static IServiceCollection AddMAUIServices(this IServiceCollection services)
     {
         services.AddSingleton<IDecksteriaPlugInFactory, DecksteriaPlugInFactory>();
-        services.TryAddScoped<GameFormat>((sp) =>
+        services.TryAddTransient<GameFormat>((sp) =>
         {
             var formatFactory = sp.GetRequiredService<IDecksteriaPlugInFactory>();
             return formatFactory.GetSelectedFormat();
         });
         services.AddHttpClient();
         services.TryAddScoped<IDialogService, DialogService>();
-        services.TryAddScoped<IDeckFileService, DeckFileService>();
+        services.TryAddScoped<IDeckFileServiceFactory, DeckFileServiceFactory>();
         // Use a different implementation for the Paging Service that turns Modals into a new Window.
 #if WINDOWS
         services.TryAddScoped<IPageService, PageService>();

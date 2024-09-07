@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Decksteria.Services.PlugInFactory;
@@ -58,15 +57,15 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private readonly IDecksteriaPlugInFactory plugInFactory;
 
-    private readonly IDeckFileService deckFileService;
+    private readonly IDeckFileServiceFactory deckFileServiceFactory;
 
     private readonly LoadPluginViewModel viewModel = new();
 
-    public LoadPlugIn(IPageService pageService, IDecksteriaPlugInFactory plugInFactory, IDeckFileService deckFileService)
+    public LoadPlugIn(IPageService pageService, IDecksteriaPlugInFactory plugInFactory, IDeckFileServiceFactory deckFileServiceFactory)
     {
         this.pageService = pageService;
         this.plugInFactory = plugInFactory;
-        this.deckFileService = deckFileService;
+        this.deckFileServiceFactory = deckFileServiceFactory;
         this.BindingContext = this.viewModel;
 
         InitializeComponent();
@@ -220,6 +219,10 @@ public partial class LoadPlugIn : UraniumContentPage
     {
         // Get All Deck files from the Plug-In Format Application Path
         viewModel.SelectedFormat = formatTile;
+        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
+
+        // Get Decks
+        var deckFileService = deckFileServiceFactory.GetDeckFileService();
         var deckNames = await deckFileService.GetSavedDecksAsync();
         var deckTiles = deckNames.Select(x => new DeckTile(x, true));
         viewModel.DeckTiles.ReplaceData(deckTiles);
@@ -227,7 +230,6 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
-        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         pageService.OpenPageAsync<Deckbuilder>();
     }
 }

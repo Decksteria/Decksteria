@@ -32,6 +32,8 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     private DecksteriaPlugIn? selectedPlugIn;
 
+    public GameFormat? selectedGameFormat;
+
     public DecksteriaPlugInFactory(IDialogService dialogService, IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory, ILogger<DecksteriaPlugInFactory> logger)
     {
         this.dialogService = dialogService;
@@ -57,20 +59,27 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public GameFormat GetSelectedFormat()
     {
+        if (selectedGameFormat is not null)
+        {
+            return selectedGameFormat;
+        }
+
         IDecksteriaGame? initializedGame;
         if (selectedPlugIn is null || (initializedGame = InitializeSelectedGame(selectedPlugIn?.PlugInType)) is null)
         {
-            throw new ArgumentNullException("Valid plug-in has not been selected.");
+            throw new ArgumentNullException("A valid plug-in has not been selected.");
         }
 
         var format = initializedGame.Formats.FirstOrDefault(format => format.Name == formatDetails?.Name) ?? throw new ArgumentNullException("Valid format has not been selected.");
-        return new(selectedPlugIn!.Name, initializedGame, format);
+        selectedGameFormat = new(selectedPlugIn!.Name, initializedGame, format);
+        return selectedGameFormat;
     }
 
     public void SelectGame(string gameName, string formatName)
     {
         selectedPlugIn = GameList?.GetValueOrDefault(gameName);
         formatDetails = selectedPlugIn?.Formats.FirstOrDefault(format => format.Name == formatName);
+        selectedGameFormat = null;
     }
 
     public bool TryAddGame(string dllFilePath)
