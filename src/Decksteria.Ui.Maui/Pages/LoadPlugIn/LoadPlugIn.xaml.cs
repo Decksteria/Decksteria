@@ -2,12 +2,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.Deckbuilder;
+using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
+using Decksteria.Ui.Maui.Shared.Extensions;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -55,12 +57,15 @@ public partial class LoadPlugIn : UraniumContentPage
 
     private readonly IDecksteriaPlugInFactory plugInFactory;
 
+    private readonly IDeckFileServiceFactory deckFileServiceFactory;
+
     private readonly LoadPluginViewModel viewModel = new();
 
-    public LoadPlugIn(IPageService pageService, IDecksteriaPlugInFactory plugInFactory)
+    public LoadPlugIn(IPageService pageService, IDecksteriaPlugInFactory plugInFactory, IDeckFileServiceFactory deckFileServiceFactory)
     {
         this.pageService = pageService;
         this.plugInFactory = plugInFactory;
+        this.deckFileServiceFactory = deckFileServiceFactory;
         this.BindingContext = this.viewModel;
 
         InitializeComponent();
@@ -138,19 +143,19 @@ public partial class LoadPlugIn : UraniumContentPage
         ListView_PlugInSelect.FadeTo(1, 100, Easing.Linear);
     }
 
-    private void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
+    private async void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
     {
         var senderBinding = (sender as ViewCell)?.BindingContext;
         if (senderBinding is not FormatTile)
         {
-            DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            await DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateDeckList((FormatTile) senderBinding);
-        ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
+        await UpdateDeckListAsync((FormatTile) senderBinding);
+        await ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
         viewModel.DecksExpanded = true;
-        ListView_DeckSelect.FadeTo(1, 100, Easing.Linear);
+        await ListView_DeckSelect.FadeTo(1, 100, Easing.Linear);
     }
 
     private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
@@ -210,22 +215,21 @@ public partial class LoadPlugIn : UraniumContentPage
         }
     }
 
-    private void UpdateDeckList(FormatTile formatTile)
+    private async Task UpdateDeckListAsync(FormatTile formatTile)
     {
         // Get All Deck files from the Plug-In Format Application Path
-        var deckDirectory = Path.Combine(FileSystem.AppDataDirectory, formatTile.DeckDirectory);
         viewModel.SelectedFormat = formatTile;
-        if (Path.Exists(deckDirectory))
-        {
-            var files = Directory.GetFiles(deckDirectory, "*.json", SearchOption.TopDirectoryOnly);
-            var deckTiles = files.Select(file => new DeckTile(file));
-            ListView_DeckSelect.ItemsSource = deckTiles;
-        }
+        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
+
+        // Get Decks
+        var deckFileService = deckFileServiceFactory.GetDeckFileService();
+        var deckNames = await deckFileService.GetSavedDecksAsync();
+        var deckTiles = deckNames.Select(x => new DeckTile(x, true));
+        viewModel.DeckTiles.ReplaceData(deckTiles);
     }
 
     private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
-        plugInFactory.SelectGame(viewModel.SelectedPlugIn!.Name, viewModel.SelectedFormat!.Name);
         pageService.OpenPageAsync<Deckbuilder>();
     }
 }

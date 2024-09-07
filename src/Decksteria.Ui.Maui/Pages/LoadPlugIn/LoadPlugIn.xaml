@@ -6,6 +6,7 @@
     x:DataType="loadplugin:LoadPluginViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:convert="clr-namespace:Decksteria.Ui.Maui.Shared.Converter"
     xmlns:local="clr-namespace:Decksteria.Ui.Maui"
     xmlns:loadplugin="clr-namespace:Decksteria.Ui.Maui.Pages.LoadPlugIn"
     xmlns:models="clr-namespace:Decksteria.Ui.Maui.Shared.Models"
@@ -24,9 +25,10 @@
                     <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            <convert:VerifiedToGlyphConverter x:Key="IsVerifiedToSymbol" />
+            <convert:VerifiedToColourConverter x:Key="IsVerifiedToColour" />
         </ResourceDictionary>
     </uranium:UraniumContentPage.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -130,7 +132,7 @@
             <ListView
                 x:Name="ListView_DeckSelect"
                 ItemsSource="{Binding DeckTiles}"
-                RowHeight="100"
+                RowHeight="50"
                 SelectionMode="Single"
                 Opacity="0"
                 IsVisible="{Binding DecksExpanded}">
@@ -189,7 +191,23 @@
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate  x:DataType="models:DeckTile">
-                        <TextCell Text="{Binding DeckName}"/>
+                        <ViewCell>
+                            <Grid Padding="5,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FASolid"
+                                            Glyph="{Binding IsValid,Converter={StaticResource IsVerifiedToSymbol}}"
+                                            Color="{Binding IsValid,Converter={StaticResource IsVerifiedToColour}}" />
+                                    </Image.Source>
+                                </Image>
+                                <Label Grid.Column="1" Text="{Binding DeckName}" Margin="10,0" FontSize="Large" VerticalTextAlignment="Center" />
+                            </Grid>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
