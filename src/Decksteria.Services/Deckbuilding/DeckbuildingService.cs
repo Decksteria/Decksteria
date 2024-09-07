@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Services.Deckbuilding;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -83,7 +84,7 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         var cards = await format.GetCardsAsync(filters, cancellationToken);
         if (!string.IsNullOrWhiteSpace(searchText))
         {
-            cards = cards.Where(c => c.Details.Contains(searchText));
+            cards = cards.Where(c => c.Details.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
         }
 
         return cards.SelectMany(ToCardArts);
