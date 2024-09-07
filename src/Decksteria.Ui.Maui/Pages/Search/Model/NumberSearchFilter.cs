@@ -61,7 +61,7 @@ internal sealed class NumberSearchFilter : IMauiSearchFilter
 
     public ISearchFieldFilter[] AsSearchFieldFilterArray()
     {
-        if (!MinimumIsChanged || !MaximumIsChanged)
+        if (!MinimumIsChanged && !MaximumIsChanged)
         {
             return [];
         }
