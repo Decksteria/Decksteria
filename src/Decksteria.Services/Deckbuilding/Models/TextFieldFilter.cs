@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Services.Deckbuilding.Models;
 
+using System;
 using System.ComponentModel;
 using Decksteria.Core.Models;
 
@@ -63,12 +64,12 @@ public sealed class TextFieldFilter : ISearchFieldFilter
 
         return Comparison switch
         {
-            ComparisonType.Equals => cardProperty == StringValue,
-            ComparisonType.NotEquals => cardProperty != StringValue,
-            ComparisonType.Contains => cardProperty.Contains(StringValue),
-            ComparisonType.NotContains => !cardProperty.Contains(StringValue),
-            ComparisonType.StartsWith => cardProperty.StartsWith(StringValue),
-            ComparisonType.EndsWith => cardProperty.EndsWith(StringValue),
+            ComparisonType.Equals => string.Equals(cardProperty, StringValue, StringComparison.InvariantCultureIgnoreCase),
+            ComparisonType.NotEquals => !string.Equals(cardProperty, StringValue, StringComparison.InvariantCultureIgnoreCase),
+            ComparisonType.Contains => cardProperty.Contains(StringValue, StringComparison.InvariantCultureIgnoreCase),
+            ComparisonType.NotContains => !cardProperty.Contains(StringValue, StringComparison.InvariantCultureIgnoreCase),
+            ComparisonType.StartsWith => cardProperty.StartsWith(StringValue, StringComparison.InvariantCultureIgnoreCase),
+            ComparisonType.EndsWith => cardProperty.EndsWith(StringValue, StringComparison.InvariantCultureIgnoreCase),
             _ => false,
         };
     }

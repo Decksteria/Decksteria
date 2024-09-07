@@ -31,6 +31,8 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IDeckFileService deckFileService;
 
+    private SearchModal? searchModal = null;
+
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
     private IEnumerable<ISearchFieldFilter> searchFieldFilters;
@@ -45,6 +47,11 @@ public partial class Deckbuilder : UraniumContentPage
         this.pageService = pageService;
         this.deckFileService = deckFileServiceFactory.GetDeckFileService();
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
+    }
+
+    public async Task LoadDecklistAsync(string deckName)
+    {
+        var decklist = await deckFileService.ReadDecklistAsync(deckName);
     }
 
     private async void ContentPage_LoadedAsync(object? sender, EventArgs e)
@@ -183,26 +190,42 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
-        await pageService.OpenFormPage<SearchModal>(OnSubmitAsync, OnCancelAsync, null);
-
-        async Task OnSubmitAsync(SearchModal searchModal, CancellationToken cancellationToken)
+        searchModal = await pageService.OpenFormPage<SearchModal>(searchModal);
+        if (!searchModal.IsSubmitted)
         {
-            searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
-            cancellationToken.ThrowIfCancellationRequested();
-            await PerformSearch(cancellationToken);
+            return;
         }
 
-        Task OnCancelAsync(SearchModal searchModal, CancellationToken cancellationToken)
+        if (!searchModal.ViewModel.SearchFieldFilters.Any())
         {
-            return Task.CompletedTask;
+            ClearAdvancedFilter_Pressed(sender, e);
+            return;
         }
+        
+        viewModel.AdvancedFiltersApplied = true;
+        searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
+        await PerformSearch();
+    }
+
+    private async void ClearAdvancedFilter_Pressed(object? sender, EventArgs e)
+    {
+        searchModal = null;
+        searchFieldFilters = Array.Empty<ISearchFieldFilter>();
+        viewModel.AdvancedFiltersApplied = false;
+        await PerformSearch();
     }
 
     private async Task PerformSearch(CancellationToken cancellationToken = default)
     {
+        if (viewModel.SearchText.Length < 3 && !searchFieldFilters.Any())
+        {
+            viewModel.FilteredCards.Clear();
+            return;
+        }
+
         viewModel.Searching = true;
         var results = await deckbuilder.GetCardsAsync(viewModel.SearchText, searchFieldFilters, cancellationToken);
-        viewModel.FilteredCards.ReplaceData(results);
+        viewModel.FilteredCards.UpdateData(results);
         viewModel.Searching = false;
     }
 
@@ -214,16 +237,10 @@ public partial class Deckbuilder : UraniumContentPage
         }
 
         var cardInfo = new CardInfo(card, deckbuilder, pageService);
-        await pageService.OpenModalPage(CardInfoClosed, cardInfo);
-
-        Task CardInfoClosed(CardInfo cardInfo, CancellationToken cancellationToken)
+        var page = await pageService.OpenModalPage(cardInfo);
+        if (page.DecksChanged)
         {
-            if (!cardInfo.DecksChanged)
-            {
-                return Task.CompletedTask;
-            }
-
-            return UpdateDeckCollections(null, cancellationToken);
+            await UpdateDeckCollections(null);
         }
     }
 
@@ -263,11 +280,6 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void TextSearch_Entered(object? sender, EventArgs e)
     {
-        if (viewModel.SearchText.Length < 3)
-        {
-            return;
-        }
-
         await PerformSearch();
     }
 
