@@ -58,6 +58,11 @@ internal sealed class DeckFileService : IDeckFileService
     {
         cancellationToken.ThrowIfCancellationRequested();
         var baseDirectory = GetDeckFilePath();
+        if (!Directory.Exists(baseDirectory))
+        {
+            return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+        }
+
         var filePaths = Directory.EnumerateFiles(baseDirectory, "*.json", new EnumerationOptions
         {
             MatchType = MatchType.Simple,
