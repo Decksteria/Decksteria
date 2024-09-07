@@ -79,7 +79,7 @@ public partial class Deckbuilder : UraniumContentPage
                 {
                     HorizontalItemSpacing = 2,
                     SnapPointsAlignment = SnapPointsAlignment.Center,
-                    Span = 4,
+                    Span = 8,
                     VerticalItemSpacing = 2
                 }
             };
