@@ -17,17 +17,29 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
         Descending
     }
 
-    public string ActiveDeckTab { get; set; } = string.Empty;
-
-    public string DecklistName { get; set; } = string.Empty;
-
-    private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
+    private bool _advancedFiltersApplied = false;
 
     private bool _searching = false;
 
     private SortDeckStatus _sortStatus = SortDeckStatus.Unsorted;
 
+    private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
+
     private string _windowTitle = string.Empty;
+
+    public string ActiveDeckTab { get; set; } = string.Empty;
+
+    public string DecklistName { get; set; } = string.Empty;
+
+    public bool AdvancedFiltersApplied
+    {
+        get => _advancedFiltersApplied;
+        set
+        {
+            _advancedFiltersApplied = value;
+            OnPropertyChanged(nameof(AdvancedFiltersApplied));
+        }
+    }
 
     public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
 

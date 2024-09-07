@@ -29,6 +29,8 @@ public partial class SearchModal : UraniumContentPage, IActionFormPage<SearchMod
 
     public bool IsSubmitted { get; internal set; } = false;
 
+    public bool IsChanged { get; internal set; } = false;
+
     public Func<SearchModal, CancellationToken, Task>? OnSubmitAsync { get; set; } = null;
 
     public Func<SearchModal, CancellationToken, Task>? OnPopAsync { get; set; } = null;

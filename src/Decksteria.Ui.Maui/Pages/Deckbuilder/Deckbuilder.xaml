@@ -52,6 +52,7 @@
                         <ColumnDefinition Width="40*"/>
                         <ColumnDefinition Width="45" />
                         <ColumnDefinition Width="45" />
+                        <ColumnDefinition Width="45" />
                     </Grid.ColumnDefinitions>
                     <Label
                         Grid.Column="0"
@@ -99,6 +100,24 @@
                                 Size="28"
                                 FontFamily="FASolid"
                                 Glyph="{x:Static fa:Solid.Filter}"
+                                Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                    <ImageButton
+                        StyleClass="FilledTonalButton"
+                        Grid.Column="4"
+                        Margin="5"
+                        Padding="1"
+                        BorderWidth="1"
+                        CornerRadius="5"
+                        ToolTipProperties.Text="Clear Filters"
+                        IsEnabled="{Binding AdvancedFiltersApplied}"
+                        Pressed="ClearAdvancedFilter_Pressed">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                Size="28"
+                                FontFamily="FASolid"
+                                Glyph="{x:Static fa:Solid.FilterCircleXmark}"
                                 Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                         </ImageButton.Source>
                     </ImageButton>

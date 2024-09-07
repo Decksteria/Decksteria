@@ -228,8 +228,8 @@ public partial class LoadPlugIn : UraniumContentPage
         viewModel.DeckTiles.ReplaceData(deckTiles);
     }
 
-    private void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
+    private async void ListView_DeckSelect_New_Clicked(object sender, EventArgs e)
     {
-        pageService.OpenPageAsync<Deckbuilder>();
+        await pageService.OpenPageAsync<Deckbuilder>(null, false);
     }
 }

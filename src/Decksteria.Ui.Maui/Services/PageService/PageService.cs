@@ -1,10 +1,10 @@
 ﻿namespace Decksteria.Ui.Maui.Services.PageService;
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Ui.Maui.Pages.LoadPlugIn;
-using Decksteria.Ui.Maui.Shared.Pages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 
@@ -23,7 +23,6 @@ internal sealed class PageService : IPageService
     public async Task BackToHomeAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
         await AppShellNavigation.PopToRootAsync(true);
     }
 
@@ -32,58 +31,67 @@ internal sealed class PageService : IPageService
         return GetPageInstance<LoadPlugIn>();
     }
 
-    public async Task OpenFormPage<T>(Func<T, CancellationToken, Task> OnPopAsync, T? newPage = null, CancellationToken cancellationToken = default) where T : Page, IFormPage<T>
+    public async Task<T> OpenFormPage<T>(T? newPage = null, bool waitUntilDisappear = true, CancellationToken cancellationToken = default) where T : Page
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        var taskCompletion = new TaskCompletionSource<bool>();
         var page = newPage ?? GetPageInstance<T>();
-        page.OnPopAsync = OnPopAsync;
-        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
-    }
-
-    public async Task OpenFormPage<T>(Func<T, CancellationToken, Task> OnSubmitAsync, Func<T, CancellationToken, Task> OnPopAsync, T? newPage = null, CancellationToken cancellationToken = default) where T : Page, IActionFormPage<T>
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var page = newPage ?? GetPageInstance<T>();
-        page.OnPopAsync = OnPopAsync;
-        page.OnSubmitAsync = OnSubmitAsync;
-        await AppShellNavigation.PushModalAsync(new NavigationPage(page), true);
-    }
-
-    public async Task OpenModalPage<T>(Func<T, CancellationToken, Task> onPopAsync, T? newPage = null, CancellationToken cancellationToken = default) where T : Page, IFormPage<T>
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var page = newPage ?? GetPageInstance<T>();
-        page.OnPopAsync = onPopAsync;
+        var disappearAction = CreateOnModalDisappearAction(page, taskCompletion);
+        page.Disappearing += (sender, e) => disappearAction(sender, e);
         await AppShellNavigation.PushModalAsync(page, true);
+
+        // Wait for the page to have been closed.
+        if (waitUntilDisappear)
+        {
+            await taskCompletion.Task;
+        }
+
+        return page;
     }
 
-    public async Task OpenPageAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : ContentPage
+    public async Task<T> OpenModalPage<T>(T? newPage = null, bool waitUntilDisappear = true, CancellationToken cancellationToken = default) where T : Page
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        var taskCompletion = new TaskCompletionSource<bool>();
         var page = newPage ?? GetPageInstance<T>();
-        await AppShellNavigation.PushAsync(page, true);
+        var disappearAction = CreateOnModalDisappearAction(page, taskCompletion);
+        page.Disappearing += (sender, e) => disappearAction(sender, e);
+        await AppShellNavigation.PushModalAsync(page, true);
+
+        // Wait for the page to have been closed.
+        if (waitUntilDisappear)
+        {
+            await taskCompletion.Task;
+        }
+
+        return page;
     }
 
-    public async Task<T?> PopModalAsync<T>(T? newPage = null, CancellationToken cancellationToken = default) where T : Page
+    public async Task<T> OpenPageAsync<T>(T? newPage = null, bool waitUntilDisappear = true, CancellationToken cancellationToken = default) where T : ContentPage
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        var taskCompletion = new TaskCompletionSource<bool>();
+        var page = newPage ?? GetPageInstance<T>();
+        var disappearAction = CreateOnModalDisappearAction(page, taskCompletion);
+        page.Disappearing += (sender, e) => disappearAction(sender, e);
+        await AppShellNavigation.PushAsync(page, true);
+
+        // Wait for the page to have been closed.
+        if (waitUntilDisappear)
+        {
+            await taskCompletion.Task;
+        }
+
+        return page;
+    }
+
+    public async Task<T?> PopModalAsync<T>(CancellationToken cancellationToken = default) where T : Page
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         var poppedPage = await AppShellNavigation.PopModalAsync(true) as T;
-
-        if (poppedPage is IFormPage<T> modalPage && modalPage.OnPopAsync is not null)
-        {
-            await modalPage.OnPopAsync(poppedPage, cancellationToken);
-        }
-
-        if (poppedPage is IActionFormPage<T> formPage && formPage.OnSubmitAsync is not null && formPage.IsSubmitted)
-        {
-            await formPage.OnSubmitAsync(poppedPage, cancellationToken);
-        }
-
         return poppedPage;
     }
 
@@ -94,5 +102,31 @@ internal sealed class PageService : IPageService
         var instance = ActivatorUtilities.GetServiceOrCreateInstance<T>(services);
         var page = instance as T;
         return page!;
+    }
+
+    private Action<object?, EventArgs> CreateOnModalDisappearAction<T>(T page, TaskCompletionSource<bool> completionSource) where T : Page
+    {
+        return (sender, e) =>
+        {
+            if (AppShellNavigation.ModalStack.Contains(page))
+            {
+                return;
+            }
+
+            completionSource.TrySetResult(true);
+        };
+    }
+
+    private Action<object?, EventArgs> CreateOnNavigationDisappearAction<T>(T page, TaskCompletionSource<bool> completionSource) where T : Page
+    {
+        return (sender, e) =>
+        {
+            if (AppShellNavigation.NavigationStack.Contains(page))
+            {
+                return;
+            }
+
+            completionSource.TrySetResult(true);
+        };
     }
 }
