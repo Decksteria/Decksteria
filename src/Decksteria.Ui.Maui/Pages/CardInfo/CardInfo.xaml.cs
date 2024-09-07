@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.FileService.Models;
 using Decksteria.Ui.Maui.Services.PageService;
-using Decksteria.Ui.Maui.Shared.Pages;
 using Microsoft.Maui.Controls;
 
-public partial class CardInfo : ContentPage, IFormPage<CardInfo>
+public partial class CardInfo : ContentPage
 {
     private readonly IDeckbuildingService deckbuildingService;
 

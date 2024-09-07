@@ -31,6 +31,8 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IDeckFileService deckFileService;
 
+    private SearchModal? searchModal = null;
+
     private ReadOnlyDictionary<string, CollectionView>? deckViews;
 
     private IEnumerable<ISearchFieldFilter> searchFieldFilters;
@@ -45,6 +47,11 @@ public partial class Deckbuilder : UraniumContentPage
         this.pageService = pageService;
         this.deckFileService = deckFileServiceFactory.GetDeckFileService();
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
+    }
+
+    public async Task LoadDecklistAsync(string deckName)
+    {
+        var decklist = await deckFileService.ReadDecklistAsync(deckName);
     }
 
     private async void ContentPage_LoadedAsync(object? sender, EventArgs e)
@@ -183,18 +190,12 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
     {
-        await pageService.OpenFormPage<SearchModal>(OnSubmitAsync, OnCancelAsync, null);
+        var searchModal = await pageService.OpenFormPage<SearchModal>();
 
-        async Task OnSubmitAsync(SearchModal searchModal, CancellationToken cancellationToken)
+        if (searchModal.IsSubmitted)
         {
             searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
-            cancellationToken.ThrowIfCancellationRequested();
-            await PerformSearch(cancellationToken);
-        }
-
-        Task OnCancelAsync(SearchModal searchModal, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
+            await PerformSearch();
         }
     }
 
@@ -214,16 +215,10 @@ public partial class Deckbuilder : UraniumContentPage
         }
 
         var cardInfo = new CardInfo(card, deckbuilder, pageService);
-        await pageService.OpenModalPage(CardInfoClosed, cardInfo);
-
-        Task CardInfoClosed(CardInfo cardInfo, CancellationToken cancellationToken)
+        var page = await pageService.OpenModalPage(cardInfo);
+        if (page.DecksChanged)
         {
-            if (!cardInfo.DecksChanged)
-            {
-                return Task.CompletedTask;
-            }
-
-            return UpdateDeckCollections(null, cancellationToken);
+            await UpdateDeckCollections(null);
         }
     }
 
