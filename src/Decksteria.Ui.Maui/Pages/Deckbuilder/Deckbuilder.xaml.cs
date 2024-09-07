@@ -217,6 +217,12 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async Task PerformSearch(CancellationToken cancellationToken = default)
     {
+        if (viewModel.SearchText.Length < 3 && !searchFieldFilters.Any())
+        {
+            viewModel.FilteredCards.Clear();
+            return;
+        }
+
         viewModel.Searching = true;
         var results = await deckbuilder.GetCardsAsync(viewModel.SearchText, searchFieldFilters, cancellationToken);
         viewModel.FilteredCards.UpdateData(results);
@@ -274,11 +280,6 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void TextSearch_Entered(object? sender, EventArgs e)
     {
-        if (viewModel.SearchText.Length < 3)
-        {
-            return;
-        }
-
         await PerformSearch();
     }
 
