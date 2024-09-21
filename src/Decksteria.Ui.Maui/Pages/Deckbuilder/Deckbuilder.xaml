@@ -142,6 +142,7 @@
                     x:Name="ActivityIndicator_Searching"
                     Grid.Row="0"
                     Grid.RowSpan="2"
+                    ZIndex="2"
                     IsRunning="{Binding Searching}"
                     Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
             </Grid>
@@ -150,6 +151,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+                <ActivityIndicator
+                    x:Name="ActivityIndicator_Loading"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    ZIndex="2"
+                    IsRunning="{Binding Loading}"
+                    Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
                     <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
                         <Button

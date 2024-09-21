@@ -80,6 +80,11 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         return Task.CompletedTask;
     }
 
+    public Decklist CreateDecklist()
+    {
+        return new(game.GetType().Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));
+    }
+
     public async Task<CardArt> GetCardAsync(CardArtId cardArtId, CancellationToken cancellationToken = default)
     {
         var card = await format.GetCardAsync(cardArtId.CardId, cancellationToken);
@@ -115,12 +120,33 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         return value;
     }
 
-    public Decklist CreateDecklist() => new(game.GetType().Name, format.Name, decklist.ToDictionary(kv => kv.Key, kv => kv.Value.Cast<CardArtId>()));
-
-    public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
+    public async Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default)
     {
-        var deck = await GetDecklistAsync(deckName, cancellationToken);
-        return deck?.Remove(card) ?? false;
+        foreach (var deck in decklist)
+        {
+            var name = deck.Key;
+            var cardList = deck.Value;
+
+            // Clear the existing decklist because we're loading up the decklist from scratch.
+            cardList.Clear();
+
+            // Skip this deck if the loaded decklist doesn't contain any cards for this deck.
+            newDecklist.Decks.TryGetValue(name, out var cards);
+            if (cards is null || !cards.Any())
+            {
+                continue;
+            }
+
+            // Populate deck with new cards
+            var convertTasks = cards.Select(GetCardArtFromId);
+            var newCards = await Task.WhenAll(convertTasks);
+            cardList.AddRange(newCards);
+        }
+
+        Task<CardArt> GetCardArtFromId(CardArtId cardArtId)
+        {
+            return GetCardAsync(cardArtId, cancellationToken);
+        }
     }
 
     public Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default)
@@ -128,6 +154,12 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         cancellationToken.ThrowIfCancellationRequested();
         decklist = format.Decks.ToDictionary(deck => deck.Name, _ => new List<CardArt>()).AsReadOnly();
         return Task.FromResult<IDictionary<string, List<CardArt>>>(decklist);
+    }
+
+    public async Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default)
+    {
+        var deck = await GetDecklistAsync(deckName, cancellationToken);
+        return deck?.Remove(card) ?? false;
     }
 
     public async Task<bool> RemoveCardAtAsync(int index, string deckName, CancellationToken cancellationToken = default)

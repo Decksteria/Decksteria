@@ -31,6 +31,8 @@ public interface IDeckbuildingService
 
     IEnumerable<CardArt>? GetDeckCards(string deckName);
 
+    Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default);
+
     Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default);
 
     Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default);
