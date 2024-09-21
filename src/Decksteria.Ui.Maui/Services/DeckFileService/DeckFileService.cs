@@ -93,6 +93,7 @@ internal sealed class DeckFileService : IDeckFileService
         using var fileStream = new FileStream(filePath, FileMode.Open);
         using var memoryStream = new MemoryStream();
         await fileStream.CopyToAsync(memoryStream, cancellationToken);
+        memoryStream.Position = 0;
         return await importer.LoadDecklistAsync(memoryStream, format, cancellationToken);
     }
 
