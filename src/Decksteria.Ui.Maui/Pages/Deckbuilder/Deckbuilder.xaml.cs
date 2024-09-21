@@ -17,11 +17,8 @@ using Decksteria.Ui.Maui.Pages.Search;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
-using Java.Nio.FileNio.Attributes;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Devices;
-using Microsoft.Maui.Storage;
 using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 

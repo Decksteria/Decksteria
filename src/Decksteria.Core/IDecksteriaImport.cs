@@ -11,11 +11,6 @@ using Decksteria.Core.Models;
 public interface IDecksteriaImport
 {
     /// <summary>
-    /// The name of the import command.
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
     /// The file extension the import function is designed to handle.
     /// </summary>
     public string FileType { get; }

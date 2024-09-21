@@ -68,7 +68,7 @@
                         VerticalTextAlignment="Center"
                         Margin="1"
                         Text="{Binding SearchText}"
-                        Completed="TextSearch_Entered"/>
+                        Completed="SearchTextSearch_Entered"/>
                     <ImageButton
                         StyleClass="FilledTonalButton"
                         Grid.Column="2"
