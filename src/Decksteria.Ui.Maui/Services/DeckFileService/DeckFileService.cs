@@ -32,8 +32,10 @@ internal sealed class DeckFileService : IDeckFileService
         format = gameFormat.Format;
         formatName = gameFormat.Format.Name;
         this.deckFileService = deckFileService;
-        exporters = gameFormat.Game.Exporters.ToDictionary(e => e.Name);
-        importers = gameFormat.Game.Importers.ToDictionary(e => e.Name);
+
+        // Use the labels as the key because .NET Maui's Display Action Sheet does not support classes
+        exporters = gameFormat.Game.Exporters.ToDictionary(e => e.Label);
+        importers = gameFormat.Game.Importers.ToDictionary(e => e.Label);
     }
 
     public async Task ExportDecklistAsync(string filePath, string exportFormat, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default)
@@ -52,6 +54,16 @@ internal sealed class DeckFileService : IDeckFileService
         _ = CreateMissingDirectories(filePath);
         using var fileStream = new FileStream(filePath, FileMode.Create);
         await memoryStream.CopyToAsync(fileStream, cancellationToken);
+    }
+
+    public IDictionary<string, string> GetExportFileTypes()
+    {
+        return exporters.ToDictionary(e => e.Key, e => e.Value.FileType);
+    }
+
+    public IDictionary<string, string> GetImportFileTypes()
+    {
+        return exporters.ToDictionary(e => e.Key, e => e.Value.FileType);
     }
 
     public Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default)
