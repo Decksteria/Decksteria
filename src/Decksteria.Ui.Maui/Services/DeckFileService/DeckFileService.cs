@@ -38,7 +38,7 @@ internal sealed class DeckFileService : IDeckFileService
         importers = gameFormat.Game.Importers.ToDictionary(e => e.Label);
     }
 
-    public async Task ExportDecklistAsync(string filePath, string exportFormat, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default)
+    public async Task<MemoryStream> ExportDecklistAsync(string exportFormat, Decklist decklist, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -46,14 +46,11 @@ internal sealed class DeckFileService : IDeckFileService
         var exporter = exporters.GetValueOrDefault(exportFormat) ?? throw new InvalidOperationException($"{exportFormat} is not a valid Exporter Option.");
 
         // Build Decklist Model
-        var decklist = new Decklist(gameName, formatName, decks.AsReadOnly());
         using var memoryStream = await exporter.SaveDecklistAsync(decklist, format, cancellationToken);
 
-        // Save File
+        // Reset memory stream for .NET Maui's FileSaver to use.
         memoryStream.Position = 0;
-        _ = CreateMissingDirectories(filePath);
-        using var fileStream = new FileStream(filePath, FileMode.Create);
-        await memoryStream.CopyToAsync(fileStream, cancellationToken);
+        return memoryStream;
     }
 
     public IDictionary<string, string> GetExportFileTypes()

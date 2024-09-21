@@ -1,13 +1,14 @@
 ﻿namespace Decksteria.Ui.Maui.Services.DeckFileService;
 
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
 
 public interface IDeckFileService
 {
-    Task ExportDecklistAsync(string filePath, string exportFormat, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default);
+    Task<MemoryStream> ExportDecklistAsync(string exportFormat, Decklist decklist, CancellationToken cancellationToken = default);
 
     IDictionary<string, string> GetExportFileTypes();
     
