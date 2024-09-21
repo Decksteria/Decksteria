@@ -144,7 +144,7 @@ public partial class Deckbuilder : UraniumContentPage
         var selectedExport = await DisplayActionSheet("Export to...", "Cancel", null, exportLabels);
         var memoryStream = await deckFileService.ExportDecklistAsync(selectedExport, deckbuilder.CreateDecklist(), cancellationToken);
 
-        var extension = exportOptions[selectedExport];
+        var extension = exportOptions[selectedExport].TrimStart('.');
         var fileSaveResult = await FileSaver.Default.SaveAsync($"{viewModel.DecklistName}.{extension}", memoryStream, cancellationToken);
 
         // Provide user se
