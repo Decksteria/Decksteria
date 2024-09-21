@@ -52,6 +52,7 @@ public partial class Deckbuilder : UraniumContentPage
     public async Task LoadDecklistAsync(string deckName, CancellationToken cancellationToken = default)
     {
         viewModel.Loading = true;
+        viewModel.DecklistName = deckName;
         var decklist = await deckFileService.ReadDecklistAsync(deckName, cancellationToken);
         await deckbuilder.LoadDecklistAsync(decklist, cancellationToken);
         await UpdateDeckCollections(cancellationToken: cancellationToken);
@@ -247,7 +248,7 @@ public partial class Deckbuilder : UraniumContentPage
             // Loading is only necessary if multiple decks will be refreshed.
             viewModel.Loading = true;
             await UpdateDeckCollections(null);
-            viewModel.Loading = true;
+            viewModel.Loading = false;
         }
     }
 
