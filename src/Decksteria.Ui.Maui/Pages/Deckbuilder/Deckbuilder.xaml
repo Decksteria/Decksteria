@@ -176,7 +176,8 @@
                         <Button
                             StyleClass="TextButton"
                             Text="Import"
-                            ToolTipProperties.Text="Import Decklist">
+                            ToolTipProperties.Text="Import Decklist"
+                            Pressed="MenuButtonImport_Pressed">
                             <Button.ImageSource>
                                 <FontImageSource
                                     Size="20"

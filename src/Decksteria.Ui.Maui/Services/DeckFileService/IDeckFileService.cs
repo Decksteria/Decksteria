@@ -16,6 +16,8 @@ public interface IDeckFileService
 
     Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default);
 
+    Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, CancellationToken cancellationToken = default);
+
     Task<Decklist> ReadDecklistAsync(string deckName, CancellationToken cancellationToken = default);
 
     Task SaveDecklistAsync(string deckName, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default);

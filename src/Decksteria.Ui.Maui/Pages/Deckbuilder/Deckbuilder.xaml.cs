@@ -19,6 +19,8 @@ using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Storage;
 using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 
@@ -142,6 +144,11 @@ public partial class Deckbuilder : UraniumContentPage
         var exportLabels = exportOptions.Keys.ToArray();
 
         var selectedExport = await DisplayActionSheet("Export to...", "Cancel", null, exportLabels);
+        if (selectedExport == "Cancel")
+        {
+            return;
+        }
+
         using var memoryStream = await deckFileService.ExportDecklistAsync(selectedExport, deckbuilder.CreateDecklist(), cancellationToken);
 
         var extension = exportOptions[selectedExport].TrimStart('.');
@@ -156,6 +163,55 @@ public partial class Deckbuilder : UraniumContentPage
         else
         {
             await DisplayAlert("Error", $"File not saved: {fileSaveResult.Exception.Message}", "OK");
+        }
+    }
+
+    private async void MenuButtonImport_Pressed(object sender, EventArgs e)
+    {
+        var importOptions = deckFileService.GetImportFileTypes();
+        var importLabels = importOptions.Keys.ToArray();
+
+        var selectedImport = await DisplayActionSheet("Import from...", "Cancel", null, importLabels);
+        if (selectedImport == "Cancel")
+        {
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
+        {
+            var overwrite = await DisplayAlert("Overwrite existing deck?", "Do you want to use a different name for the deck?", "Yes", "No", FlowDirection.LeftToRight);
+            if (overwrite)
+            {
+                viewModel.DecklistName = string.Empty;
+            }
+        }
+
+        var extension = importOptions[selectedImport].TrimStart('.');
+        var fileOpenResult = await FilePicker.Default.PickAsync(new()
+        {
+            FileTypes = GetFilePickerTypes(extension),
+            PickerTitle = $"Please select a {selectedImport} file"
+        });
+
+        var fullPath = fileOpenResult?.FullPath;
+        if (string.IsNullOrWhiteSpace(fullPath))
+        {
+            return;
+        }
+
+        var decklist = await deckFileService.ImportDecklistAsync(fullPath, selectedImport);
+        await deckbuilder.LoadDecklistAsync(decklist);
+        await UpdateDeckCollections();
+
+        static FilePickerFileType GetFilePickerTypes(string extension)
+        {
+            return new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.iOS, new[] { "public.data" } }, // Generic UTType for custom data files
+                { DevicePlatform.Android, new[] { "application/octet-stream" } }, // Generic MIME type for binary files
+                { DevicePlatform.WinUI, new[] { $".{extension}" } }, // Custom file extensions for Windows
+                { DevicePlatform.MacCatalyst, new[] { "public.data" } } // Generic UTType for custom data files
+            });
         }
     }
 
