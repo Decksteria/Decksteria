@@ -46,7 +46,7 @@ internal sealed class DeckFileService : IDeckFileService
         var exporter = exporters.GetValueOrDefault(exportFormat) ?? throw new InvalidOperationException($"{exportFormat} is not a valid Exporter Option.");
 
         // Build Decklist Model
-        using var memoryStream = await exporter.SaveDecklistAsync(decklist, format, cancellationToken);
+        var memoryStream = await exporter.SaveDecklistAsync(decklist, format, cancellationToken);
 
         // Reset memory stream for .NET Maui's FileSaver to use.
         memoryStream.Position = 0;
