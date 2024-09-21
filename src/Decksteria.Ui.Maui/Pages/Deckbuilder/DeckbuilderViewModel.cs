@@ -19,6 +19,8 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 
     private bool _advancedFiltersApplied = false;
 
+    private bool _loading;
+
     private bool _searching = false;
 
     private SortDeckStatus _sortStatus = SortDeckStatus.Unsorted;
@@ -44,6 +46,16 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
     public Dictionary<string, ObservableCollection<CardArt>> Decks { get; set; } = [];
 
     public ObservableCollection<CardArt> FilteredCards { get; set; } = [];
+
+    public bool Loading
+    {
+        get => _loading;
+        set
+        {
+            _loading = value;
+            OnPropertyChanged(nameof(Loading));
+        }
+    }
 
     public bool Searching
     {

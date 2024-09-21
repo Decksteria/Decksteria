@@ -49,9 +49,14 @@ public partial class Deckbuilder : UraniumContentPage
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
-    public async Task LoadDecklistAsync(string deckName)
+    public async Task LoadDecklistAsync(string deckName, CancellationToken cancellationToken = default)
     {
-        var decklist = await deckFileService.ReadDecklistAsync(deckName);
+        viewModel.Loading = true;
+        viewModel.DecklistName = deckName;
+        var decklist = await deckFileService.ReadDecklistAsync(deckName, cancellationToken);
+        await deckbuilder.LoadDecklistAsync(decklist, cancellationToken);
+        await UpdateDeckCollections(cancellationToken: cancellationToken);
+        viewModel.Loading = false;
     }
 
     private async void ContentPage_LoadedAsync(object? sender, EventArgs e)
@@ -240,7 +245,10 @@ public partial class Deckbuilder : UraniumContentPage
         var page = await pageService.OpenModalPage(cardInfo);
         if (page.DecksChanged)
         {
+            // Loading is only necessary if multiple decks will be refreshed.
+            viewModel.Loading = true;
             await UpdateDeckCollections(null);
+            viewModel.Loading = false;
         }
     }
 
@@ -298,7 +306,7 @@ public partial class Deckbuilder : UraniumContentPage
             return Task.CompletedTask;
         }
 
-        collection.ReplaceData(newData);
+        collection.UpdateData(newData);
         collectionView.ItemsSource = collection;
         return Task.CompletedTask;
     }

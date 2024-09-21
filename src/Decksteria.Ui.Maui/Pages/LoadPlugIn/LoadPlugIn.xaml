@@ -135,7 +135,8 @@
                 RowHeight="50"
                 SelectionMode="Single"
                 Opacity="0"
-                IsVisible="{Binding DecksExpanded}">
+                IsVisible="{Binding DecksExpanded}"
+                ItemSelected="ListView_DeckSelect_ItemSelected">
                 <ListView.Header>
                     <Grid HeightRequest="40">
                         <Grid.ColumnDefinitions>
@@ -170,20 +171,6 @@
                                 <FontImageSource
                                     FontFamily="FASolid"
                                     Glyph="{x:Static fa:Solid.FileCirclePlus}"
-                                    Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                            </ImageButton.Source>
-                        </ImageButton>
-                        <ImageButton
-                            Grid.Column="3"
-                            Clicked="ListView_DeckSelect_Open_Clicked"
-                            ToolTipProperties.Text="Open Deck"
-                            CornerRadius="2"
-                            Padding="1"
-                            Margin="1">
-                            <ImageButton.Source>
-                                <FontImageSource
-                                    FontFamily="FASolid"
-                                    Glyph="{x:Static fa:Solid.File}"
                                     Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>
