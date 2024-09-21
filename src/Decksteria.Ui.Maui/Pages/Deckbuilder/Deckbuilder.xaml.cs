@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Maui.Storage;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
@@ -18,6 +19,8 @@ using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Storage;
 using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
 
@@ -123,7 +126,96 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
     }
 
-    private async void ButtonSave_Pressed(object sender, EventArgs e)
+    private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
+    {
+        if (e.BindingContext is not DecksteriaDeck deck)
+        {
+            return;
+        }
+
+        viewModel.ActiveDeckTab = deck.Name;
+    }
+
+    private async void MenuButtonExport_Pressed(object sender, EventArgs e)
+    {
+        var cancellationToken = new CancellationToken();
+
+        var exportOptions = deckFileService.GetExportFileTypes();
+        var exportLabels = exportOptions.Keys.ToArray();
+
+        var selectedExport = await DisplayActionSheet("Export to...", "Cancel", null, exportLabels);
+        if (selectedExport == "Cancel")
+        {
+            return;
+        }
+
+        using var memoryStream = await deckFileService.ExportDecklistAsync(selectedExport, deckbuilder.CreateDecklist(), cancellationToken);
+
+        var extension = exportOptions[selectedExport].TrimStart('.');
+        var fileSaveResult = await FileSaver.Default.SaveAsync($"{viewModel.DecklistName}.{extension}", memoryStream, cancellationToken);
+
+        // Provide user se
+        if (fileSaveResult.IsSuccessful)
+        {
+            var fileName = Path.GetFileName(fileSaveResult.FilePath);
+            await DisplayAlert("Success", $"File saved to: {fileName}", "OK");
+        }
+        else
+        {
+            await DisplayAlert("Error", $"File not saved: {fileSaveResult.Exception.Message}", "OK");
+        }
+    }
+
+    private async void MenuButtonImport_Pressed(object sender, EventArgs e)
+    {
+        var importOptions = deckFileService.GetImportFileTypes();
+        var importLabels = importOptions.Keys.ToArray();
+
+        var selectedImport = await DisplayActionSheet("Import from...", "Cancel", null, importLabels);
+        if (selectedImport == "Cancel")
+        {
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
+        {
+            var overwrite = await DisplayAlert("Overwrite existing deck?", "Do you want to use a different name for the deck?", "Yes", "No", FlowDirection.LeftToRight);
+            if (overwrite)
+            {
+                viewModel.DecklistName = string.Empty;
+            }
+        }
+
+        var extension = importOptions[selectedImport].TrimStart('.');
+        var fileOpenResult = await FilePicker.Default.PickAsync(new()
+        {
+            FileTypes = GetFilePickerTypes(extension),
+            PickerTitle = $"Please select a {selectedImport} file"
+        });
+
+        var fullPath = fileOpenResult?.FullPath;
+        if (string.IsNullOrWhiteSpace(fullPath))
+        {
+            return;
+        }
+
+        var decklist = await deckFileService.ImportDecklistAsync(fullPath, selectedImport);
+        await deckbuilder.LoadDecklistAsync(decklist);
+        await UpdateDeckCollections();
+
+        static FilePickerFileType GetFilePickerTypes(string extension)
+        {
+            return new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.iOS, new[] { "public.data" } }, // Generic UTType for custom data files
+                { DevicePlatform.Android, new[] { "application/octet-stream" } }, // Generic MIME type for binary files
+                { DevicePlatform.WinUI, new[] { $".{extension}" } }, // Custom file extensions for Windows
+                { DevicePlatform.MacCatalyst, new[] { "public.data" } } // Generic UTType for custom data files
+            });
+        }
+    }
+
+    private async void MenuButtonSave_Pressed(object sender, EventArgs e)
     {
         const string save = "Save";
         const string saveAs = "Save As";
@@ -166,7 +258,7 @@ public partial class Deckbuilder : UraniumContentPage
         await DisplayAlert("Deck Saved", $"Your deck {deckName} has been saved.", "OK");
 
         // Create Decklist in CardArtId format.
-        static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string,ObservableCollection<CardArt>> decklist)
+        static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string, ObservableCollection<CardArt>> decklist)
         {
             return decklist.ToDictionary
             (
@@ -183,17 +275,7 @@ public partial class Deckbuilder : UraniumContentPage
         }
     }
 
-    private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
-    {
-        if (e.BindingContext is not DecksteriaDeck deck)
-        {
-            return;
-        }
-
-        viewModel.ActiveDeckTab = deck.Name;
-    }
-
-    private async void AdvancedFilter_Pressed(object? sender, EventArgs e)
+    private async void SearchAdvancedFilter_Pressed(object? sender, EventArgs e)
     {
         searchModal = await pageService.OpenFormPage<SearchModal>(searchModal);
         if (!searchModal.IsSubmitted)
@@ -203,24 +285,29 @@ public partial class Deckbuilder : UraniumContentPage
 
         if (!searchModal.ViewModel.SearchFieldFilters.Any())
         {
-            ClearAdvancedFilter_Pressed(sender, e);
+            SearchClearFilter_Pressed(sender, e);
             return;
         }
-        
+
         viewModel.AdvancedFiltersApplied = true;
         searchFieldFilters = searchModal.ViewModel.SearchFieldFilters.SelectMany(f => f.AsSearchFieldFilterArray());
-        await PerformSearch();
+        await SearchExecuteAsync();
     }
 
-    private async void ClearAdvancedFilter_Pressed(object? sender, EventArgs e)
+    private async void SearchClearFilter_Pressed(object? sender, EventArgs e)
     {
         searchModal = null;
         searchFieldFilters = Array.Empty<ISearchFieldFilter>();
         viewModel.AdvancedFiltersApplied = false;
-        await PerformSearch();
+        await SearchExecuteAsync();
     }
 
-    private async Task PerformSearch(CancellationToken cancellationToken = default)
+    private async void SearchTextSearch_Entered(object? sender, EventArgs e)
+    {
+        await SearchExecuteAsync();
+    }
+
+    private async Task SearchExecuteAsync(CancellationToken cancellationToken = default)
     {
         if (viewModel.SearchText.Length < 3 && !searchFieldFilters.Any())
         {
@@ -284,11 +371,6 @@ public partial class Deckbuilder : UraniumContentPage
         }
 
         await UpdateDeckCollections(viewModel.ActiveDeckTab);
-    }
-
-    private async void TextSearch_Entered(object? sender, EventArgs e)
-    {
-        await PerformSearch();
     }
 
     private Task UpdateDeckCollections(string? deckName = null, CancellationToken cancellationToken = default)

@@ -32,11 +32,13 @@ internal sealed class DeckFileService : IDeckFileService
         format = gameFormat.Format;
         formatName = gameFormat.Format.Name;
         this.deckFileService = deckFileService;
-        exporters = gameFormat.Game.Exporters.ToDictionary(e => e.Name);
-        importers = gameFormat.Game.Importers.ToDictionary(e => e.Name);
+
+        // Use the labels as the key because .NET Maui's Display Action Sheet does not support classes
+        exporters = gameFormat.Game.Exporters.ToDictionary(e => e.Label);
+        importers = gameFormat.Game.Importers.ToDictionary(e => e.Label);
     }
 
-    public async Task ExportDecklistAsync(string filePath, string exportFormat, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default)
+    public async Task<MemoryStream> ExportDecklistAsync(string exportFormat, Decklist decklist, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -44,14 +46,21 @@ internal sealed class DeckFileService : IDeckFileService
         var exporter = exporters.GetValueOrDefault(exportFormat) ?? throw new InvalidOperationException($"{exportFormat} is not a valid Exporter Option.");
 
         // Build Decklist Model
-        var decklist = new Decklist(gameName, formatName, decks.AsReadOnly());
-        using var memoryStream = await exporter.SaveDecklistAsync(decklist, format, cancellationToken);
+        var memoryStream = await exporter.SaveDecklistAsync(decklist, format, cancellationToken);
 
-        // Save File
+        // Reset memory stream for .NET Maui's FileSaver to use.
         memoryStream.Position = 0;
-        _ = CreateMissingDirectories(filePath);
-        using var fileStream = new FileStream(filePath, FileMode.Create);
-        await memoryStream.CopyToAsync(fileStream, cancellationToken);
+        return memoryStream;
+    }
+
+    public IDictionary<string, string> GetExportFileTypes()
+    {
+        return exporters.ToDictionary(e => e.Key, e => e.Value.FileType);
+    }
+
+    public IDictionary<string, string> GetImportFileTypes()
+    {
+        return exporters.ToDictionary(e => e.Key, e => e.Value.FileType);
     }
 
     public Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default)
@@ -84,6 +93,7 @@ internal sealed class DeckFileService : IDeckFileService
         using var fileStream = new FileStream(filePath, FileMode.Open);
         using var memoryStream = new MemoryStream();
         await fileStream.CopyToAsync(memoryStream, cancellationToken);
+        memoryStream.Position = 0;
         return await importer.LoadDecklistAsync(memoryStream, format, cancellationToken);
     }
 

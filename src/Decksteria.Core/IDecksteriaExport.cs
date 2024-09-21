@@ -11,11 +11,6 @@ using Decksteria.Core.Models;
 public interface IDecksteriaExport
 {
     /// <summary>
-    /// The name of the export command.
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
     /// The file extension the export function is designed to handle.
     /// </summary>
     public string FileType { get; }
