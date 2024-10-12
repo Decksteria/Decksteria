@@ -9,7 +9,7 @@ public interface IDecksteriaPlugInFactory
 
     GameFormat GetSelectedFormat();
 
-    void SelectGame(string gameName, string formatNaame);
+    void SelectGame(string gameName, string formatName);
 
     bool TryAddGame(string dllFilePath);
 }

@@ -13,6 +13,8 @@ public interface IDeckbuildingService
 
     string GameTitle { get; }
 
+    string FormatName { get; }
+
     string FormatTitle { get; }
 
     Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
