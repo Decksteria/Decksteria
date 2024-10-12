@@ -28,11 +28,13 @@ public partial class Deckbuilder : UraniumContentPage
 {
     private readonly DeckbuilderViewModel viewModel = new();
 
-    private readonly IDeckbuildingService deckbuilder;
+    private readonly IDeckbuildingServiceFactory deckbuilderFactory;
+
+    private readonly IDeckFileService deckFileService;
 
     private readonly IPageService pageService;
 
-    private readonly IDeckFileService deckFileService;
+    private IDeckbuildingService deckbuilder;
 
     private SearchModal? searchModal = null;
 
@@ -42,13 +44,14 @@ public partial class Deckbuilder : UraniumContentPage
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingService deckbuilder, IPageService pageService, IDeckFileServiceFactory deckFileServiceFactory)
+    public Deckbuilder(IDeckbuildingServiceFactory deckbuilderFactory, IDeckFileServiceFactory deckFileServiceFactory, IPageService pageService)
     {
         InitializeComponent();
         BindingContext = viewModel;
-        this.deckbuilder = deckbuilder;
-        this.pageService = pageService;
+        this.deckbuilderFactory = deckbuilderFactory;
+        this.deckbuilder = deckbuilderFactory.GetCurrentDeckbuildingService();
         this.deckFileService = deckFileServiceFactory.GetDeckFileService();
+        this.pageService = pageService;
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
@@ -57,8 +60,7 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.Loading = true;
         viewModel.DecklistName = deckName;
         var decklist = await deckFileService.ReadDecklistAsync(deckName, cancellationToken);
-        await deckbuilder.LoadDecklistAsync(decklist, cancellationToken);
-        await UpdateDeckCollections(cancellationToken: cancellationToken);
+        await LoadDecklistAsync(decklist, cancellationToken);
         viewModel.Loading = false;
     }
 
@@ -136,6 +138,27 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.ActiveDeckTab = deck.Name;
     }
 
+    private async Task LoadDecklistAsync(Decklist decklist, CancellationToken cancellationToken = default)
+    {
+        // Ask user if they want to switch formats
+        if (decklist.Format != deckbuilder.FormatName)
+        {
+            var switchFormats = await DisplayAlert("Switch formats?", "The current format does not support the decklist, do you want to switch formats?", "Continue", "Cancel");
+            if (!switchFormats)
+            {
+                viewModel.Loading = false;
+                return;
+            }
+
+            deckbuilderFactory.ChangeFormat(decklist.Format);
+            deckbuilder = deckbuilderFactory.GetCurrentDeckbuildingService();
+            viewModel.WindowTitle = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
+        }
+
+        await deckbuilder.LoadDecklistAsync(decklist, cancellationToken);
+        await UpdateDeckCollections(cancellationToken: cancellationToken);
+    }
+
     private async void MenuButtonExport_Pressed(object sender, EventArgs e)
     {
         var cancellationToken = new CancellationToken();
@@ -199,9 +222,10 @@ public partial class Deckbuilder : UraniumContentPage
             return;
         }
 
+        viewModel.Loading = true;
         var decklist = await deckFileService.ImportDecklistAsync(fullPath, selectedImport);
-        await deckbuilder.LoadDecklistAsync(decklist);
-        await UpdateDeckCollections();
+        await LoadDecklistAsync(decklist);
+        viewModel.Loading = false;
 
         static FilePickerFileType GetFilePickerTypes(string extension)
         {

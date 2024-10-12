@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +23,8 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
     public IEnumerable<DecksteriaDeck> DeckInformation => format.Decks.Select(f => new DecksteriaDeck(f));
 
     public string GameTitle => game.DisplayName;
+
+    public string FormatName => format.Name;
 
     public string FormatTitle => format.DisplayName;
 
