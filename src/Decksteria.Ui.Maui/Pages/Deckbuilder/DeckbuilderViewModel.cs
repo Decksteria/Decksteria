@@ -27,7 +27,7 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 
     private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
 
-    public bool _validDeckStatus = false;
+    private bool _validDeckStatus = false;
 
     private string _windowTitle = string.Empty;
 

@@ -214,23 +214,19 @@
                         </Button>
                     </HorizontalStackLayout>
                 </ScrollView>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Text="Validated" />
-                    <Image>
-                        <Image.Source>
+                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
+                    <Button
+                        StyleClass="TextButton"
+                        Text="Valid Deck">
+                        <Button.ImageSource>
                             <FontImageSource 
                                 Size="20"
                                 FontFamily="FASolid"
                                 Glyph="{Binding ValidDeckIcon}"
-                                Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
-                                />
-                        </Image.Source>
-                    </Image>
-                </Grid>
+                                Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}" />
+                        </Button.ImageSource>
+                    </Button>
+                </HorizontalStackLayout>
                 <material:TabView
                     Grid.Row="2"
                     Grid.Column="0"

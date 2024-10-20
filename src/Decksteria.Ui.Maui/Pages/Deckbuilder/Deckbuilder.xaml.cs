@@ -397,23 +397,24 @@ public partial class Deckbuilder : UraniumContentPage
         await UpdateDeckCollections(viewModel.ActiveDeckTab);
     }
 
-    private Task UpdateDeckCollections(string? deckName = null, CancellationToken cancellationToken = default)
+    private async Task UpdateDeckCollections(string? deckName = null, CancellationToken cancellationToken = default)
     {
         if (deckName is null)
         {
             var collectionTasks = viewModel.Decks.Select(deck => UpdateDeckCollections(deck.Key));
-            return Task.WhenAll(collectionTasks);
+            await Task.WhenAll(collectionTasks);
+            return;
         }
 
         cancellationToken.ThrowIfCancellationRequested();
         var newData = deckbuilder.GetDeckCards(deckName);
         if (newData is null || !viewModel.Decks.TryGetValue(deckName, out var collection) || deckViews is null || !deckViews.TryGetValue(deckName, out var collectionView))
         {
-            return Task.CompletedTask;
+            return;
         }
 
         collection.UpdateData(newData);
         collectionView.ItemsSource = collection;
-        return Task.CompletedTask;
+        viewModel.ValidDeckStatus = await deckbuilder.ValidDecklistAsync(cancellationToken);
     }
 }
