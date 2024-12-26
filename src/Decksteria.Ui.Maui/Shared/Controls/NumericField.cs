@@ -80,23 +80,6 @@ internal partial class NumericField : InputField
             numericField.EntryView.TextColor = (Color) newValue;
         });
 
-    public string FontFamily { get => (string) GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
-
-    public static readonly BindableProperty FontFamilyProperty = BindableProperty.Create(
-        nameof(FontFamily),
-        typeof(string),
-        typeof(NumericField),
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.EntryView.FontFamily = (string) newValue;
-            numericField.labelTitle.FontFamily = (string) newValue;
-        });
-
     public object ReturnCommandParameter { get => GetValue(ReturnCommandParameterProperty); set => SetValue(ReturnCommandParameterProperty, value); }
 
     public static readonly BindableProperty ReturnCommandParameterProperty = BindableProperty.Create(
@@ -243,48 +226,13 @@ internal partial class NumericField : InputField
             numericField.EntryView.MaxLength = numericField.MaxDigits;
         });
 
-    public new bool IsReadOnly { get => (bool) GetValue(IsReadOnlyProperty); set => SetValue(IsReadOnlyProperty, value); }
+    public bool IsReadOnly { get => (bool) GetValue(IsReadOnlyProperty); set => SetValue(IsReadOnlyProperty, value); }
 
     public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(
         nameof(IsReadOnly),
         typeof(bool),
         typeof(NumericField),
         false);
-
-    [TypeConverter(typeof(FontSizeConverter))]
-    public double FontSize { get => (double) GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
-
-    public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
-        nameof(FontSize),
-        typeof(double),
-        typeof(InputField),
-        defaultValue: Label.FontSizeProperty.DefaultValue,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.EntryView.FontSize = (double) newValue;
-        });
-
-    public FontAttributes FontAttributes { get => (FontAttributes) GetValue(FontAttributesProperty); set => SetValue(FontAttributesProperty, value); }
-
-    public static readonly BindableProperty FontAttributesProperty = BindableProperty.Create(
-        nameof(FontAttributes),
-        typeof(FontAttributes),
-        typeof(NumericField),
-        defaultValue: Entry.FontAttributesProperty.DefaultValue,
-        propertyChanged: (bindable, oldValue, newValue) =>
-        {
-            if (bindable is not NumericField numericField)
-            {
-                return;
-            }
-
-            numericField.EntryView.FontAttributes = (FontAttributes) newValue;
-        });
 
     public TextAlignment HorizontalTextAlignment { get => (TextAlignment) GetValue(HorizontalTextAlignmentProperty); set => SetValue(HorizontalTextAlignmentProperty, value); }
 

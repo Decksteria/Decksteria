@@ -19,10 +19,12 @@ using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
 using UraniumUI.Material.Controls;
 using UraniumUI.Pages;
+using Path = System.IO.Path;
 
 public partial class Deckbuilder : UraniumContentPage
 {
@@ -73,7 +75,7 @@ public partial class Deckbuilder : UraniumContentPage
 
         var decks = await deckbuilder.ReInitializeAsync();
         var deckInfo = deckbuilder.DeckInformation;
-        DecksLayout.Items.Clear();
+        DecksLayout.Tabs.Clear();
         viewModel.Decks = decks.ToDictionary(kv => kv.Key, kv => new ObservableCollection<CardArt>(kv.Value));
         deckViews = deckInfo.ToDictionary(v => v.Name, RenderCollectionView).AsReadOnly();
         viewModel.WindowTitle = $"{deckbuilder.GameTitle} Deckbuilder - {deckbuilder.FormatTitle}";
@@ -102,10 +104,13 @@ public partial class Deckbuilder : UraniumContentPage
             };
             collectionView.SizeChanged += AdaptiveGrid_Main_SizeChanged;
 
-            var frameView = new Frame
+            var frameView = new Border
             {
                 Padding = 1,
-                CornerRadius = 15,
+                StrokeShape = new RoundRectangle
+                {
+                    CornerRadius = new CornerRadius(15)
+                },
                 Margin = 2,
                 Content = collectionView
             };
@@ -118,7 +123,7 @@ public partial class Deckbuilder : UraniumContentPage
                 Content = frameView
             };
 
-            DecksLayout.Items.Add(tabItem);
+            DecksLayout.Tabs.Add(tabItem);
             return collectionView;
         }
     }
