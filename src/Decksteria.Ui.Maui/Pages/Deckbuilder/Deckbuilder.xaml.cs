@@ -135,7 +135,7 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void CheckDeck_Button_Pressed(object sender, EventArgs e)
     {
-        var text = await deckbuilder.GetDeckStatsAsync(false);
+        var text = await deckbuilder.GetDeckStatsAsync(true);
         await DisplayAlert("Deck Stats", text, "OK");
     }
 
