@@ -1,4 +1,5 @@
-﻿namespace Decksteria.Ui.Maui;
+﻿using Microsoft.Maui;
+namespace Decksteria.Ui.Maui;
 using Foundation;
 
 [Register("AppDelegate")]

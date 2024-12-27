@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
@@ -40,4 +41,8 @@ public interface IDeckbuildingService
     Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default);
 
     Task<bool> RemoveCardAtAsync(int index, string deckName, CancellationToken cancellationToken = default);
+
+    Task<bool> ValidDecklistAsync(CancellationToken cancellationToken = default);
+
+    Task<(IDictionary<IDecksteriaDeck, bool>, bool)> ValidDecksAsync(CancellationToken cancellationToken = default);
 }

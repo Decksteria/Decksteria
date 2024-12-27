@@ -27,6 +27,8 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 
     private TabViewTabPlacement _tabPlacement = TabViewTabPlacement.Top;
 
+    private bool _validDeckStatus = false;
+
     private string _windowTitle = string.Empty;
 
     public string ActiveDeckTab { get; set; } = string.Empty;
@@ -78,6 +80,17 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool ValidDeckStatus
+    {
+        get => _validDeckStatus;
+        set
+        {
+            _validDeckStatus = value;
+            OnPropertyChanged(nameof(ValidDeckStatus));
+            OnPropertyChanged(nameof(ValidDeckIcon));
+        }
+    }
+
     public string SortDeckIcon => SortStatus switch
     {
         SortDeckStatus.Unsorted => Solid.Sort,
@@ -85,6 +98,8 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
         SortDeckStatus.Descending => Solid.SortUp,
         _ => throw new UnreachableException($"An option for {nameof(SortStatus)} is unavailable.")
     };
+
+    public string ValidDeckIcon => _validDeckStatus ? Solid.CircleCheck : Solid.Xmark;
 
     public string SearchText { get; set; } = "";
 

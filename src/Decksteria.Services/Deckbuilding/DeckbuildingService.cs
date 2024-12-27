@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
@@ -168,6 +169,31 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
         var deck = await GetDecklistAsync(deckName, cancellationToken);
         deck?.RemoveAt(index);
         return deck != null;
+    }
+
+    public async Task<bool> ValidDecklistAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var decklistIds = decklist.ToDictionary(d => d.Key, d => d.Value.Select(c => c.CardId)).AsReadOnly();
+        foreach (var deck in format.Decks)
+        {
+            if (!(await deck.IsDeckValidAsync(decklistIds[deck.Name], cancellationToken)))
+            {
+                return false;
+            }
+        }
+        
+        return await format.IsDecklistLegalAsync(decklistIds, cancellationToken);
+    }
+
+    public async Task<(IDictionary<IDecksteriaDeck, bool>, bool)> ValidDecksAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var decklistIds = decklist.ToDictionary(d => d.Key, d => d.Value.Select(c => c.CardId)).AsReadOnly();
+        var deckValidationTasks = format.Decks.ToDictionary(d => d, async d => await d.IsDeckValidAsync(decklistIds[d.Name], cancellationToken));
+        await Task.WhenAll(deckValidationTasks.Select(f => f.Value));
+        var deckValidationList = deckValidationTasks.ToDictionary(d => d.Key, d => d.Value.Result);
+        return (deckValidationList, await format.IsDecklistLegalAsync(decklistIds, cancellationToken));
     }
 
     private static ReadOnlyDictionary<string, IEnumerable<long>> SelectAsLong(IReadOnlyDictionary<string, List<CardArt>> decks)

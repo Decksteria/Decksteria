@@ -95,7 +95,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// <param name="decklist">The decklist to be verified.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the execution.</param>
     /// <returns></returns>
-    public Task<bool> IsDecklistLegal(IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default);
+    public Task<bool> IsDecklistLegalAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Used by the Plug-In to free up any intensive memory. Use this to free up any large Lists.

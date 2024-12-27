@@ -149,22 +149,23 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <ActivityIndicator
                     x:Name="ActivityIndicator_Loading"
                     Grid.Row="0"
-                    Grid.RowSpan="2"
+                    Grid.RowSpan="3"
                     ZIndex="2"
                     IsRunning="{Binding Loading}"
                     Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
-                <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always" Padding="0,4,0,4">
                     <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
                         <Button
                             StyleClass="OutlinedButton"
                             Text="Save"
                             ToolTipProperties.Text="Save Decklist"
-                            Pressed="MenuButtonSave_Pressed">
+                            Released="MenuButtonSave_Pressed">
                             <Button.ImageSource>
                                 <FontImageSource
                                     Size="20"
@@ -177,7 +178,7 @@
                             StyleClass="TextButton"
                             Text="Import"
                             ToolTipProperties.Text="Import Decklist"
-                            Pressed="MenuButtonImport_Pressed">
+                            Released="MenuButtonImport_Pressed">
                             <Button.ImageSource>
                                 <FontImageSource
                                     Size="20"
@@ -190,7 +191,7 @@
                             StyleClass="TextButton"
                             Text="Export"
                             ToolTipProperties.Text="Export Decklist"
-                            Pressed="MenuButtonExport_Pressed">
+                            Released="MenuButtonExport_Pressed">
                             <Button.ImageSource>
                                 <FontImageSource
                                     Size="20"
@@ -213,8 +214,21 @@
                         </Button>
                     </HorizontalStackLayout>
                 </ScrollView>
+                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
+                    <Button
+                        StyleClass="TextButton"
+                        Text="Valid Deck">
+                        <Button.ImageSource>
+                            <FontImageSource 
+                                Size="20"
+                                FontFamily="FASolid"
+                                Glyph="{Binding ValidDeckIcon}"
+                                Color="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}" />
+                        </Button.ImageSource>
+                    </Button>
+                </HorizontalStackLayout>
                 <material:TabView
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Grid.Column="0"
                     x:Name="DecksLayout"
                     MinimumHeightRequest="300"

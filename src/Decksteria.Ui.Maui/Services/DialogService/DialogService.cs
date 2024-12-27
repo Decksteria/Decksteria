@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui.Services.DialogService;
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -22,5 +23,5 @@ internal sealed class DialogService : IDialogService
         return MainPage is not null ? await global::Decksteria.Ui.Maui.Services.DialogService.DialogService.MainPage.DisplayAlert(title, message, "Yes", "No", flowDirection) : null;
     }
 
-    private static Page? MainPage => Application.Current?.MainPage;
+    private static Page? MainPage => Application.Current?.Windows.FirstOrDefault()?.Page;
 }
