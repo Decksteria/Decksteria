@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
@@ -120,6 +121,18 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
     {
         _ = decklist.TryGetValue(deckName, out var value);
         return value;
+    }
+
+    public async Task<string> GetDeckStatsAsync(bool detailed = false, CancellationToken cancellationToken = default)
+    {
+        var decklistIds = decklist.ToDictionary(d => d.Key, d => d.Value.Select(c => c.CardId)).AsReadOnly();
+        var dictionaryCounts = await format.GetDeckStatsAsync(decklistIds, detailed, cancellationToken);
+        var deckStatText = new StringBuilder();
+        foreach (var keyValue in dictionaryCounts)
+        {
+            deckStatText.AppendLine($"{keyValue.Key}: { keyValue.Value }");
+        }
+        return deckStatText.ToString();
     }
 
     public async Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default)

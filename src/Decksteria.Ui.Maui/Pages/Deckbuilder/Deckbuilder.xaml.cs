@@ -133,6 +133,12 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
     }
 
+    private async void CheckDeck_Button_Pressed(object sender, EventArgs e)
+    {
+        var text = await deckbuilder.GetDeckStatsAsync(false);
+        await DisplayAlert("Deck Stats", text, "OK");
+    }
+
     private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
     {
         if (e.BindingContext is not DecksteriaDeck deck)

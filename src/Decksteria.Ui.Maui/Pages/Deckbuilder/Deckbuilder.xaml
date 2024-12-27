@@ -217,7 +217,8 @@
                 <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
                     <Button
                         StyleClass="TextButton"
-                        Text="Valid Deck">
+                        Text="Check Deck"
+                        Pressed="CheckDeck_Button_Pressed">
                         <Button.ImageSource>
                             <FontImageSource 
                                 Size="20"
