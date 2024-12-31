@@ -3,7 +3,6 @@ namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +12,7 @@ using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
+using Decksteria.Ui.Maui.Pages.DeckStatistics;
 using Decksteria.Ui.Maui.Pages.Search;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
@@ -135,8 +135,10 @@ public partial class Deckbuilder : UraniumContentPage
 
     private async void CheckDeck_Button_Pressed(object sender, EventArgs e)
     {
-        var text = await deckbuilder.GetDeckStatsAsync(true);
-        await DisplayAlert("Deck Stats", text, "OK");
+        var cancellationToken = default(CancellationToken);
+        var statisticSections = await deckbuilder.GetDeckStatsAsync(true, cancellationToken);
+        var modalPage = new DeckStatistics(statisticSections, pageService);
+        await pageService.OpenModalPage(modalPage, false, cancellationToken);
     }
 
     private void DecksLayout_SelectedTabChanged(object? _, TabItem e)

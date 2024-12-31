@@ -76,6 +76,9 @@
     <MauiXaml Update="Pages\Deckbuilder\Deckbuilder.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\DeckStatistics\DeckStatistics.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\LoadPlugIn\LoadPlugIn.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -100,8 +103,5 @@
     <None Update="Pages\Search\SearchModal.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\DeckStats\" />
   </ItemGroup>
 </Project>

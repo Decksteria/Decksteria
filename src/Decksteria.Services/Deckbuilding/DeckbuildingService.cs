@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
@@ -125,7 +126,22 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
     {
         var decklistIds = decklist.ToDictionary(d => d.Key, d => d.Value.Select(c => c.CardId)).AsReadOnly();
         var dictionaryCounts = await format.GetDeckStatsAsync(decklistIds, detailed, cancellationToken);
-        return dictionaryCounts;
+        return dictionaryCounts.Select(SortStatisticSection);
+
+        static DeckStatisticSection SortStatisticSection(DeckStatisticSection section)
+        {
+            if (!section.OrderByCount)
+            {
+                return section;
+            }
+
+            return new DeckStatisticSection
+            {
+                Label = section.Label,
+                OrderByCount = section.OrderByCount,
+                Statistics = section.Statistics.OrderByDescending(kv => kv.Value).ToDictionary()
+            };
+        }
     }
 
     public async Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default)

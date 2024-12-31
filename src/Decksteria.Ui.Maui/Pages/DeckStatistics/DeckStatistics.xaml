@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Decksteria.Ui.Maui.Pages.DeckStatistics.DeckStatistics"
+             xmlns:deckstats="clr-namespace:Decksteria.Ui.Maui.Pages.DeckStatistics"
+             x:DataType="deckstats:DeckStatisticsViewModel"
+             Title="Deck Statistics"
+             MaximumWidthRequest="400">
+    <Grid VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <ScrollView VerticalOptions="Fill" VerticalScrollBarVisibility="Default">
+            <VerticalStackLayout Grid.Row="0" BindableLayout.ItemsSource="{Binding Sections}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="deckstats:SectionInfo">
+                        <Grid HorizontalOptions="FillAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" Margin="1" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" />
+                            <CollectionView Grid.Row="1" ItemsSource="{Binding Statistics}" Margin="1" >
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout Orientation="Vertical" Span="3" VerticalItemSpacing="0" HorizontalItemSpacing="0" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="deckstats:StatisticInfo">
+                                        <Label FontSize="Body" Text="{Binding Text}" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Grid.Row="1" StyleClass="FilledButton" Text="Close" Pressed="CloseButton_Pressed" />
+    </Grid>
+</ContentPage>
