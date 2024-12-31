@@ -20,7 +20,7 @@ internal sealed class DialogService : IDialogService
 
     public async Task<bool?> DisplayYesNo(string title, string message, FlowDirection flowDirection = FlowDirection.MatchParent)
     {
-        return MainPage is not null ? await global::Decksteria.Ui.Maui.Services.DialogService.DialogService.MainPage.DisplayAlert(title, message, "Yes", "No", flowDirection) : null;
+        return MainPage is not null ? await MainPage.DisplayAlert(title, message, "Yes", "No", flowDirection) : null;
     }
 
     private static Page? MainPage => Application.Current?.Windows.FirstOrDefault()?.Page;

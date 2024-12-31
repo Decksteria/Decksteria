@@ -122,10 +122,12 @@
                         </ImageButton.Source>
                     </ImageButton>
                 </Grid>
-                <Frame
+                <Border
                     Grid.Row="1"
-                    Padding="1"
-                    CornerRadius="15">
+                    Padding="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15" />
+                    </Border.StrokeShape>
                     <CollectionView
                         x:Name="CollectionView_Search"
                         ItemsSource="{Binding FilteredCards}"
@@ -137,7 +139,7 @@
                             <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="2" VerticalItemSpacing="2" SnapPointsAlignment="Center" />
                         </CollectionView.ItemsLayout>
                     </CollectionView>
-                </Frame>
+                </Border>
                 <ActivityIndicator
                     x:Name="ActivityIndicator_Searching"
                     Grid.Row="0"
@@ -217,7 +219,8 @@
                 <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
                     <Button
                         StyleClass="TextButton"
-                        Text="Valid Deck">
+                        Text="Check Deck"
+                        Pressed="CheckDeck_Button_Pressed">
                         <Button.ImageSource>
                             <FontImageSource 
                                 Size="20"

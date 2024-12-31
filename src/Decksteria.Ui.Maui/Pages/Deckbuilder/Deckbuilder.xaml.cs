@@ -3,7 +3,6 @@ namespace Decksteria.Ui.Maui.Pages.Deckbuilder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +12,7 @@ using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.FileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
+using Decksteria.Ui.Maui.Pages.DeckStatistics;
 using Decksteria.Ui.Maui.Pages.Search;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
@@ -131,6 +131,14 @@ public partial class Deckbuilder : UraniumContentPage
     private void AdaptiveGrid_Main_SizeChanged(object? sender, EventArgs e)
     {
         viewModel.TabViewTabPlacement = AdaptiveGrid_Main.HorizontalDisplay ? TabViewTabPlacement.Top : TabViewTabPlacement.Bottom;
+    }
+
+    private async void CheckDeck_Button_Pressed(object sender, EventArgs e)
+    {
+        var cancellationToken = default(CancellationToken);
+        var statisticSections = await deckbuilder.GetDeckStatsAsync(true, cancellationToken);
+        var modalPage = new DeckStatistics(statisticSections, pageService);
+        await pageService.OpenModalPage(modalPage, false, cancellationToken);
     }
 
     private void DecksLayout_SelectedTabChanged(object? _, TabItem e)
@@ -266,7 +274,7 @@ public partial class Deckbuilder : UraniumContentPage
             var isValidFileName = true;
             do
             {
-                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", null, default, viewModel.DecklistName, 20, Keyboard.Default);
+                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", "OK", "Cancel", viewModel.DecklistName, 20, Keyboard.Default);
 
                 // If prompt was cancelled, exit out of the function.
                 if (deckName is null)
