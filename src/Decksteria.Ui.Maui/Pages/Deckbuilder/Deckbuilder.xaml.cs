@@ -274,7 +274,7 @@ public partial class Deckbuilder : UraniumContentPage
             var isValidFileName = true;
             do
             {
-                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", null, default, viewModel.DecklistName, 20, Keyboard.Default);
+                deckName = await DisplayPromptAsync("Deck Name", "What name do you want to save it as?", "OK", "Cancel", viewModel.DecklistName, 20, Keyboard.Default);
 
                 // If prompt was cancelled, exit out of the function.
                 if (deckName is null)
