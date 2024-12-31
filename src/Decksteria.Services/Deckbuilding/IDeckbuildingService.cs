@@ -34,7 +34,7 @@ public interface IDeckbuildingService
 
     IEnumerable<CardArt>? GetDeckCards(string deckName);
 
-    Task<string> GetDeckStatsAsync(bool detailed = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(bool detailed = false, CancellationToken cancellationToken = default);
 
     Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default);
 

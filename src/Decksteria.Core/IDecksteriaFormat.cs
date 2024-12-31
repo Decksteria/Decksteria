@@ -66,13 +66,13 @@ public interface IDecksteriaFormat : IDecksteriaTile
     public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the counts of each particular import type of card that the user may want to keep track of.
+    /// Gets the counts of each particular important type of card that the user may want to keep track of.
     /// </summary>
-    /// <param name="decklist">The decklist provided by the user.</param>
+    /// <param name="decklist">The decklist provided by the user. The list only provides the Card ID as the Art ID should not be used for the counting.</param>
     /// <param name="isDetailed">Determines whether a more detailed count should be returned.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
-    /// <returns>A summary of the import card types that the user should keep track of. The <see cref="string"/> key is the Label used and the <see cref="int"/> value is the amount of that type has been added.</returns>
-    public Task<Dictionary<string, int>> GetDeckStatsAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default);
+    /// <returns>A list of sections that provide the user important card types should count for the user to keep track of.</returns>
+    public Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Determines which deck a card should be added to by default, if not defined by the user.
