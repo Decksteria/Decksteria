@@ -8,6 +8,7 @@
     xmlns:decksteria="clr-namespace:Decksteria.Services.DeckFileService.Models;assembly=Decksteria.Services"
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
+    xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
     xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
     x:DataType="deckbuilder:DeckbuilderViewModel"
@@ -16,12 +17,7 @@
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding Image.FileSourceUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
-                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SearchSecondaryTapped" />
-                </Image.GestureRecognizers>
-            </Image>
+            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" Loaded="DecksteriaImageControl_Loaded" />
         </DataTemplate>
         <DataTemplate x:Name="DeckView_CardItem" x:Key="CardView_Deck" x:DataType="decksteria:CardArt">
             <Image Source="{Binding Image.FileSourceUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
