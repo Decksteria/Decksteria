@@ -23,7 +23,9 @@ internal sealed class DownloadableImage : ContentView
     public static readonly BindableProperty FileNameProperty =
         BindableProperty.Create(nameof(FileName), typeof(string), typeof(DownloadableImage), string.Empty);
 
-    public event EventHandler? Initialised;
+    // This is a workaround because dependency injection is not available for ContentView.
+    // This should be removed once ContentView can use dependency injection.
+    public event EventHandler? SetImageService;
 
     public bool AllowDownload
     {
@@ -65,6 +67,11 @@ internal sealed class DownloadableImage : ContentView
         if (string.IsNullOrWhiteSpace(ImageUrl))
         {
             return;
+        }
+
+        if (cardImageService is null)
+        {
+            SetImageService?.Invoke(this, EventArgs.Empty);
         }
 
         // If the Image Control is told to never use the local file.

@@ -436,7 +436,7 @@ public partial class Deckbuilder : UraniumContentPage
         viewModel.ValidDeckStatus = await deckbuilder.ValidDecklistAsync(cancellationToken);
     }
 
-    private void DecksteriaImageControl_Loaded(object sender, EventArgs e)
+    private void DecksteriaImageControl_SetService(object sender, EventArgs e)
     {
         if (sender is not DownloadableImage imageControl)
         {
