@@ -161,6 +161,13 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         var fileLock = lockedFiles.GetOrAdd(fileName, new SemaphoreSlim(1, 1));
 
         await fileLock.WaitAsync();
+        if (await ValidateChecksum())
+        {
+            fileLock.Release();
+            lockedFiles.TryRemove(fileName, out _);
+            return;
+        }
+
         // Add custom retry policy for HTTP Request
         for (var i = 0; i < 3; i++)
         {
@@ -170,7 +177,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
                 var checksumValid = await ValidateChecksum();
                 if (checksumValid)
                 {
-                    return;
+                    break;
                 }
 
                 logger.LogWarning("File checksum validation did not match. Retry: {RetryCount}.", i);
@@ -194,6 +201,11 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         {
             verifiedFiles.Add(filePath);
             return true;
+        }
+
+        if (!File.Exists(filePath))
+        {
+            return false;
         }
 
         // Compute MD5 Checksum

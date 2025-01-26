@@ -80,6 +80,12 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
         var fileLock = lockedFiles.GetOrAdd(fileName, new SemaphoreSlim(1, 1));
 
         await fileLock.WaitAsync();
+        if (await ValidateChecksum())
+        {
+            fileLock.Release();
+            lockedFiles.TryRemove(fileName, out _);
+            return;
+        }
 
         // Add custom retry policy for HTTP Request
         for (var i = 0; i < 3; i++)
@@ -90,7 +96,7 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
                 var checksumValid = await ValidateChecksum();
                 if (checksumValid)
                 {
-                    return;
+                    break;
                 }
 
                 logger.LogWarning("File checksum validation did not match. Retry: {RetryCount}.", i);
@@ -102,13 +108,18 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
             }
         }
 
-
         fileLock.Release();
         lockedFiles.TryRemove(fileName, out _);
     }
 
     private async Task<bool> VerifyChecksum(string filePath, string? md5Checksum)
     {
+        // Since there is no file to open validation, simply skip and return false.
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
         // If the plug-in did not provide a checksum, always assume it was downloaded correctly.
         // If a file has already been verified, it does not need to be verified again.
         if (string.IsNullOrWhiteSpace(md5Checksum) || verifiedFiles.Contains(filePath))
