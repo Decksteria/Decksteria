@@ -10,12 +10,14 @@ using CommunityToolkit.Maui.Storage;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
 using Decksteria.Ui.Maui.Pages.DeckStatistics;
 using Decksteria.Ui.Maui.Pages.Search;
+using Decksteria.Ui.Maui.Services.CardImageService;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
+using Decksteria.Ui.Maui.Shared.Controls;
 using Decksteria.Ui.Maui.Shared.Extensions;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -36,6 +38,8 @@ public partial class Deckbuilder : UraniumContentPage
 
     private readonly IPageService pageService;
 
+    private readonly IDecksteriaCardImageService cardImageService;
+
     private IDeckbuildingService deckbuilder;
 
     private SearchModal? searchModal = null;
@@ -46,7 +50,7 @@ public partial class Deckbuilder : UraniumContentPage
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingServiceFactory deckbuilderFactory, IDeckFileServiceFactory deckFileServiceFactory, IPageService pageService)
+    public Deckbuilder(IDeckbuildingServiceFactory deckbuilderFactory, IDeckFileServiceFactory deckFileServiceFactory, IPageService pageService, IDecksteriaCardImageService cardImageService)
     {
         InitializeComponent();
         BindingContext = viewModel;
@@ -54,6 +58,7 @@ public partial class Deckbuilder : UraniumContentPage
         this.deckbuilder = deckbuilderFactory.GetCurrentDeckbuildingService();
         this.deckFileService = deckFileServiceFactory.GetDeckFileService();
         this.pageService = pageService;
+        this.cardImageService = cardImageService;
         this.searchFieldFilters = Array.Empty<ISearchFieldFilter>();
     }
 
@@ -365,7 +370,7 @@ public partial class Deckbuilder : UraniumContentPage
             return;
         }
 
-        var cardInfo = new CardInfo(card, deckbuilder, pageService);
+        var cardInfo = new CardInfo(card, cardImageService, deckbuilder, pageService);
         var page = await pageService.OpenModalPage(cardInfo);
         if (page.DecksChanged)
         {
@@ -429,5 +434,15 @@ public partial class Deckbuilder : UraniumContentPage
         collection.UpdateData(newData);
         collectionView.ItemsSource = collection;
         viewModel.ValidDeckStatus = await deckbuilder.ValidDecklistAsync(cancellationToken);
+    }
+
+    private void DecksteriaImageControl_SetService(object sender, EventArgs e)
+    {
+        if (sender is not DownloadableImage imageControl)
+        {
+            return;
+        }
+
+        imageControl.SetCardImageService(cardImageService);
     }
 }

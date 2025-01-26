@@ -1,6 +1,6 @@
 ﻿namespace Decksteria.Core.Models;
 
-using System.Collections.Generic;
+using Decksteria.Core.Data;
 
 /// <summary>
 /// Represents a statistic being returned by <see cref="IDecksteriaFormat.GetDeckStatsAsync"/>.
@@ -21,5 +21,5 @@ public sealed record DeckStatisticSection
     /// <summary>
     /// The card type counts belonging to this particular section.
     /// </summary>
-    public required IReadOnlyDictionary<string, int> Statistics { get; init; }
+    public required ReadOnlyDeckStatisticDictionary Statistics { get; init; }
 }

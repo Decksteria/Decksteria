@@ -2,11 +2,15 @@
 
 using System;
 using CommunityToolkit.Maui;
+using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
+using Decksteria.Ui.Maui.Services.CardImageService;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.DialogService;
+using Decksteria.Ui.Maui.Services.FileLocator;
+using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +67,9 @@ public static class MauiProgram
         services.AddHttpClient();
         services.TryAddScoped<IDialogService, DialogService>();
         services.TryAddScoped<IDeckFileServiceFactory, DeckFileServiceFactory>();
+        services.TryAddScoped<IDecksteriaFileLocator, DecksteriaFileLocator>();
+        services.TryAddScoped<IDecksteriaCardImageService, DecksteriaCardImageService>();
+        services.TryAddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
         // Use a different implementation for the Paging Service that turns Modals into a new Window.
 #if WINDOWS
         services.TryAddScoped<IPageService, PageService>();

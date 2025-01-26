@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 using UraniumUI.Icons.FontAwesome;
 using UraniumUI.Material.Controls;
 

@@ -4,21 +4,26 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Services.Deckbuilding;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
+using Decksteria.Ui.Maui.Services.CardImageService;
 using Decksteria.Ui.Maui.Services.PageService;
+using Decksteria.Ui.Maui.Shared.Controls;
 using Microsoft.Maui.Controls;
 
 public partial class CardInfo : ContentPage
 {
+    private readonly IDecksteriaCardImageService cardImageService;
+
     private readonly IDeckbuildingService deckbuildingService;
 
     private readonly IPageService pageService;
 
     private readonly CardInfoViewModel viewModel;
 
-    public CardInfo(CardArt cardArt, IDeckbuildingService deckbuildingService, IPageService pageService)
+    public CardInfo(CardArt cardArt, IDecksteriaCardImageService cardImageService, IDeckbuildingService deckbuildingService, IPageService pageService)
 	{
 		InitializeComponent();
+        this.cardImageService = cardImageService;
         this.deckbuildingService = deckbuildingService;
         this.pageService = pageService;
         viewModel = new()
@@ -79,6 +84,16 @@ public partial class CardInfo : ContentPage
     private async void CloseButton_Pressed(object sender, EventArgs e)
     {
         await pageService.PopModalAsync<CardInfo>();
+    }
+
+    private void DecksteriaImageControl_SetService(object sender, EventArgs e)
+    {
+        if (sender is not DownloadableImage imageControl)
+        {
+            return;
+        }
+
+        imageControl.SetCardImageService(cardImageService);
     }
 
     private async void UpdateDeckInformation(string deckName, CardDeckInfo? cardDeckInfo = null)

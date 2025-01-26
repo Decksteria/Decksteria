@@ -1,6 +1,5 @@
 ﻿namespace Decksteria.Services.DeckFileService;
 
-using System.IO;
 using System.Text.Json;
 using Decksteria.Core.Models;
 using Decksteria.Services.DeckFileService.Models;
