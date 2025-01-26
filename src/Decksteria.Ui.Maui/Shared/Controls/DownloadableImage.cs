@@ -50,6 +50,7 @@ internal sealed class DownloadableImage : ContentView
         imageControl = new Image();
         Content = imageControl;
         PropertyChanged += OnPropertiesChanged;
+        Loaded += TransferGestureRecognizers;
     }
 
     public void SetCardImageService(IDecksteriaCardImageService cardImageService)
@@ -57,6 +58,13 @@ internal sealed class DownloadableImage : ContentView
         this.cardImageService = cardImageService;
     }
 
+    private void TransferGestureRecognizers(object? sender, EventArgs e)
+    {
+        foreach (var recognizer in GestureRecognizers)
+        {
+            imageControl.GestureRecognizers.Add(recognizer);
+        }
+    }
     private async void OnPropertiesChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is not (nameof(AllowDownload)) and not (nameof(ImageUrl)) and not (nameof(FileName)))
