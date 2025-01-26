@@ -8,34 +8,44 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Data;
+using Decksteria.Ui.Maui.Services.FileLocator;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Networking;
-using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 {
     private readonly HttpClient httpClient;
 
-    private readonly string gameName;
+    private readonly IDecksteriaFileLocator fileLocator;
 
     private readonly ILogger<DecksteriaFileReader> logger;
 
-    private readonly List<string> VerifiedFiles;
+    private readonly List<string> verifiedFiles;
 
-    public DecksteriaFileReader(string gameName, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
+    public DecksteriaFileReader(IDecksteriaFileLocator fileLocator, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
     {
         this.httpClient = httpClientFactory.CreateClient();
-        this.gameName = gameName;
+        this.fileLocator = fileLocator;
         this.logger = logger;
-        VerifiedFiles = [];
+        verifiedFiles = [];
     }
 
     public string BuildConnectionString(string fileName, IDictionary<string, string> connectionProperties, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
+    public string GetExpectedFileLocation(string fileName)
+    {
+        return fileLocator.GetExpectedFileLocation(fileName);
+    }
+
+    public string GetExpectedImageLocation(string fileName)
+    {
+        return fileLocator.GetExpectedImageLocation(fileName);
+    }
+
     public async Task<string> GetFileLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
     {
         // Gets the file path used by the .NET Maui Application
-        var filePath = @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
+        var filePath = GetExpectedFileLocation(fileName);
 
         // If the device does not have internet, return the expected file path assuming it was already downloaded.
         // Exception handling for a missing file will be handled on the application side.
@@ -69,11 +79,53 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         }
     }
 
-    public Task<byte[]> ReadByteFileAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    public Task<byte[]> ReadImageAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    public async Task<string> GetImageLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        // Gets the file path used by the .NET Maui Application
+        var filePath = GetExpectedImageLocation(fileName);
+
+        // If the device does not have internet, return the expected file path assuming it was already downloaded.
+        // Exception handling for a missing file will be handled on the application side.
+        if (!ValidateNetworkAccess())
+        {
+            return filePath;
+        }
+
+        if (File.Exists(filePath) && await VerifyChecksum(filePath, md5Checksum))
+        {
+            return filePath;
+        }
+
+        // Create directory if the directory is missing.
+        var directory = Path.GetDirectoryName(filePath);
+        if (directory is not null && !Directory.Exists(directory))
+        {
+            _ = Directory.CreateDirectory(directory);
+        }
+
+        // Download file and implement retry policy
+        await DownloadRetryAsync(DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
+        return filePath;
+
+        async Task DownloadAsync()
+        {
+            using var httpStream = await httpClient.GetStreamAsync(downloadURL, cancellationToken);
+            using var fileStream = File.Create(filePath);
+            await httpStream.CopyToAsync(fileStream, cancellationToken);
+            fileStream.Close();
+        }
+    }
+
+    public async Task<byte[]> ReadByteFileAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    {
+        var filePath = await GetFileLocationAsync(fileName, downloadURL, md5Checksum, cancellationToken);
+        return await File.ReadAllBytesAsync(filePath, cancellationToken);
+    }
+
+    public async Task<byte[]> ReadImageAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)
+    {
+        var filePath = await GetImageLocationAsync(fileName, downloadURL, md5Checksum, cancellationToken);
+        return await File.ReadAllBytesAsync(filePath, cancellationToken);
     }
 
     public async Task<string?> ReadOnlineTextAsync(string URL, CancellationToken cancellationToken = default)
@@ -128,9 +180,9 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
     {
         // If the plug-in did not provide a checksum, always assume it was downloaded correctly.
         // If a file has already been verified, it does not need to be verified again.
-        if (string.IsNullOrWhiteSpace(md5Checksum) || VerifiedFiles.Contains(filePath))
+        if (string.IsNullOrWhiteSpace(md5Checksum) || verifiedFiles.Contains(filePath))
         {
-            VerifiedFiles.Add(filePath);
+            verifiedFiles.Add(filePath);
             return true;
         }
 
@@ -143,7 +195,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         if (StandardiseHash(checksum) == StandardiseHash(md5Checksum))
         {
             // File is already verified and does not need to be re-verified again.
-            VerifiedFiles.Add(filePath);
+            verifiedFiles.Add(filePath);
             return true;
         }
 

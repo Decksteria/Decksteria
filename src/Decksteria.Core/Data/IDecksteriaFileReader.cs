@@ -21,14 +21,18 @@ public interface IDecksteriaFileReader
     public string BuildConnectionString(string fileName, IDictionary<string, string> connectionProperties, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Used by any <see cref="IDecksteriaGame"/> plug-ins to get the absolute path of a specific file.
+    /// Gets the expected file location for a generic plug-in file.
     /// </summary>
-    /// <param name="fileName">The name of the file that the plug-in needs to be read. Do not include a path.</param>
-    /// <param name="downloadURL">The URL which the raw file can be downloaded from if unavailable.</param>
-    /// <param name="md5Checksum">The MD5 checksum that the file should resolve to. If not parsed in, it will presume it was always downloaded correctly.</param>
-    /// <param name="cancellationToken">The cancellation token used to cancel the execution.</param>
+    /// <param name="fileName">The name of the file, not including the file path, but including the file extension.</param>
     /// <returns>The absolute path of the file.</returns>
-    public Task<string> GetFileLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default);
+    string GetExpectedFileLocation(string fileName);
+
+    /// <summary>
+    /// Gets the expected file location for an image file.
+    /// </summary>
+    /// <param name="fileName">The name of the file, not including the file path, but including the file extension.</param>
+    /// <returns>The absolute path of the image.</returns>
+    string GetExpectedImageLocation(string fileName);
 
     /// <summary>
     /// Used by any <see cref="IDecksteriaGame"/> plug-ins to read local binary files.

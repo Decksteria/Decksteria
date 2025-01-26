@@ -4,14 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using Decksteria.Core;
 using Decksteria.Core.Data;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,11 +18,9 @@ using Microsoft.Maui.Storage;
 
 internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 {
+    private readonly IServiceProvider serviceProvider;
+
     private readonly IDialogService dialogService;
-
-    private readonly IHttpClientFactory httpClientFactory;
-
-    private readonly ILoggerFactory loggerFactory;
 
     private readonly ILogger<DecksteriaPlugInFactory> logger;
 
@@ -34,11 +30,10 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
     public GameFormat? selectedGameFormat;
 
-    public DecksteriaPlugInFactory(IDialogService dialogService, IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory, ILogger<DecksteriaPlugInFactory> logger)
+    public DecksteriaPlugInFactory(IServiceProvider serviceProvider, IDialogService dialogService, ILogger<DecksteriaPlugInFactory> logger)
     {
+        this.serviceProvider = serviceProvider;
         this.dialogService = dialogService;
-        this.httpClientFactory = httpClientFactory;
-        this.loggerFactory = loggerFactory;
         this.logger = logger;
     }
 
@@ -126,7 +121,7 @@ internal sealed class DecksteriaPlugInFactory : IDecksteriaPlugInFactory
 
         var serviceCollection = new ServiceCollection();
         serviceCollection.TryAddSingleton(dialogService);
-        serviceCollection.TryAddSingleton<IDecksteriaFileReader>(new DecksteriaFileReader(type.Name, httpClientFactory, loggerFactory.CreateLogger<DecksteriaFileReader>()));
+        serviceCollection.TryAddSingleton(serviceProvider.GetRequiredService<IDecksteriaFileReader>());
         serviceCollection.AddLogging();
         var sp = serviceCollection.BuildServiceProvider();
 
