@@ -10,7 +10,7 @@ using CommunityToolkit.Maui.Storage;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding;
 using Decksteria.Services.Deckbuilding.Models;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 using Decksteria.Ui.Maui.Pages.CardInfo;
 using Decksteria.Ui.Maui.Pages.DeckStatistics;
 using Decksteria.Ui.Maui.Pages.Search;

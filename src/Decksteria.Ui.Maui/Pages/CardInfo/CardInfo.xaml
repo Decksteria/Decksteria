@@ -8,7 +8,7 @@
              MaximumWidthRequest="400">
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
-            <Image Source="{Binding CardInfo.DownloadUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="250" />
+            <Image Source="{Binding CardInfo.Image.FileSourceUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="250" />
             <Border
                 BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"
             >

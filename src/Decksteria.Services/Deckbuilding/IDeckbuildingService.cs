@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 
 public interface IDeckbuildingService
 {

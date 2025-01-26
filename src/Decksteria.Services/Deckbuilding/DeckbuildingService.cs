@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 
 internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
     where T : IDecksteriaFormat
@@ -237,6 +236,6 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
 
     private CardArt GetCardArtFromCard(IDecksteriaCard cardInfo, IDecksteriaCardArt art)
     {
-        return new CardArt(cardInfo.CardId, art.ArtId, art.DownloadUrl, art.FileName, cardInfo.Details);
+        return new CardArt(cardInfo.CardId, art.ArtId, art.Image, cardInfo.Details);
     }
 }

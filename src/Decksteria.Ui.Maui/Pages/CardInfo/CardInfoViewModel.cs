@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 
 internal sealed class CardInfoViewModel : INotifyPropertyChanged
 {

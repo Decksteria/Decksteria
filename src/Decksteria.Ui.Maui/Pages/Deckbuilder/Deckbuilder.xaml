@@ -5,7 +5,7 @@
     x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
     xmlns:deckbuilder="clr-namespace:Decksteria.Ui.Maui.Pages.Deckbuilder"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:decksteria="clr-namespace:Decksteria.Services.FileService.Models;assembly=Decksteria.Services"
+    xmlns:decksteria="clr-namespace:Decksteria.Services.DeckFileService.Models;assembly=Decksteria.Services"
     xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
@@ -16,7 +16,7 @@
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
+            <Image Source="{Binding Image.FileSourceUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
                     <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SearchSecondaryTapped" />
@@ -24,7 +24,7 @@
             </Image>
         </DataTemplate>
         <DataTemplate x:Name="DeckView_CardItem" x:Key="CardView_Deck" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding DownloadUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
+            <Image Source="{Binding Image.FileSourceUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
                     <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_DeckSecondaryTapped" />

@@ -1,5 +1,7 @@
 ﻿namespace Decksteria.Core;
 
+using Decksteria.Core.Data;
+
 /// <summary>
 /// Represents an individual art for a particular card.
 /// </summary>
@@ -12,12 +14,7 @@ public interface IDecksteriaCardArt
     public long ArtId { get; }
 
     /// <summary>
-    /// The URL used by the Decksteria Application to download the Image File.
+    /// The details used to retrieve the image for the card art.
     /// </summary>
-    public string DownloadUrl { get; }
-
-    /// <summary>
-    /// The image file to save to and read from. Do not include the path.
-    /// </summary>
-    public string FileName { get; }
+    public DecksteriaImage Image { get; }
 }

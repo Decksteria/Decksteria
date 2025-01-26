@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Services.Deckbuilding;
-using Decksteria.Services.FileService.Models;
+using Decksteria.Services.DeckFileService.Models;
 using Decksteria.Ui.Maui.Services.PageService;
 using Microsoft.Maui.Controls;
 
