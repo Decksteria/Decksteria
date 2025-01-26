@@ -17,15 +17,20 @@
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
-            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" SetImageService="DecksteriaImageControl_SetService" />
+            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" SetImageService="DecksteriaImageControl_SetService">
+                <shared:DownloadableImage.GestureRecognizers>
+                    <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
+                    <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SearchSecondaryTapped" />
+                </shared:DownloadableImage.GestureRecognizers>
+            </shared:DownloadableImage>
         </DataTemplate>
         <DataTemplate x:Name="DeckView_CardItem" x:Key="CardView_Deck" x:DataType="decksteria:CardArt">
-            <Image Source="{Binding Image.FileSourceUrl}" MinimumWidthRequest="50" Aspect="AspectFill">
-                <Image.GestureRecognizers>
+            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" SetImageService="DecksteriaImageControl_SetService">
+                <shared:DownloadableImage.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
                     <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_DeckSecondaryTapped" />
-                </Image.GestureRecognizers>
-            </Image>
+                </shared:DownloadableImage.GestureRecognizers>
+            </shared:DownloadableImage>
         </DataTemplate>
     </uranium:UraniumContentPage.Resources>
     <ScrollView Orientation="Vertical" VerticalScrollBarVisibility="Always" HorizontalScrollBarVisibility="Never">

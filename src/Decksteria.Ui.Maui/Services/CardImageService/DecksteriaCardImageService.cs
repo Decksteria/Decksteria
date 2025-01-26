@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 
 internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
 {
@@ -19,6 +20,8 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
 
     private readonly ILogger<DecksteriaCardImageService> logger;
 
+    private readonly ConcurrentDictionary<string, SemaphoreSlim> lockedFiles;
+
     private readonly List<string> verifiedFiles;
 
     public DecksteriaCardImageService(IDecksteriaFileLocator fileLocator, IHttpClientFactory httpClientFactory, ILogger<DecksteriaCardImageService> logger)
@@ -26,6 +29,7 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
         this.httpClient = httpClientFactory.CreateClient();
         this.fileLocator = fileLocator;
         this.logger = logger;
+        lockedFiles = [];
         verifiedFiles = [];
     }
 
@@ -54,7 +58,7 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
         }
 
         // Download file and implement retry policy
-        await DownloadRetryAsync(DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
+        await DownloadRetryAsync(fileName, DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
         return filePath;
 
         async Task DownloadAsync()
@@ -71,8 +75,12 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
         return fileLocator.GetExpectedCardImageLocation(fileName);
     }
 
-    private async Task DownloadRetryAsync(Func<Task> DownloadAsync, Func<Task<bool>> ValidateChecksum)
+    private async Task DownloadRetryAsync(string fileName, Func<Task> DownloadAsync, Func<Task<bool>> ValidateChecksum)
     {
+        var fileLock = lockedFiles.GetOrAdd(fileName, new SemaphoreSlim(1, 1));
+
+        await fileLock.WaitAsync();
+
         // Add custom retry policy for HTTP Request
         for (var i = 0; i < 3; i++)
         {
@@ -93,6 +101,10 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
                 continue;
             }
         }
+
+
+        fileLock.Release();
+        lockedFiles.TryRemove(fileName, out _);
     }
 
     private async Task<bool> VerifyChecksum(string filePath, string? md5Checksum)

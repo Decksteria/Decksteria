@@ -1,6 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Services.FileReader;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -20,6 +21,8 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 
     private readonly ILogger<DecksteriaFileReader> logger;
 
+    private readonly ConcurrentDictionary<string, SemaphoreSlim> lockedFiles;
+
     private readonly List<string> verifiedFiles;
 
     public DecksteriaFileReader(IDecksteriaFileLocator fileLocator, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
@@ -27,6 +30,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         this.httpClient = httpClientFactory.CreateClient();
         this.fileLocator = fileLocator;
         this.logger = logger;
+        lockedFiles = [];
         verifiedFiles = [];
     }
 
@@ -67,7 +71,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         }
 
         // Download file and implement retry policy
-        await DownloadRetryAsync(DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
+        await DownloadRetryAsync(fileName, DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
         return filePath;
 
         async Task DownloadAsync()
@@ -104,7 +108,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         }
 
         // Download file and implement retry policy
-        await DownloadRetryAsync(DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
+        await DownloadRetryAsync(fileName, DownloadAsync, () => VerifyChecksum(filePath, md5Checksum));
         return filePath;
 
         async Task DownloadAsync()
@@ -152,8 +156,11 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
         return await File.ReadAllTextAsync(fileLocation, cancellationToken);
     }
 
-    private async Task DownloadRetryAsync(Func<Task> DownloadAsync, Func<Task<bool>> ValidateChecksum)
+    private async Task DownloadRetryAsync(string fileName, Func<Task> DownloadAsync, Func<Task<bool>> ValidateChecksum)
     {
+        var fileLock = lockedFiles.GetOrAdd(fileName, new SemaphoreSlim(1, 1));
+
+        await fileLock.WaitAsync();
         // Add custom retry policy for HTTP Request
         for (var i = 0; i < 3; i++)
         {
@@ -174,6 +181,9 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
                 continue;
             }
         }
+
+        fileLock.Release();
+        lockedFiles.TryRemove(fileName, out _);
     }
 
     private async Task<bool> VerifyChecksum(string filePath, string? md5Checksum)
