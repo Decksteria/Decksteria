@@ -1,6 +1,5 @@
 ﻿namespace Decksteria.Core.Models;
 
-using System.Collections.Generic;
 using Decksteria.Core.Data;
 
 /// <summary>

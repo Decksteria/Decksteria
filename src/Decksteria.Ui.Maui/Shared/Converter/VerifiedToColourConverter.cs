@@ -4,7 +4,6 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using Microsoft.Maui.Controls;
-using UraniumUI.Icons.FontAwesome;
 
 internal sealed class VerifiedToColourConverter : IValueConverter
 {

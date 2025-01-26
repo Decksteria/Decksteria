@@ -1,9 +1,7 @@
 ﻿namespace Decksteria.Ui.Maui.Services.PageService;
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Decksteria.Ui.Maui.Shared.Pages;
 using Microsoft.Maui.Controls;
 
 public interface IPageService
