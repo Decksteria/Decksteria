@@ -370,7 +370,7 @@ public partial class Deckbuilder : UraniumContentPage
             return;
         }
 
-        var cardInfo = new CardInfo(card, deckbuilder, pageService);
+        var cardInfo = new CardInfo(card, cardImageService, deckbuilder, pageService);
         var page = await pageService.OpenModalPage(cardInfo);
         if (page.DecksChanged)
         {

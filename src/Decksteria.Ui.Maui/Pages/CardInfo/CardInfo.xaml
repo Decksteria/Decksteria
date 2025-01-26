@@ -3,12 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Decksteria.Ui.Maui.Pages.CardInfo.CardInfo"
              xmlns:cardinfo="clr-namespace:Decksteria.Ui.Maui.Pages.CardInfo"
+             xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
              x:DataType="cardinfo:CardInfoViewModel"
              Loaded="CardInfo_Loaded"
              MaximumWidthRequest="400">
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
-            <Image Source="{Binding CardInfo.Image.FileSourceUrl}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" HeightRequest="250" />
+            <shared:DownloadableImage
+                FileName="{Binding CardInfo.Image.FileNameWithExtension}"
+                ImageUrl="{Binding CardInfo.Image.FileSourceUrl}"
+                AllowDownload="True"
+                SetImageService="DecksteriaImageControl_SetService"
+                HorizontalOptions="Center"
+                VerticalOptions="CenterAndExpand"
+                HeightRequest="250" />
             <Border
                 BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"
             >

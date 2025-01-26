@@ -17,7 +17,13 @@
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
-            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" SetImageService="DecksteriaImageControl_SetService">
+            <shared:DownloadableImage
+                FileName="{Binding Image.FileNameWithExtension}"
+                ImageUrl="{Binding Image.FileSourceUrl}"
+                AllowDownload="True"
+                SetImageService="DecksteriaImageControl_SetService"
+                MinimumWidthRequest="50"
+                Aspect="AspectFill">
                 <shared:DownloadableImage.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
                     <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_SearchSecondaryTapped" />
@@ -25,7 +31,13 @@
             </shared:DownloadableImage>
         </DataTemplate>
         <DataTemplate x:Name="DeckView_CardItem" x:Key="CardView_Deck" x:DataType="decksteria:CardArt">
-            <shared:DownloadableImage FileName="{Binding Image.FileNameWithExtension}" ImageUrl="{Binding Image.FileSourceUrl}" AllowDownload="True" SetImageService="DecksteriaImageControl_SetService">
+            <shared:DownloadableImage
+                FileName="{Binding Image.FileNameWithExtension}"
+                ImageUrl="{Binding Image.FileSourceUrl}"
+                AllowDownload="True"
+                SetImageService="DecksteriaImageControl_SetService"
+                MinimumWidthRequest="50"
+                Aspect="AspectFill">
                 <shared:DownloadableImage.GestureRecognizers>
                     <TapGestureRecognizer Buttons="Primary" Tapped="TapGestureRecognizer_PrimaryTapped" />
                     <TapGestureRecognizer Buttons="Secondary" Tapped="TapGestureRecognizer_DeckSecondaryTapped" />

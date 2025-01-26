@@ -1,7 +1,9 @@
 ﻿namespace Decksteria.Ui.Maui.Shared.Controls;
 
 using Decksteria.Ui.Maui.Services.CardImageService;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Plainer.Maui.Controls;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -17,6 +19,9 @@ internal sealed class DownloadableImage : ContentView
     public static readonly BindableProperty AllowDownloadProperty =
         BindableProperty.Create(nameof(AllowDownload), typeof(bool), typeof(DownloadableImage), false);
 
+    public static readonly BindableProperty AspectProperty =
+        BindableProperty.Create(nameof(Aspect), typeof(Aspect), typeof(DownloadableImage), Aspect.AspectFit);
+
     public static readonly BindableProperty ImageUrlProperty =
         BindableProperty.Create(nameof(ImageUrl), typeof(string), typeof(DownloadableImage), string.Empty);
 
@@ -31,6 +36,20 @@ internal sealed class DownloadableImage : ContentView
     {
         get => (bool) GetValue(AllowDownloadProperty);
         set => SetValue(AllowDownloadProperty, value);
+    }
+
+    public Aspect Aspect
+    {
+        get
+        {
+            var value = (Aspect) GetValue(AspectProperty);
+            return value;
+        }
+        set
+        {
+            SetValue(AspectProperty, value);
+            imageControl.Aspect = value;
+        }
     }
 
     public string ImageUrl
