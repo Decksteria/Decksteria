@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core;
+using Decksteria.Core.Data;
 using Decksteria.Core.Models;
 using Decksteria.Services.Deckbuilding.Models;
 using Decksteria.Services.DeckFileService.Models;
@@ -138,7 +139,7 @@ internal sealed class DeckbuildingService<T> : IDeckbuildingService<T>
             {
                 Label = section.Label,
                 OrderByCount = section.OrderByCount,
-                Statistics = section.Statistics.OrderByDescending(kv => kv.Value).ToDictionary()
+                Statistics = section.Statistics.SortValues()
             };
         }
     }

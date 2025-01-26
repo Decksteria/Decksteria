@@ -34,7 +34,7 @@ public partial class DeckStatistics : ContentPage
 				Sortable = section.OrderByCount,
 				Statistics = section.Statistics.Select(kv => new StatisticInfo
 				{
-					Count = kv.Value,
+					Count = kv.Value.value,
 					Label = kv.Key
 				}).ToObservableCollection(),
 				Title = section.Label
