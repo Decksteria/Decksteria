@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.56">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="..\..\.editorconfig" />
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\.gitattributes" />
+    <None Include="..\Directory.Build.props" />
+    <None Include="..\..\LICENSE" />
+    <None Include="..\..\README.md" />
+    <None Include="..\..\.github\**\*" Link="github\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>
