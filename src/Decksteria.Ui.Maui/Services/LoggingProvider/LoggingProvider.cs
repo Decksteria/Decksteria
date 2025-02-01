@@ -19,7 +19,7 @@ internal sealed class LoggingProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        var baseDirectory = Path.GetFullPath(logFilePath);
+        var baseDirectory = Path.GetDirectoryName(logFilePath) ?? FileSystem.AppDataDirectory;
         if (!Directory.Exists(baseDirectory))
         {
             Directory.CreateDirectory(baseDirectory);
