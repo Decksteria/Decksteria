@@ -174,7 +174,7 @@ public partial class LoadPlugIn : UraniumContentPage
         }
 
         ProcessingInProgress = true;
-        var result = await FilePicker.Default.PickAsync(new()
+        await FilePicker.Default.PickAsync(new()
         {
             PickerTitle = "Open a Deckbuilder File",
             FileTypes = jsonFileTypes
