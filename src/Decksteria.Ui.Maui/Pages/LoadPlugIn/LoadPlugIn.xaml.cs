@@ -195,6 +195,16 @@ public partial class LoadPlugIn : UraniumContentPage
         await deckbuilderPage.LoadDecklistAsync(selectedItem.DeckName);
     }
 
+    private async void LoadPlugInPage_Appearing(object sender, EventArgs e)
+    {
+        if (!viewModel.DecksExpanded || viewModel.SelectedFormat is null)
+        {
+            return;
+        }
+
+        await UpdateDeckListAsync(viewModel.SelectedFormat);
+    }
+
     private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)
     {
         viewModel.GameTiles.Clear();
