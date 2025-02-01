@@ -9,14 +9,23 @@ internal sealed class LoggingProvider : ILoggerProvider
 {
     private readonly string logFilePath;
 
+    private readonly TimeProvider timeProvider;
+
     public LoggingProvider(TimeProvider timeProvider)
     {
-        logFilePath = Path.Combine(FileSystem.AppDataDirectory, "logs", $"log_{timeProvider.GetUtcNow()}.log");
+        logFilePath = Path.Combine(FileSystem.AppDataDirectory, "logs", $"log_{timeProvider.GetUtcNow():yyyy-MM-dd_HH-mm-ss}.log");
+        this.timeProvider = timeProvider;
     }
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new FileLogger(logFilePath);
+        var baseDirectory = Path.GetFullPath(logFilePath);
+        if (!Directory.Exists(baseDirectory))
+        {
+            Directory.CreateDirectory(baseDirectory);
+        }
+
+        return new FileLogger(logFilePath, timeProvider);
     }
 
     public void Dispose()
@@ -28,11 +37,15 @@ internal sealed class LoggingProvider : ILoggerProvider
 public class FileLogger : ILogger
 {
     private readonly string filePath;
+
+    private readonly TimeProvider timeProvider;
+
     private static readonly object _lock = new();
 
-    public FileLogger(string filePath)
+    public FileLogger(string filePath, TimeProvider timeProvider)
     {
         this.filePath = filePath;
+        this.timeProvider = timeProvider;
     }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
@@ -52,7 +65,7 @@ public class FileLogger : ILogger
         var message = formatter(state, exception);
         lock (_lock)
         {
-            var fullMessage = $"[{typeof(TState).Name}]: {logLevel} - {message}";
+            var fullMessage = $"[{typeof(TState).Name}] - {timeProvider.GetLocalNow():yyyy/MM/dd HH:mm:ss.fff zzz}: {logLevel} - {message}";
             AddMessage(fullMessage);
         }
     }
