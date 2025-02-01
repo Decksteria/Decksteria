@@ -9,7 +9,6 @@
              MaximumWidthRequest="400">
     <ScrollView>
         <VerticalStackLayout x:Name="MainLayout">
-            <Label x:Name="TestingLabel" Text="Test" FontSize="Subtitle" />
             <shared:DownloadableImage
                 FileName="{Binding CardInfo.Image.FileNameWithExtension}"
                 ImageUrl="{Binding CardInfo.Image.FileSourceUrl}"
