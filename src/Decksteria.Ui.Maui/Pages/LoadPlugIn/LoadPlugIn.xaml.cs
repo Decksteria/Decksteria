@@ -174,7 +174,7 @@ public partial class LoadPlugIn : UraniumContentPage
         }
 
         ProcessingInProgress = true;
-        var result = await FilePicker.Default.PickAsync(new()
+        await FilePicker.Default.PickAsync(new()
         {
             PickerTitle = "Open a Deckbuilder File",
             FileTypes = jsonFileTypes
@@ -193,6 +193,16 @@ public partial class LoadPlugIn : UraniumContentPage
         // Open Deckbuilder Window
         var deckbuilderPage = await pageService.OpenPageAsync<Deckbuilder>(null, false);
         await deckbuilderPage.LoadDecklistAsync(selectedItem.DeckName);
+    }
+
+    private async void LoadPlugInPage_Appearing(object sender, EventArgs e)
+    {
+        if (!viewModel.DecksExpanded || viewModel.SelectedFormat is null)
+        {
+            return;
+        }
+
+        await UpdateDeckListAsync(viewModel.SelectedFormat);
     }
 
     private void UpdatePlugInList(IEnumerable<DecksteriaPlugIn> plugIns)

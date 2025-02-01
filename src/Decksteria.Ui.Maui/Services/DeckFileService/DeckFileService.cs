@@ -67,12 +67,13 @@ internal sealed class DeckFileService : IDeckFileService
     {
         cancellationToken.ThrowIfCancellationRequested();
         var baseDirectory = GetDeckFilePath();
+        var filePath = @$"{baseDirectory}/Gaius.json";
         if (!Directory.Exists(baseDirectory))
         {
             return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
         }
 
-        var filePaths = Directory.EnumerateFiles(baseDirectory, "*.json", new EnumerationOptions
+        var filePaths = Directory.GetFiles(baseDirectory, "*.json", new EnumerationOptions
         {
             MatchType = MatchType.Simple,
             MatchCasing = MatchCasing.CaseInsensitive,
@@ -138,12 +139,13 @@ internal sealed class DeckFileService : IDeckFileService
 
     private string GetDeckFilePath(string? deckName = null)
     {
-        var baseDirectory = @$"{FileSystem.AppDataDirectory}\{gameName}\{formatName}\";
+        var baseDirectory = Path.Combine(FileSystem.AppDataDirectory, gameName, formatName);
+        // @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
         if (deckName is null)
-    {
+        {
             return baseDirectory;
         }
 
-        return $@"{baseDirectory}\{deckName}.json";
+        return Path.Combine(baseDirectory, $"{deckName}.json");
     }
 }

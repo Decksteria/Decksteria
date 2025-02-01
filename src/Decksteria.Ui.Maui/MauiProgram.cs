@@ -11,6 +11,7 @@ using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.DialogService;
 using Decksteria.Ui.Maui.Services.FileLocator;
 using Decksteria.Ui.Maui.Services.FileReader;
+using Decksteria.Ui.Maui.Services.LoggingProvider;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,9 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFontAwesomeIconFonts();
             });
+
+        builder.Logging.ClearProviders();
+        builder.Logging.AddProvider(new LoggingProvider(TimeProvider.System));
 
 #if DEBUG
         builder.Logging.AddDebug();

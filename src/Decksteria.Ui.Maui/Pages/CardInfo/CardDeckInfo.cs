@@ -47,7 +47,6 @@ internal sealed class CardDeckInfo : INotifyPropertyChanged
             Text = $"{deckLabel}: ",
             VerticalTextAlignment = TextAlignment.Center
         };
-        titleLabel.SetValue(Label.FontSizeProperty, "Subtitle");
 
         var removeButton = new Button
         {

@@ -23,7 +23,7 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 
     private readonly ConcurrentDictionary<string, SemaphoreSlim> lockedFiles;
 
-    private readonly List<string> verifiedFiles;
+    private readonly HashSet<string> verifiedFiles;
 
     public DecksteriaFileReader(IDecksteriaFileLocator fileLocator, IHttpClientFactory httpClientFactory, ILogger<DecksteriaFileReader> logger)
     {
@@ -195,6 +195,12 @@ internal sealed class DecksteriaFileReader : IDecksteriaFileReader
 
     private async Task<bool> VerifyChecksum(string filePath, string? md5Checksum)
     {
+        // Since there is no file to open validation, simply skip and return false.
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
         // If the plug-in did not provide a checksum, always assume it was downloaded correctly.
         // If a file has already been verified, it does not need to be verified again.
         if (string.IsNullOrWhiteSpace(md5Checksum) || verifiedFiles.Contains(filePath))

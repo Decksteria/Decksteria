@@ -1,5 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui.Services.FileLocator;
- 
+
+using System.IO;
 using Decksteria.Services.PlugInFactory;
 using Microsoft.Maui.Storage;
 
@@ -15,19 +16,19 @@ internal sealed class DecksteriaFileLocator : IDecksteriaFileLocator
     public string GetExpectedFileLocation(string fileName)
     {
         var gameName = GetGameName();
-        return @$"{FileSystem.AppDataDirectory}\{gameName}\{fileName}";
+        return Path.Combine(FileSystem.AppDataDirectory, gameName, fileName);
     }
 
     public string GetExpectedCardImageLocation(string fileName)
     {
         var gameName = GetGameName();
-        return @$"{FileSystem.AppDataDirectory}\{gameName}\cards\{fileName}";
+        return Path.Combine(FileSystem.AppDataDirectory, gameName, "cards", fileName);
     }
 
     public string GetExpectedImageLocation(string fileName)
     {
         var gameName = GetGameName();
-        return @$"{FileSystem.AppDataDirectory}\{gameName}\images\{fileName}";
+        return Path.Combine(FileSystem.AppDataDirectory, gameName, "images", fileName);
     }
 
     private string GetGameName()

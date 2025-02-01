@@ -36,7 +36,7 @@ jobs:
           dotnet build "src/Decksteria.Services/Decksteria.Services.csproj"
           --configuration Release
           --no-restore
-          /p:WarningsAsErrors=false
+          /p:WarningsAsErrors=true
       - name: Install dependencies for Maui Project
         run: |
           dotnet workload install android
@@ -47,5 +47,5 @@ jobs:
           dotnet build "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj"
           --configuration Release
           --no-restore
-          /p:WarningsAsErrors=false
+          /p:WarningsAsErrors=true
           /p:Platform=x64
