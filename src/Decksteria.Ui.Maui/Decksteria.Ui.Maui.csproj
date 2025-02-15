@@ -82,6 +82,9 @@
     <MauiXaml Update="Pages\LoadPlugIn\LoadPlugIn.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\Preferences\Preferences.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\Search\SearchModal.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
