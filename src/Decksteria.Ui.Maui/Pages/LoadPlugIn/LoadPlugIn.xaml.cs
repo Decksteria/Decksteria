@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Pages.Deckbuilder;
+using Decksteria.Ui.Maui.Pages.Preferences;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Shared.Extensions;
@@ -69,6 +70,11 @@ public partial class LoadPlugIn : UraniumContentPage
         this.BindingContext = this.viewModel;
 
         InitializeComponent();
+    }
+
+    private async void Button_Preferences_Clicked(object sender, EventArgs e)
+    {
+        await pageService.OpenModalPage<UserPreferences>(null, false);
     }
 
     private void ContentPage_LoadedAsync(object sender, EventArgs e)
