@@ -1,12 +1,40 @@
 ﻿namespace Decksteria.Ui.Maui.Pages.Preferences;
 
+using Decksteria.Ui.Maui.Shared;
+using Decksteria.Ui.Maui.Shared.Configuration;
+
 /// <summary>
 /// View model for preferences before it gets saved.
 /// </summary>
-internal sealed class PreferencesViewModel
+public sealed class PreferencesViewModel : BaseViewModel
 {
+    public PreferencesViewModel(PreferenceConfiguration preferences)
+    {
+        this.Preferences = preferences;
+    }
+
     /// <summary>
-    /// Determines whether card images will be downloaded by the application.
+    /// The preference configurations.
     /// </summary>
-    public bool DownloadImages { get; set; }
+    internal PreferenceConfiguration Preferences { get; init; }
+
+    public bool AllowDownloads
+    {
+        get => Preferences.DownloadImages;
+        set
+        {
+            Preferences.DownloadImages = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool PreventDownloads
+    {
+        get => !Preferences.DownloadImages;
+        set
+        {
+            Preferences.DownloadImages = !value;
+            OnPropertyChanged();
+        }
+    }
 }
