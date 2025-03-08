@@ -2,7 +2,7 @@
 
 public interface IDeckbuildingServiceFactory
 {
-    void ChangeFormat(string formatName);
+    public void ChangeFormat(string formatName);
 
-    IDeckbuildingService GetCurrentDeckbuildingService();
+    public IDeckbuildingService GetCurrentDeckbuildingService();
 }

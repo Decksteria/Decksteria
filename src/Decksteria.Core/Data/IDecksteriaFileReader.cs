@@ -25,14 +25,14 @@ public interface IDecksteriaFileReader
     /// </summary>
     /// <param name="fileName">The name of the file, not including the file path, but including the file extension.</param>
     /// <returns>The absolute path of the file.</returns>
-    string GetExpectedFileLocation(string fileName);
+    public string GetExpectedFileLocation(string fileName);
 
     /// <summary>
     /// Gets the expected file location for an image file.
     /// </summary>
     /// <param name="fileName">The name of the file, not including the file path, but including the file extension.</param>
     /// <returns>The absolute path of the image.</returns>
-    string GetExpectedImageLocation(string fileName);
+    public string GetExpectedImageLocation(string fileName);
 
     /// <summary>
     /// Used by any <see cref="IDecksteriaGame"/> plug-ins to read local binary files.

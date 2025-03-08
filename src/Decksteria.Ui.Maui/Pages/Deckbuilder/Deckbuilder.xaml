@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uranium:UraniumContentPage 
+    x:Name="DeckbuilderPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
@@ -10,17 +11,18 @@
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
-    xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
+    xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layouts"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="{Binding WindowTitle}"
     Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
+        <Binding x:Name="Binding_AllowedDownloading" x:Key="Binding_Download" Path="BindingContext.AllowDownloading" Source="{x:Reference DeckbuilderPage}" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
             <shared:DownloadableImage
                 FileName="{Binding Image.FileNameWithExtension}"
                 ImageUrl="{Binding Image.FileSourceUrl}"
-                AllowDownload="True"
+                AllowDownload="{DynamicResource Key=Binding_Download}"
                 SetImageService="DecksteriaImageControl_SetService"
                 MinimumWidthRequest="50"
                 Aspect="AspectFill">
@@ -34,7 +36,7 @@
             <shared:DownloadableImage
                 FileName="{Binding Image.FileNameWithExtension}"
                 ImageUrl="{Binding Image.FileSourceUrl}"
-                AllowDownload="True"
+                AllowDownload="{DynamicResource Key=Binding_Download}"
                 SetImageService="DecksteriaImageControl_SetService"
                 MinimumWidthRequest="50"
                 Aspect="AspectFill">
@@ -146,7 +148,7 @@
                         ItemsSource="{Binding FilteredCards}"
                         ItemTemplate="{StaticResource Key=CardView_Search}"
                         SelectionMode="None"
-                        VerticalOptions="FillAndExpand"
+                        VerticalOptions="Fill"
                         VerticalScrollBarVisibility="Default">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="2" VerticalItemSpacing="2" SnapPointsAlignment="Center" />
@@ -175,7 +177,7 @@
                     IsRunning="{Binding Loading}"
                     Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always" Padding="0,4,0,4">
-                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+                    <HorizontalStackLayout HorizontalOptions="Center">
                         <Button
                             StyleClass="OutlinedButton"
                             Text="Save"
@@ -229,7 +231,7 @@
                         </Button>
                     </HorizontalStackLayout>
                 </ScrollView>
-                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
+                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center">
                     <Button
                         StyleClass="TextButton"
                         Text="Check Deck"

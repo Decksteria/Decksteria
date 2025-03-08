@@ -4,7 +4,7 @@ using Decksteria.Core.Models;
 
 public interface IDecksteriaDeckFileService
 {
-    string CreateDeckFileJson(Decklist decklist, bool deckIsValid);
+    public string CreateDeckFileJson(Decklist decklist, bool deckIsValid);
 
-    Decklist? ReadDeckFileJson(string deckFileJson);
+    public Decklist? ReadDeckFileJson(string deckFileJson);
 }

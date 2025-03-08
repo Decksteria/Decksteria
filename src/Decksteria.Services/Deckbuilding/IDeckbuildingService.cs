@@ -10,41 +10,41 @@ using Decksteria.Services.DeckFileService.Models;
 
 public interface IDeckbuildingService
 {
-    IEnumerable<DecksteriaDeck> DeckInformation { get; }
+    public IEnumerable<DecksteriaDeck> DeckInformation { get; }
 
-    string GameTitle { get; }
+    public string GameTitle { get; }
 
-    string FormatName { get; }
+    public string FormatName { get; }
 
-    string FormatTitle { get; }
+    public string FormatTitle { get; }
 
-    Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
+    public Task<bool> AddCardAsync(CardArt card, string? deckName = null, CancellationToken cancellationToken = default);
 
-    Task<bool> CanAddCardAsync(long cardId, string? deckName = null, CancellationToken cancellationToken = default);
+    public Task<bool> CanAddCardAsync(long cardId, string? deckName = null, CancellationToken cancellationToken = default);
 
-    Task ClearCardsAsync(CancellationToken cancellationToken = default);
+    public Task ClearCardsAsync(CancellationToken cancellationToken = default);
 
-    Decklist CreateDecklist();
+    public Decklist CreateDecklist();
 
-    int GetCardCountFromDeck(long cardId, string deckName);
+    public int GetCardCountFromDeck(long cardId, string deckName);
 
-    Task<CardArt> GetCardAsync(CardArtId cardArtId, CancellationToken cancellationToken = default);
+    public Task<CardArt> GetCardAsync(CardArtId cardArtId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CardArt>> GetCardsAsync(string searchText, IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default);
 
-    IEnumerable<CardArt>? GetDeckCards(string deckName);
+    public IEnumerable<CardArt>? GetDeckCards(string deckName);
 
-    Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(bool detailed = false, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(bool detailed = false, CancellationToken cancellationToken = default);
 
-    Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default);
+    public Task LoadDecklistAsync(Decklist newDecklist, CancellationToken cancellationToken = default);
 
-    Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default);
+    public Task<IDictionary<string, List<CardArt>>> ReInitializeAsync(CancellationToken cancellationToken = default);
 
-    Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default);
+    public Task<bool> RemoveCardAsync(CardArt card, string deckName, CancellationToken cancellationToken = default);
 
-    Task<bool> RemoveCardAtAsync(int index, string deckName, CancellationToken cancellationToken = default);
+    public Task<bool> RemoveCardAtAsync(int index, string deckName, CancellationToken cancellationToken = default);
 
-    Task<bool> ValidDecklistAsync(CancellationToken cancellationToken = default);
+    public Task<bool> ValidDecklistAsync(CancellationToken cancellationToken = default);
 
-    Task<(IDictionary<IDecksteriaDeck, bool>, bool)> ValidDecksAsync(CancellationToken cancellationToken = default);
+    public Task<(IDictionary<IDecksteriaDeck, bool>, bool)> ValidDecksAsync(CancellationToken cancellationToken = default);
 }

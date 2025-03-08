@@ -4,5 +4,5 @@ using Microsoft.Maui.Controls;
 
 public interface IActionFormPage<T> where T : Page
 {
-    bool IsSubmitted { get; }
+    public bool IsSubmitted { get; }
 }

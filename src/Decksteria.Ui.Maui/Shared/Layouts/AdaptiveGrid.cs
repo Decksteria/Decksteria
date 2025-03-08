@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Ui.Maui.Shared.Layout;
+﻿namespace Decksteria.Ui.Maui.Shared.Layouts;
 
 using System.ComponentModel;
 using Microsoft.Maui;

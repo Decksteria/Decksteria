@@ -3,7 +3,6 @@
 using Decksteria.Ui.Maui.Services.CardImageService;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-using Plainer.Maui.Controls;
 using System;
 using System.ComponentModel;
 using System.IO;

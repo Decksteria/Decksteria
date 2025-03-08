@@ -1,4 +1,4 @@
-﻿namespace Decksteria.Ui.Maui.Shared.Models;
+﻿namespace Decksteria.Services.PlugInFactory.Models;
 
 using System;
 using Decksteria.Core;

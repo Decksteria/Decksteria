@@ -31,6 +31,11 @@ internal sealed class PageService : IPageService
         return GetPageInstance<LoadPlugIn>();
     }
 
+    public T CreatePageInstance<T>(params object[] parameters) where T : Page
+    {
+        return ActivatorUtilities.CreateInstance<T>(services, parameters);
+    }
+
     public async Task<T> OpenFormPage<T>(T? newPage = null, bool waitUntilDisappear = true, CancellationToken cancellationToken = default) where T : Page
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -100,8 +105,7 @@ internal sealed class PageService : IPageService
     private T GetPageInstance<T>() where T : Page
     {
         var instance = ActivatorUtilities.GetServiceOrCreateInstance<T>(services);
-        var page = instance as T;
-        return page!;
+        return instance;
     }
 
     private Action<object?, EventArgs> CreateOnModalDisappearAction<T>(T page, TaskCompletionSource<bool> completionSource) where T : Page

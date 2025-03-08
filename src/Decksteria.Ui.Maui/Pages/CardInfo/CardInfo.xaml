@@ -15,7 +15,7 @@
                 AllowDownload="True"
                 SetImageService="DecksteriaImageControl_SetService"
                 HorizontalOptions="Center"
-                VerticalOptions="CenterAndExpand"
+                VerticalOptions="Center"
                 HeightRequest="250" />
             <Border
                 BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},Dark={StaticResource SurfaceVariantDark}}"

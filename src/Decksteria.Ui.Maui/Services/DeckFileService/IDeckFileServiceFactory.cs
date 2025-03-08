@@ -2,5 +2,5 @@
 
 public interface IDeckFileServiceFactory
 {
-    IDeckFileService GetDeckFileService();
+    public IDeckFileService GetDeckFileService();
 }

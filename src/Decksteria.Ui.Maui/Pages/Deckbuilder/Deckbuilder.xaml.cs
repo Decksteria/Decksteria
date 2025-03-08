@@ -30,7 +30,7 @@ using Path = System.IO.Path;
 
 public partial class Deckbuilder : UraniumContentPage
 {
-    private readonly DeckbuilderViewModel viewModel = new();
+    private readonly DeckbuilderViewModel viewModel;
 
     private readonly IDeckbuildingServiceFactory deckbuilderFactory;
 
@@ -50,10 +50,11 @@ public partial class Deckbuilder : UraniumContentPage
 
     private bool firstLoaded = false;
 
-    public Deckbuilder(IDeckbuildingServiceFactory deckbuilderFactory, IDeckFileServiceFactory deckFileServiceFactory, IPageService pageService, IDecksteriaCardImageService cardImageService)
+    public Deckbuilder(IDeckbuildingServiceFactory deckbuilderFactory, IDeckFileServiceFactory deckFileServiceFactory, IPageService pageService, IDecksteriaCardImageService cardImageService, DeckbuilderViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        this.viewModel = viewModel;
+        BindingContext = this.viewModel;
         this.deckbuilderFactory = deckbuilderFactory;
         this.deckbuilder = deckbuilderFactory.GetCurrentDeckbuildingService();
         this.deckFileService = deckFileServiceFactory.GetDeckFileService();
@@ -142,7 +143,7 @@ public partial class Deckbuilder : UraniumContentPage
     {
         var cancellationToken = default(CancellationToken);
         var statisticSections = await deckbuilder.GetDeckStatsAsync(true, cancellationToken);
-        var modalPage = new DeckStatistics(statisticSections, pageService);
+        var modalPage = pageService.CreatePageInstance<DeckStatistics>(statisticSections);
         await pageService.OpenModalPage(modalPage, false, cancellationToken);
     }
 
@@ -370,7 +371,7 @@ public partial class Deckbuilder : UraniumContentPage
             return;
         }
 
-        var cardInfo = new CardInfo(card, cardImageService, deckbuilder, pageService);
+        var cardInfo = pageService.CreatePageInstance<CardInfo>(card, deckbuilder);
         var page = await pageService.OpenModalPage(cardInfo);
         if (page.DecksChanged)
         {

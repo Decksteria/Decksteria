@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<uranium:UraniumContentPage
+             x:Name="Preferences"
+             x:Class="Decksteria.Ui.Maui.Pages.Preferences.UserPreferences"
+             x:DataType="preferences:PreferencesViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             xmlns:preferences="clr-namespace:Decksteria.Ui.Maui.Pages.Preferences"
+             Title="Preferences"
+             MaximumWidthRequest="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Label
+            Grid.Row="0"
+            Text="Preferences"
+            FontSize="Header"
+            FontAttributes="Bold"
+            StyleClass="Heading"
+            />
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Default" HorizontalScrollBarVisibility="Never" Padding="10,5">
+            <VerticalStackLayout>
+                <VerticalStackLayout x:Name="Option_DownloadImages">
+                    <material:RadioButtonGroupView>
+                        <material:RadioButton
+                            Text="Download Images to Storage"
+                            IsChecked="{Binding AllowDownloads}"
+                            ToolTipProperties.Text="All images are downloaded and saved, images must be cleared to be refreshed or updated." />
+                        <material:RadioButton
+                            Text="Load Images from Web"
+                            IsChecked="{Binding PreventDownloads}"
+                            ToolTipProperties.Text="All images will have to be re-downloaded each time the application is closed." />
+                    </material:RadioButtonGroupView>
+                    <Button
+                        Text="Clear out images from file storage"
+                        Pressed="Button_ClearImages_Pressed"
+                        StyleClass="OutlinedButton" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Text="Cancel"
+                StyleClass="OutlinedButton"
+                Pressed="Button_Cancel_Pressed"/>
+            <Button
+                Grid.Column="1"
+                Text="Save"
+                StyleClass="FilledTonalButton"
+                Pressed="Button_Save_Pressed"/>
+        </Grid>
+    </Grid>
+</uranium:UraniumContentPage>

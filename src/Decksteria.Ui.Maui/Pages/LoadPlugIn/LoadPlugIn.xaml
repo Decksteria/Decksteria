@@ -47,6 +47,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="40" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Text="Select a Plug-In" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                         <ImageButton
@@ -60,6 +61,20 @@
                                 <FontImageSource
                                     FontFamily="FASolid"
                                     Glyph="{x:Static fa:Solid.Plus}"
+                                    Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+                        <ImageButton
+                            Grid.Column="2"
+                            Clicked="Button_Preferences_Clicked"
+                            ToolTipProperties.Text="Preferences"
+                            CornerRadius="2"
+                            Padding="1"
+                            Margin="1">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="FASolid"
+                                    Glyph="{x:Static fa:Solid.Wrench}"
                                     Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </ImageButton.Source>
                         </ImageButton>

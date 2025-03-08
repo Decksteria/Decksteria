@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using System.Linq;
 
 internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
 {
@@ -31,6 +32,21 @@ internal sealed class DecksteriaCardImageService : IDecksteriaCardImageService
         this.logger = logger;
         lockedFiles = [];
         verifiedFiles = [];
+    }
+
+    public async Task DeleteAllImagesAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var directories = fileLocator.GetAllCardImageDirectories();
+        var deleteTasks = directories.Select(d => DeleteDirectory(d, cancellationToken));
+        await Task.WhenAll(deleteTasks);
+
+        static Task DeleteDirectory(string directory, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            Directory.Delete(directory, true);
+            return Task.CompletedTask;
+        }
     }
 
     public async Task<string> GetCardImageLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default)

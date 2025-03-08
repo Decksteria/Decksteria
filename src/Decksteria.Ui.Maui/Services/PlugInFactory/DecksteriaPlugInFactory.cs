@@ -10,7 +10,6 @@ using Decksteria.Core.Data;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
 using Decksteria.Ui.Maui.Services.DialogService;
-using Decksteria.Ui.Maui.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
