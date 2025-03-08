@@ -5,11 +5,11 @@ using Decksteria.Services.PlugInFactory.Models;
 
 public interface IDecksteriaPlugInFactory
 {
-    IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns();
+    public IEnumerable<DecksteriaPlugIn> GetOrInitializePlugIns();
 
-    GameFormat GetSelectedFormat();
+    public GameFormat GetSelectedFormat();
 
-    void SelectGame(string gameName, string formatName);
+    public void SelectGame(string gameName, string formatName);
 
-    bool TryAddGame(string dllFilePath);
+    public bool TryAddGame(string dllFilePath);
 }

@@ -1,4 +1,6 @@
-﻿namespace Decksteria.Ui.Maui;
+﻿#pragma warning disable IDE0130 // Namespace does not match folder structure, this namespace is required for using the Android namespaces.
+namespace Decksteria.Ui.Maui;
+#pragma warning disable IDE0130 // Namespace does not match folder structure, this namespace is required for using the Android namespaces.
 
 using System;
 using Android.App;

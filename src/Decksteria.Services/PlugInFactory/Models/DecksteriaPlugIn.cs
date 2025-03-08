@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Decksteria.Core;
-using Decksteria.Ui.Maui.Shared.Models;
 
 public sealed class DecksteriaPlugIn
 {

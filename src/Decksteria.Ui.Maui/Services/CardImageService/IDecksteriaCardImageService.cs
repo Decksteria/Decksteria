@@ -13,7 +13,7 @@ public interface IDecksteriaCardImageService
     /// <param name="md5Checksum"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The absolute path of the image.</returns>
-    Task<string> GetCardImageLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default);
+    public Task<string> GetCardImageLocationAsync(string fileName, string downloadURL, string? md5Checksum = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the expected file location for a card image file.

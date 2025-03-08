@@ -8,12 +8,12 @@ public interface ISearchFieldFilter
     /// <summary>
     /// The comparison type selected by the user.
     /// </summary>
-    ComparisonType Comparison { get; }
+    public ComparisonType Comparison { get; }
 
     /// <summary>
     /// A <see cref="Models.SearchField"/> provided by the plug-in.
     /// </summary>
-    SearchField SearchField { get; }
+    public SearchField SearchField { get; }
 
     /// <summary>
     /// The search value provided by the user.
@@ -22,7 +22,7 @@ public interface ISearchFieldFilter
     /// It will be a <see cref="string"/> when it is <see cref="FieldType.SingleSelect"/>.
     /// It will be a <see cref="int"/> when it is <see cref="FieldType.MultiSelect"/>.
     /// </summary>
-    object? Value { get; }
+    public object? Value { get; }
 
     /// <summary>
     /// Default <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
@@ -30,7 +30,7 @@ public interface ISearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    bool MatchesFilter(int cardProperty);
+    public bool MatchesFilter(int cardProperty);
 
     /// <summary>
     /// Default nullable <see cref="int" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
@@ -38,7 +38,7 @@ public interface ISearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    bool MatchesFilter(int? cardProperty);
+    public bool MatchesFilter(int? cardProperty);
 
     /// <summary>
     /// Default <see cref="string" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching.
@@ -46,7 +46,7 @@ public interface ISearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    bool MatchesFilter(string? cardProperty);
+    public bool MatchesFilter(string? cardProperty);
 
     /// <summary>
     /// Default <see cref="uint" /> filter matching, call this inside the GetCardsAsync if you don't need to do any special filter matching for <see cref="FieldType.MultiSelect"/>.
@@ -54,5 +54,5 @@ public interface ISearchFieldFilter
     /// </summary>
     /// <param name="cardProperty">The value you specifically want to match.</param>
     /// <returns>A boolean value indicating whether the <paramref name="cardProperty"/> matches the default filter criteria based on the value of the search field.</returns>
-    bool MatchesFilter(uint cardProperty);
+    public bool MatchesFilter(uint cardProperty);
 }

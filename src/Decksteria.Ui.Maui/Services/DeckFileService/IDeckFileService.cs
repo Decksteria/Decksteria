@@ -8,17 +8,17 @@ using Decksteria.Core.Models;
 
 public interface IDeckFileService
 {
-    Task<MemoryStream> ExportDecklistAsync(string exportFormat, Decklist decklist, CancellationToken cancellationToken = default);
+    public Task<MemoryStream> ExportDecklistAsync(string exportFormat, Decklist decklist, CancellationToken cancellationToken = default);
 
-    IDictionary<string, string> GetExportFileTypes();
-    
-    IDictionary<string, string> GetImportFileTypes();
+    public IDictionary<string, string> GetExportFileTypes();
 
-    Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default);
+    public IDictionary<string, string> GetImportFileTypes();
 
-    Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<string>> GetSavedDecksAsync(CancellationToken cancellationToken = default);
 
-    Task<Decklist> ReadDecklistAsync(string deckName, CancellationToken cancellationToken = default);
+    public Task<Decklist> ImportDecklistAsync(string filePath, string importFormat, CancellationToken cancellationToken = default);
 
-    Task SaveDecklistAsync(string deckName, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default);
+    public Task<Decklist> ReadDecklistAsync(string deckName, CancellationToken cancellationToken = default);
+
+    public Task SaveDecklistAsync(string deckName, IDictionary<string, IEnumerable<CardArtId>> decks, CancellationToken cancellationToken = default);
 }

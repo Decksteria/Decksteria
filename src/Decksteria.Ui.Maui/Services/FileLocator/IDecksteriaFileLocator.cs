@@ -2,7 +2,7 @@
 
 internal interface IDecksteriaFileLocator
 {
-    string GetExpectedCardImageLocation(string fileName);
-    string GetExpectedFileLocation(string fileName);
-    string GetExpectedImageLocation(string fileName);
+    public string GetExpectedCardImageLocation(string fileName);
+    public string GetExpectedFileLocation(string fileName);
+    public string GetExpectedImageLocation(string fileName);
 }

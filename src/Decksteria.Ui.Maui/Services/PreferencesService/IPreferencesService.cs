@@ -12,16 +12,16 @@ public interface IPreferencesService
     /// Retrieves the preferences configuration.
     /// </summary>
     /// <returns></returns>
-    IOptions<PreferenceConfiguration> GetConfiguration();
+    public IOptions<PreferenceConfiguration> GetConfiguration();
 
     /// <summary>
     /// Reset all settings to the last saved settings state.
     /// </summary>
-    void LoadFromSavedSettings();
+    public void LoadFromSavedSettings();
 
     /// <summary>
     /// Saves settings to the application, propagates the changes to other services.
     /// </summary>
     /// <param name="newConfiguration">The new configuration values.</param>
-    void SaveToSettings(PreferenceConfiguration newConfiguration);
+    public void SaveToSettings(PreferenceConfiguration newConfiguration);
 }

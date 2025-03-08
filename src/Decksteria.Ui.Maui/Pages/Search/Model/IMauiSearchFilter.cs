@@ -5,9 +5,9 @@ using Microsoft.Maui.Controls;
 
 internal interface IMauiSearchFilter
 {
-    string Title { get; }
+    public string Title { get; }
 
-    ISearchFieldFilter[] AsSearchFieldFilterArray();
+    public ISearchFieldFilter[] AsSearchFieldFilterArray();
 
-    VisualElement GetVisualElement();
+    public VisualElement GetVisualElement();
 }
