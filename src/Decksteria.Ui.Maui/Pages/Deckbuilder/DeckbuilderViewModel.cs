@@ -5,16 +5,23 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using Decksteria.Services.DeckFileService.Models;
+using Decksteria.Ui.Maui.Shared.Configuration;
+using Microsoft.Extensions.Options;
 using UraniumUI.Icons.FontAwesome;
 using UraniumUI.Material.Controls;
 
-internal class DeckbuilderViewModel : INotifyPropertyChanged
+public class DeckbuilderViewModel : INotifyPropertyChanged
 {
-    internal enum SortDeckStatus
+    public enum SortDeckStatus
     {
         Unsorted,
         Ascending,
         Descending
+    }
+
+    public DeckbuilderViewModel(IOptions<PreferenceConfiguration> preferences)
+    {
+        this.preferences = preferences.Value;
     }
 
     private bool _advancedFiltersApplied = false;
@@ -31,7 +38,11 @@ internal class DeckbuilderViewModel : INotifyPropertyChanged
 
     private string _windowTitle = string.Empty;
 
+    private readonly PreferenceConfiguration preferences;
+
     public string ActiveDeckTab { get; set; } = string.Empty;
+
+    public bool AllowDownloading => preferences.DownloadImages;
 
     public string DecklistName { get; set; } = string.Empty;
 

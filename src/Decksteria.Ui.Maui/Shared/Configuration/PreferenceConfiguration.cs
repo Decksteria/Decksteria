@@ -1,6 +1,6 @@
 ﻿namespace Decksteria.Ui.Maui.Shared.Configuration;
 
-internal sealed class Preferences
+public sealed class PreferenceConfiguration
 {
     /// <summary>
     /// Determines whether the client will download the images as it goes.

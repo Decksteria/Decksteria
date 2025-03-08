@@ -146,7 +146,7 @@
                         ItemsSource="{Binding FilteredCards}"
                         ItemTemplate="{StaticResource Key=CardView_Search}"
                         SelectionMode="None"
-                        VerticalOptions="FillAndExpand"
+                        VerticalOptions="Fill"
                         VerticalScrollBarVisibility="Default">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="2" VerticalItemSpacing="2" SnapPointsAlignment="Center" />
@@ -175,7 +175,7 @@
                     IsRunning="{Binding Loading}"
                     Color="{AppThemeBinding Light={StaticResource OnSecondaryContainer}, Dark={StaticResource OnSecondaryContainerDark}}" />
                 <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Always" Padding="0,4,0,4">
-                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+                    <HorizontalStackLayout HorizontalOptions="Center">
                         <Button
                             StyleClass="OutlinedButton"
                             Text="Save"
@@ -229,7 +229,7 @@
                         </Button>
                     </HorizontalStackLayout>
                 </ScrollView>
-                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand">
+                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center">
                     <Button
                         StyleClass="TextButton"
                         Text="Check Deck"

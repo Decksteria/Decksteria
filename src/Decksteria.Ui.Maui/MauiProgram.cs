@@ -6,6 +6,7 @@ using Decksteria.Core.Data;
 using Decksteria.Services;
 using Decksteria.Services.PlugInFactory;
 using Decksteria.Services.PlugInFactory.Models;
+using Decksteria.Ui.Maui.Pages.Deckbuilder;
 using Decksteria.Ui.Maui.Services.CardImageService;
 using Decksteria.Ui.Maui.Services.DeckFileService;
 using Decksteria.Ui.Maui.Services.DialogService;
@@ -14,9 +15,12 @@ using Decksteria.Ui.Maui.Services.FileReader;
 using Decksteria.Ui.Maui.Services.LoggingProvider;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PlugInFactory;
+using Decksteria.Ui.Maui.Services.PreferencesService;
+using Decksteria.Ui.Maui.Shared.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using UraniumUI;
@@ -69,11 +73,19 @@ public static class MauiProgram
             return formatFactory.GetSelectedFormat();
         });
         services.AddHttpClient();
+        services.TryAddSingleton<IPreferencesService, PreferencesService>();
+        services.TryAddSingleton(sp =>
+        {
+            var preferenceService = sp.GetRequiredService<IPreferencesService>();
+            return preferenceService.GetConfiguration();
+        });
         services.TryAddScoped<IDialogService, DialogService>();
         services.TryAddScoped<IDeckFileServiceFactory, DeckFileServiceFactory>();
         services.TryAddScoped<IDecksteriaFileLocator, DecksteriaFileLocator>();
         services.TryAddScoped<IDecksteriaCardImageService, DecksteriaCardImageService>();
         services.TryAddScoped<IDecksteriaFileReader, DecksteriaFileReader>();
+
+        services.TryAddScoped<DeckbuilderViewModel>();
         // Use a different implementation for the Paging Service that turns Modals into a new Window.
 #if WINDOWS
         services.TryAddScoped<IPageService, PageService>();

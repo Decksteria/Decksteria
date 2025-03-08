@@ -65,7 +65,7 @@
                             </ImageButton.Source>
                         </ImageButton>
                         <ImageButton
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Clicked="Button_Preferences_Clicked"
                             ToolTipProperties.Text="Preferences"
                             CornerRadius="2"
