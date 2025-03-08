@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uranium:UraniumContentPage 
+    x:Name="DeckbuilderPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Decksteria.Ui.Maui.Pages.Deckbuilder.Deckbuilder"
@@ -16,11 +17,12 @@
     Loaded="ContentPage_LoadedAsync">
     <uranium:UraniumContentPage.Resources>
         <ResourceDictionary x:Name="appColors" Source="../../Resources/Styles/Colors.xaml" />
+        <Binding x:Name="Binding_AllowedDownloading" x:Key="Binding_Download" Path="BindingContext.AllowDownloading" Source="{x:Reference DeckbuilderPage}" />
         <DataTemplate x:Name="CollectionView_CardItem" x:Key="CardView_Search" x:DataType="decksteria:CardArt">
             <shared:DownloadableImage
                 FileName="{Binding Image.FileNameWithExtension}"
                 ImageUrl="{Binding Image.FileSourceUrl}"
-                AllowDownload="True"
+                AllowDownload="{DynamicResource Key=Binding_Download}"
                 SetImageService="DecksteriaImageControl_SetService"
                 MinimumWidthRequest="50"
                 Aspect="AspectFill">
@@ -34,7 +36,7 @@
             <shared:DownloadableImage
                 FileName="{Binding Image.FileNameWithExtension}"
                 ImageUrl="{Binding Image.FileSourceUrl}"
-                AllowDownload="True"
+                AllowDownload="{DynamicResource Key=Binding_Download}"
                 SetImageService="DecksteriaImageControl_SetService"
                 MinimumWidthRequest="50"
                 Aspect="AspectFill">

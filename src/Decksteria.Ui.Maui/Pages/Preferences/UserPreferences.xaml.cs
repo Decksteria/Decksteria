@@ -4,7 +4,6 @@ using System;
 using Decksteria.Ui.Maui.Services.CardImageService;
 using Decksteria.Ui.Maui.Services.PageService;
 using Decksteria.Ui.Maui.Services.PreferencesService;
-using Decksteria.Ui.Maui.Shared.Configuration;
 using UraniumUI.Pages;
 
 public partial class UserPreferences : UraniumContentPage
@@ -32,10 +31,10 @@ public partial class UserPreferences : UraniumContentPage
         await cardImageService.DeleteAllImagesAsync();
     }
 
-    private async void Button_Save_Pressed(object sender, EventArgs e)
+    private void Button_Save_Pressed(object sender, EventArgs e)
     {
         preferencesService.SaveToSettings(viewModel.Preferences);
-        await pageService.PopModalAsync<UserPreferences>();
+        pageService.PopModalAsync<UserPreferences>();
     }
 
     private void Button_Cancel_Pressed(object sender, EventArgs e)
