@@ -10,7 +10,7 @@
     xmlns:material="clr-namespace:UraniumUI.Material.Controls;assembly=UraniumUI.Material"
     xmlns:shared="clr-namespace:Decksteria.Ui.Maui.Shared.Controls"
     xmlns:fa="clr-namespace:UraniumUI.Icons.FontAwesome;assembly=UraniumUI.Icons.FontAwesome"
-    xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layout"
+    xmlns:clyout="clr-namespace:Decksteria.Ui.Maui.Shared.Layouts"
     x:DataType="deckbuilder:DeckbuilderViewModel"
     Title="{Binding WindowTitle}"
     Loaded="ContentPage_LoadedAsync">

@@ -282,5 +282,8 @@ dotnet_diagnostic.CA1040.severity = warning
 dotnet_diagnostic.CA2250.severity = warning
 dotnet_diagnostic.CA1068.severity = warning
 dotnet_diagnostic.CA2254.severity = silent
+
+# IDE0005: Using directive is unnecessary.
+dotnet_diagnostic.IDE0005.severity = warning
 [*.vb]
 dotnet_diagnostic.CA1047.severity = warning
