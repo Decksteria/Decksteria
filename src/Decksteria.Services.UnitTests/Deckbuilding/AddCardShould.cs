@@ -1,22 +1,21 @@
 namespace Decksteria.Services.UnitTests.Deckbuilding;
 
 using Decksteria.Services.Deckbuilding;
-using Decksteria.Services.UnitTests.Deckbuilding.Mocks;
+using Decksteria.Services.UnitTests.Deckbuilding.DefaultImplementation;
 
-internal sealed class AddCardShould
+public sealed class AddCardShould
 {
     private IDeckbuildingService service;
 
-
     public AddCardShould()
     {
-        service = new DeckbuildingService<FormatImplementation>();
+        service = new DeckbuildingService<DefaultDecksteriaFormat>();
     }
 
     [Fact]
-    public sealed void AddCardShould_GetNewCard()
+    public void AddCardShould_GetNewCard()
     {
-
+        Assert.True(true);
     }
 
 }

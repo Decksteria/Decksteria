@@ -1,4 +1,4 @@
-namespace Decksteria.Services.UnitTests.Deckbuilding.Mocks;
+namespace Decksteria.Services.UnitTests.Deckbuilding.DefaultImplementation;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using Decksteria.Core;
 using Decksteria.Core.Models;
 
-
-public sealed class FormatImplementation : IDecksteriaFormat
+internal sealed class DefaultDecksteriaFormat : IDecksteriaFormat
 {
     public string Name => "TestFormat";
 
-    public IEnumerable<IDecksteriaDeck> Decks => [];
+    public IEnumerable<IDecksteriaDeck> Decks => [new DefaultDecksteriaDeck()];
 
     public IEnumerable<SearchField> SearchFields => [];
 
@@ -26,33 +25,37 @@ public sealed class FormatImplementation : IDecksteriaFormat
 
     public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
     {
-        var cardCount = decklist.SelectMany(deck => deck.Value).Count(cId => cId == cardId);
-        return Task.FromResult(cardCount < DefaultMaximumCardCount);
+        throw new NotImplementedException("This method needs to be mocked.");
     }
 
     public Task<int> CompareCardsAsync(long cardId1, long cardId2, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("This method needs to be mocked.");
     }
 
     public Task<IDecksteriaCard> GetCardAsync(long cardId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var card = new DefaultDecksteriaCard
+        {
+            CardId = cardId
+        };
+
+        return Task.FromResult<IDecksteriaCard>(card);
     }
 
     public Task<IQueryable<IDecksteriaCard>> GetCardsAsync(IEnumerable<ISearchFieldFilter>? filters = null, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("This method needs to be mocked.");
     }
 
     public Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("This method needs to be mocked.");
     }
 
     public Task<IDecksteriaDeck> GetDefaultDeckAsync(long cardId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(Decks.First());
     }
 
     public Task<bool> IsDecklistLegalAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default)
