@@ -28,7 +28,8 @@ internal sealed class DeckbuildingServiceBuilder
         {
             var card = new DefaultDecksteriaCard
             {
-                CardId = id.Arg<long>()
+                CardId = id.Arg<long>(),
+                Arts = [new DefaultDecksteriaCardArt()]
             };
             return Task.FromResult<IDecksteriaCard>(card);
         });
@@ -45,4 +46,6 @@ internal sealed class DeckbuildingServiceBuilder
     public IDecksteriaFormat DecksteriaFormat { get; private set; }
 
     public IDecksteriaDeck DecksteriaDeck { get; }
+
+    public string GameName => nameof(DefaultDecksteriaGame);
 }

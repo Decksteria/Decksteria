@@ -3,10 +3,10 @@ namespace Decksteria.Services.UnitTests.Deckbuilding.DefaultImplementation;
 using Decksteria.Core;
 using Decksteria.Core.Data;
 
-internal sealed record DefaultDecksteriaCardArt : IDecksteriaCardArt
+internal sealed record DefaultDecksteriaCardArt(long ArtId = 0) : IDecksteriaCardArt
 {
-    public long ArtId => 0;
+    public long ArtId { get; } = ArtId;
 
-    public DecksteriaImage Image { get;set; } = new(string.Empty, string.Empty);
+    public DecksteriaImage Image { get; } = new(string.Empty, string.Empty);
 
 }
