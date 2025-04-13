@@ -6,7 +6,7 @@ using Decksteria.Core;
 
 internal sealed class DefaultDecksteriaGame : IDecksteriaGame
 {
-    public IEnumerable<IDecksteriaFormat> Formats {get;set;} = [new DefaultDecksteriaFormat()];
+    public IEnumerable<IDecksteriaFormat> Formats { get; internal set; } = [];
 
     public IEnumerable<IDecksteriaImport> Importers => [];
 
