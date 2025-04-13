@@ -9,6 +9,8 @@ public sealed class AddCardShould
 {
     private const long CardId = 1;
 
+    private static readonly CardArt CardToAdd = new CardArt(CardId, 0, new(string.Empty, string.Empty), string.Empty);
+
     [Fact]
     public async Task AddCard_CanAddCard_ShouldIncreaseCount()
     {
@@ -18,7 +20,7 @@ public sealed class AddCardShould
         var service = serviceBuilder.Build();
 
         var previousCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
-        await service.AddCardAsync(new CardArt(CardId, 0, new(string.Empty, string.Empty), string.Empty));
+        await service.AddCardAsync(CardToAdd);
 
         var newCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
         Assert.Equal(previousCount + 1, newCount);
@@ -33,7 +35,7 @@ public sealed class AddCardShould
         var service = serviceBuilder.Build();
 
         var previousCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
-        await service.AddCardAsync(new CardArt(CardId, 0, new(string.Empty, string.Empty), string.Empty));
+        await service.AddCardAsync(CardToAdd);
 
         var newCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
         Assert.Equal(previousCount, newCount);
@@ -48,7 +50,7 @@ public sealed class AddCardShould
         var service = serviceBuilder.Build();
 
         var previousCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
-        await service.AddCardAsync(new CardArt(CardId, 0, new(string.Empty, string.Empty), string.Empty));
+        await service.AddCardAsync(CardToAdd);
 
         var newCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
         Assert.Equal(previousCount, newCount);
@@ -63,7 +65,7 @@ public sealed class AddCardShould
         var service = serviceBuilder.Build();
 
         var previousCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
-        await service.AddCardAsync(new CardArt(CardId, 0, new(string.Empty, string.Empty), string.Empty));
+        await service.AddCardAsync(CardToAdd);
 
         var newCount = service.GetCardCountFromDeck(CardId, serviceBuilder.DecksteriaDeck.Name);
         Assert.Equal(previousCount, newCount);
