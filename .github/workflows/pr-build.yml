@@ -49,3 +49,8 @@ jobs:
           --no-restore
           /p:WarningsAsErrors=true
           /p:Platform=x64
+      - name: Run tests
+        run: >
+          dotnet test "src/Decksteria.Base.sln"
+          --configuration Release
+          --no-build

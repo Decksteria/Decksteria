@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Decksteria.Core.Models;
 
+using DecklistDto = System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<long>>;
+
 /// <summary>
 /// Represents a game's format and its individual deck-building rules. (e.g. Standard vs. Commander)
 /// </summary>
@@ -35,7 +37,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// <param name="decklist">The decklist created by the user.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
     /// <returns>Returns <see cref="true"/> if it hasn't reached its maximum count yet.</returns>
-    public Task<bool> CheckCardCountAsync(long cardId, IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default);
+    public Task<bool> CheckCardCountAsync(long cardId, DecklistDto decklist, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Compares two <see cref="IDecksteriaCard"/> together and determines the order.
@@ -72,7 +74,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// <param name="isDetailed">Determines whether a more detailed count should be returned.</param>
     /// <param name = "cancellationToken" > The cancellation token used to cancel the execution.</param>
     /// <returns>A list of sections that provide the user important card types should count for the user to keep track of.</returns>
-    public Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, bool isDetailed, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<DeckStatisticSection>> GetDeckStatsAsync(DecklistDto decklist, bool isDetailed, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Determines which deck a card should be added to by default, if not defined by the user.
@@ -95,7 +97,7 @@ public interface IDecksteriaFormat : IDecksteriaTile
     /// <param name="decklist">The decklist to be verified.</param>
     /// <param name="cancellationToken">The cancellation token used to cancel the execution.</param>
     /// <returns></returns>
-    public Task<bool> IsDecklistLegalAsync(IReadOnlyDictionary<string, IEnumerable<long>> decklist, CancellationToken cancellationToken = default);
+    public Task<bool> IsDecklistLegalAsync(DecklistDto decklist, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Used by the Plug-In to free up any intensive memory. Use this to free up any large Lists.
