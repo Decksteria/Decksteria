@@ -23,7 +23,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies for Maui Project
         run: |
-          dotnet workload install android
+          dotnet workload restore "src/Decksteria.Base.sln"
       - name: Restore Solution
         run: dotnet restore "src/Decksteria.Base.sln"
       - name: Build Solution
