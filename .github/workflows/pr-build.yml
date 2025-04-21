@@ -49,3 +49,8 @@ jobs:
           --no-restore
           /p:WarningsAsErrors=true
           /p:Platform=x64
+      - name: Run Tests
+        run: >
+          dotnet test
+          --configuration Release
+          --no-build
