@@ -53,3 +53,4 @@ jobs:
         run: >
           dotnet test "src/Decksteria.Base.sln"
           --configuration Release
+          --no-build
