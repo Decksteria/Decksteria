@@ -25,12 +25,15 @@ jobs:
         run: |
           dotnet workload restore "src/Decksteria.Base.sln"
       - name: Restore Solution
-        run: dotnet restore "src/Decksteria.Base.sln"
+        run: >
+          dotnet restore "src/Decksteria.Base.sln"
+          --runtime win-x64
       - name: Build Solution
         run: >
           dotnet build "src/Decksteria.Base.sln"
           --configuration Release
           --no-restore
+          --runtime win-x64
           /p:WarningsAsErrors=true
       - name: Run Tests
         run: >
