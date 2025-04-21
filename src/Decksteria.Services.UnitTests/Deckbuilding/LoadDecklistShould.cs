@@ -1,5 +1,6 @@
 namespace Decksteria.Services.UnitTests.Deckbuilding;
 
+using System.Transactions;
 using Decksteria.Core;
 using Decksteria.Core.Models;
 using Decksteria.Services.UnitTests.Deckbuilding.DefaultImplementation;
@@ -128,6 +129,7 @@ public sealed class LoadDecklistShould
 
         await service.LoadDecklistAsync(new(serviceBuilder.GameName, serviceBuilder.DecksteriaFormat.Name, decklist));
 
+        // All previous cards in the decklist should be overwritten
         id0Count = service.GetCardCountFromDeck(0, deckName);
         Assert.Equal(0, id0Count);
 
@@ -140,6 +142,7 @@ public sealed class LoadDecklistShould
         id3Count = service.GetCardCountFromDeck(3, deckName);
         Assert.Equal(0, id3Count);
 
+        // All the new cards should have their counts rectified.
         var id10Count = service.GetCardCountFromDeck(10, deckName);
         Assert.Equal(2, id10Count);
 
@@ -151,5 +154,28 @@ public sealed class LoadDecklistShould
 
         var id13Count = service.GetCardCountFromDeck(13, deckName);
         Assert.Equal(1, id13Count);
+    }
+
+    [Fact]
+    public async Task LoadDecklist_ShouldMatchDecklist()
+    {
+        var serviceBuilder = new DeckbuildingServiceBuilder();
+        serviceBuilder.DecksteriaFormat.GetCardAsync(0, Arg.Any<CancellationToken>()).Returns(Task.FromResult<IDecksteriaCard>(cardInfo));
+        var service = serviceBuilder.Build();
+        
+        var deckName = serviceBuilder.DecksteriaDeck.Name;
+
+        var decklistDictionary = new Dictionary<string, IEnumerable<CardArtId>>()
+        {
+            {deckName, deck}
+        };
+        var decklistValue = new Decklist(serviceBuilder.GameName, serviceBuilder.DecksteriaFormat.Name, decklistDictionary);
+        await service.LoadDecklistAsync(decklistValue);
+
+        var decklistResult = service.CreateDecklist();
+        Assert.Equal(decklistValue.Game, decklistResult.Game);
+        Assert.Equal( decklistValue.Format, decklistResult.Format);
+        Assert.Equivalent(decklistValue.Decks.Keys, decklistResult.Decks.Keys);
+        Assert.Equivalent(decklistValue.Decks, decklistResult.Decks);
     }
 }
