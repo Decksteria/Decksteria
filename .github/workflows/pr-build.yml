@@ -24,7 +24,6 @@ jobs:
       - name: Install dependencies for Maui Project
         run: |
           dotnet workload install android
-          dotnet workload restore "src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj" --ignore-failed-sources
       - name: Restore Solution
         run: dotnet restore "src/Decksteria.Base.sln"
       - name: Build Solution
