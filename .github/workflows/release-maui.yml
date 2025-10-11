@@ -32,7 +32,7 @@ jobs:
 
       # Build Windows EXE
       - name: Publish Windows EXE
-        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net9.0-windows10.0.19041.0 -r win10-x64 --self-contained true -o publish_win
+        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net9.0-windows10.0.19041.0 -r win-x64 --self-contained -o publish_win
       - name: Zip Windows EXE
         run: |
           cd publish_win
