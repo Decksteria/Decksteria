@@ -1,0 +1,92 @@
+name: Release MAUI App
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g., v1.0.0-beta)'
+        required: true
+      release_name:
+        description: 'Release name (e.g., Pre-release v1.0.0-beta)'
+        required: true
+      release_notes:
+        description: 'Release notes'
+        required: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.0.x' ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install Android Workload
+        run: dotnet workload install android
+      - name: Restore MAUI Project
+        run: dotnet restore src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+
+      # Build Windows EXE
+      - name: Publish Windows EXE
+        run: >
+          dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj \
+            -c Release \
+            -f net9.0-windows10.0.19041.0 \
+            -r win10-x64 \
+            --self-contained true \
+            -o publish_win
+      - name: Zip Windows EXE
+        run: |
+          cd publish_win
+          powershell -Command "Compress-Archive -Path * -DestinationPath ../Decksteria-Windows.zip"
+
+      # Build Android APK
+      - name: Publish Android APK
+        run: >
+          dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj \
+            -c Release \
+            -f net9.0-android \
+            -r android-arm64 \
+            -o publish_android
+      - name: Find APK File
+        id: find_apk
+        run: |
+          $apk = Get-ChildItem -Path publish_android -Filter *.apk -Recurse | Select-Object -First 1
+          echo "::set-output name=apk_path::${apk.FullName}"
+      - name: Upload Windows ZIP Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Decksteria-Windows
+          path: Decksteria-Windows.zip
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Decksteria-Android
+          path: ${{ steps.find_apk.outputs.apk_path }}
+
+      # Delete all existing pre-releases (regardless of tag)
+      - name: Delete all existing pre-releases
+        run: |
+          gh release list --json tagName,isPrerelease | \
+            jq -r '.[] | select(.isPrerelease==true) | .tagName' | \
+            xargs -r -I % gh release delete "%" --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create Pre-release and Upload Assets
+      - name: Create Pre-release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name }}
+          name: ${{ github.event.inputs.release_name }}
+          body: ${{ github.event.inputs.release_notes }}
+          prerelease: true
+          files: |
+            Decksteria-Windows.zip
+            ${{ steps.find_apk.outputs.apk_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
