@@ -126,19 +126,19 @@ public partial class LoadPlugIn : UraniumContentPage
         await DisplayAlertAsync(SuccessAlertTitle, AddedPlugInSuccess, InformationButtonText);
     }
 
-    private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
+    private async void ListView_PlugInSelect_ItemTapped(object sender, TappedEventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
-        if (senderBinding is not PlugInTile)
+        var senderBinding = (sender as VisualElement)?.BindingContext;
+        if (senderBinding is not PlugInTile plugIn)
         {
-            DisplayAlertAsync(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            await DisplayAlertAsync(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateFormatList((PlugInTile) senderBinding);
-        ListView_PlugInSelect.FadeToAsync(0, 100, Easing.Linear);
+        UpdateFormatList(plugIn);
+        await ListView_PlugInSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
-        ListView_FormatSelect.FadeToAsync(1, 100, Easing.Linear);
+        await ListView_FormatSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
     private void ListView_FormatSelect_Back_Clicked(object sender, EventArgs e)
@@ -149,16 +149,16 @@ public partial class LoadPlugIn : UraniumContentPage
         ListView_PlugInSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
-    private async void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
+    private async void ListView_FormatSelect_ItemTapped(object sender, TappedEventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
-        if (senderBinding is not FormatTile)
+        var senderBinding = (sender as VisualElement)?.BindingContext;
+        if (senderBinding is not FormatTile format)
         {
             await DisplayAlertAsync(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        await UpdateDeckListAsync((FormatTile) senderBinding);
+        await UpdateDeckListAsync(format);
         await ListView_FormatSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.DecksExpanded = true;
         await ListView_DeckSelect.FadeToAsync(1, 100, Easing.Linear);
@@ -189,7 +189,7 @@ public partial class LoadPlugIn : UraniumContentPage
         ProcessingInProgress = false;
     }
 
-    private async void ListView_DeckSelect_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void ListView_DeckSelect_ItemTapped(object sender, TappedEventArgs e)
     {
         if (ListView_DeckSelect.SelectedItem is not DeckTile selectedItem)
         {
