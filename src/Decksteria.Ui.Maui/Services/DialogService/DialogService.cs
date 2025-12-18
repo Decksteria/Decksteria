@@ -14,13 +14,13 @@ internal sealed class DialogService : IDialogService
             return false;
         }
 
-        await MainPage.DisplayAlert(title, message, "OK", flowDirection);
+        await MainPage.DisplayAlertAsync(title, message, "OK", flowDirection);
         return true;
     }
 
     public async Task<bool?> DisplayYesNo(string title, string message, FlowDirection flowDirection = FlowDirection.MatchParent)
     {
-        return MainPage is not null ? await MainPage.DisplayAlert(title, message, "Yes", "No", flowDirection) : null;
+        return MainPage is not null ? await MainPage.DisplayAlertAsync(title, message, "Yes", "No", flowDirection) : null;
     }
 
     private static Page? MainPage => Application.Current?.Windows.FirstOrDefault()?.Page;
