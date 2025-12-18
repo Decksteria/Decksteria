@@ -107,14 +107,14 @@ public partial class LoadPlugIn : UraniumContentPage
         if (!result.FileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
             ProcessingInProgress = false;
-            await DisplayAlert(ErrorAlertTitle, InvalidPlugInFile, InformationButtonText);
+            await DisplayAlertAsync(ErrorAlertTitle, InvalidPlugInFile, InformationButtonText);
             return;
         }
 
         var plugInLoaded = plugInFactory.TryAddGame(result.FullPath);
         if (!plugInLoaded)
         {
-            await DisplayAlert(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
+            await DisplayAlertAsync(ErrorAlertTitle, IncompatiblePlugInFile, InformationButtonText);
             ProcessingInProgress = false;
             return;
         }
@@ -123,53 +123,53 @@ public partial class LoadPlugIn : UraniumContentPage
         UpdatePlugInList(plugIns);
         ProcessingInProgress = false;
 
-        await DisplayAlert(SuccessAlertTitle, AddedPlugInSuccess, InformationButtonText);
+        await DisplayAlertAsync(SuccessAlertTitle, AddedPlugInSuccess, InformationButtonText);
     }
 
-    private void ListView_PlugInSelect_ItemTapped(object sender, EventArgs e)
+    private async void ListView_PlugInSelect_ItemTapped(object sender, TappedEventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
-        if (senderBinding is not PlugInTile)
+        var senderBinding = (sender as VisualElement)?.BindingContext;
+        if (senderBinding is not PlugInTile plugIn)
         {
-            DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            await DisplayAlertAsync(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        UpdateFormatList((PlugInTile) senderBinding);
-        ListView_PlugInSelect.FadeTo(0, 100, Easing.Linear);
+        UpdateFormatList(plugIn);
+        await ListView_PlugInSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
-        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+        await ListView_FormatSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
     private void ListView_FormatSelect_Back_Clicked(object sender, EventArgs e)
     {
-        ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
+        ListView_FormatSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.PlugInsExpanded = true;
         viewModel.SelectedPlugIn = null;
-        ListView_PlugInSelect.FadeTo(1, 100, Easing.Linear);
+        ListView_PlugInSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
-    private async void ListView_FormatSelect_ItemTapped(object sender, EventArgs e)
+    private async void ListView_FormatSelect_ItemTapped(object sender, TappedEventArgs e)
     {
-        var senderBinding = (sender as ViewCell)?.BindingContext;
-        if (senderBinding is not FormatTile)
+        var senderBinding = (sender as VisualElement)?.BindingContext;
+        if (senderBinding is not FormatTile format)
         {
-            await DisplayAlert(ErrorAlertTitle, ProblemLoading, InformationButtonText);
+            await DisplayAlertAsync(ErrorAlertTitle, ProblemLoading, InformationButtonText);
             return;
         }
 
-        await UpdateDeckListAsync((FormatTile) senderBinding);
-        await ListView_FormatSelect.FadeTo(0, 100, Easing.Linear);
+        await UpdateDeckListAsync(format);
+        await ListView_FormatSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.DecksExpanded = true;
-        await ListView_DeckSelect.FadeTo(1, 100, Easing.Linear);
+        await ListView_DeckSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
     private void ListView_DeckSelect_Back_Clicked(object sender, EventArgs e)
     {
-        ListView_DeckSelect.FadeTo(0, 100, Easing.Linear);
+        ListView_DeckSelect.FadeToAsync(0, 100, Easing.Linear);
         viewModel.FormatsExpanded = true;
         viewModel.SelectedFormat = null;
-        ListView_FormatSelect.FadeTo(1, 100, Easing.Linear);
+        ListView_FormatSelect.FadeToAsync(1, 100, Easing.Linear);
     }
 
     private async void ListView_DeckSelect_Upload_Clicked(object sender, EventArgs e)
@@ -189,7 +189,7 @@ public partial class LoadPlugIn : UraniumContentPage
         ProcessingInProgress = false;
     }
 
-    private async void ListView_DeckSelect_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void ListView_DeckSelect_ItemTapped(object sender, TappedEventArgs e)
     {
         if (ListView_DeckSelect.SelectedItem is not DeckTile selectedItem)
         {

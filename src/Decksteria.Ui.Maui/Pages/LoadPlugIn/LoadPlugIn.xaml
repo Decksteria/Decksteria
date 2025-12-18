@@ -36,13 +36,12 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <FlexLayout Grid.Row="0">
-            <ListView
+            <CollectionView
                 x:Name="ListView_PlugInSelect"
                 ItemsSource="{Binding GameTiles}"
-                SelectionMode="Single"
                 Opacity="1"
                 IsVisible="{Binding PlugInsExpanded}">
-                <ListView.Header>
+                <CollectionView.Header>
                     <Grid HeightRequest="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -79,35 +78,34 @@
                             </ImageButton.Source>
                         </ImageButton>
                     </Grid>
-                </ListView.Header>
-                <ListView.ItemTemplate>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:PlugInTile">
-                        <ViewCell x:DataType="models:PlugInTile" Tapped="ListView_PlugInSelect_ItemTapped">
-                            <Grid Padding="3" ColumnSpacing="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding IconImg,Mode=OneWay,Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
-                                <Label
-                                    Grid.Column="1"
-                                    Text="{Binding DisplayName}"
-                                    FontSize="25"
-                                    FontFamily=""
-                                    VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </ViewCell>
+                        <Grid Padding="3" ColumnSpacing="3">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ListView_PlugInSelect_ItemTapped" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="{Binding IconImg,Mode=OneWay,Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding DisplayName}"
+                                FontSize="25"
+                                FontFamily=""
+                                VerticalTextAlignment="Center"/>
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <ListView
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <CollectionView
                 x:Name="ListView_FormatSelect"
                 ItemsSource="{Binding FormatTiles}"
-                RowHeight="100"
-                SelectionMode="Single"
                 Opacity="0"
                 IsVisible="{Binding FormatsExpanded}">
-                <ListView.Header>
+                <CollectionView.Header>
                     <Grid HeightRequest="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40" />
@@ -129,31 +127,29 @@
                         </ImageButton>
                         <Label Grid.Column="1" Text="Select a Format" FontSize="Medium" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     </Grid>
-                </ListView.Header>
-                <ListView.ItemTemplate>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:FormatTile">
-                        <ViewCell x:DataType="models:FormatTile" Tapped="ListView_FormatSelect_ItemTapped">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding IconImg,Mode=OneWay,Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
-                                <Label Grid.Column="1" Text="{Binding DisplayName}" FontSize="25" VerticalTextAlignment="Center" />
-                            </Grid>
-                        </ViewCell>
+                        <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ListView_FormatSelect_ItemTapped" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="{Binding IconImg,Mode=OneWay,Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
+                            <Label Grid.Column="1" Text="{Binding DisplayName}" FontSize="25" VerticalTextAlignment="Center" />
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <ListView
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <CollectionView
                 x:Name="ListView_DeckSelect"
                 ItemsSource="{Binding DeckTiles}"
-                RowHeight="50"
-                SelectionMode="Single"
                 Opacity="0"
-                IsVisible="{Binding DecksExpanded}"
-                ItemSelected="ListView_DeckSelect_ItemSelected">
-                <ListView.Header>
+                IsVisible="{Binding DecksExpanded}">
+                <CollectionView.Header>
                     <Grid HeightRequest="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40" />
@@ -191,29 +187,30 @@
                             </ImageButton.Source>
                         </ImageButton>
                     </Grid>
-                </ListView.Header>
-                <ListView.ItemTemplate>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
                     <DataTemplate  x:DataType="models:DeckTile">
-                        <ViewCell>
-                            <Grid Padding="5,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Image.Source>
-                                        <FontImageSource
-                                            FontFamily="FASolid"
-                                            Glyph="{Binding IsValid,Converter={StaticResource IsVerifiedToSymbol}}"
-                                            Color="{Binding IsValid,Converter={StaticResource IsVerifiedToColour}}" />
-                                    </Image.Source>
-                                </Image>
-                                <Label Grid.Column="1" Text="{Binding DeckName}" Margin="10,0" FontSize="Large" VerticalTextAlignment="Center" />
-                            </Grid>
-                        </ViewCell>
+                        <Grid Padding="5,0">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ListView_DeckSelect_ItemTapped" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FASolid"
+                                        Glyph="{Binding IsValid,Converter={StaticResource IsVerifiedToSymbol}}"
+                                        Color="{Binding IsValid,Converter={StaticResource IsVerifiedToColour}}" />
+                                </Image.Source>
+                            </Image>
+                            <Label Grid.Column="1" Text="{Binding DeckName}" Margin="10,0" FontSize="Large" VerticalTextAlignment="Center" />
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </FlexLayout>
         <Button StyleClass="FilledButton" Grid.Row="2" FontSize="Small" Text="Upload New Deck" Clicked="ListView_DeckSelect_Upload_Clicked" Margin="5,0">
             <Button.ImageSource>
@@ -225,5 +222,3 @@
         </Button>
     </Grid>
 </uranium:UraniumContentPage>
-
-    

@@ -162,7 +162,7 @@ public partial class Deckbuilder : UraniumContentPage
         // Ask user if they want to switch formats
         if (decklist.Format != deckbuilder.FormatName)
         {
-            var switchFormats = await DisplayAlert("Switch formats?", "The current format does not support the decklist, do you want to switch formats?", "Continue", "Cancel");
+            var switchFormats = await DisplayAlertAsync("Switch formats?", "The current format does not support the decklist, do you want to switch formats?", "Continue", "Cancel");
             if (!switchFormats)
             {
                 viewModel.Loading = false;
@@ -185,7 +185,7 @@ public partial class Deckbuilder : UraniumContentPage
         var exportOptions = deckFileService.GetExportFileTypes();
         var exportLabels = exportOptions.Keys.ToArray();
 
-        var selectedExport = await DisplayActionSheet("Export to...", "Cancel", null, exportLabels);
+        var selectedExport = await DisplayActionSheetAsync("Export to...", "Cancel", null, exportLabels);
         if (selectedExport == "Cancel")
         {
             return;
@@ -200,11 +200,11 @@ public partial class Deckbuilder : UraniumContentPage
         if (fileSaveResult.IsSuccessful)
         {
             var fileName = Path.GetFileName(fileSaveResult.FilePath);
-            await DisplayAlert("Success", $"File saved to: {fileName}", "OK");
+            await DisplayAlertAsync("Success", $"File saved to: {fileName}", "OK");
         }
         else
         {
-            await DisplayAlert("Error", $"File not saved: {fileSaveResult.Exception.Message}", "OK");
+            await DisplayAlertAsync("Error", $"File not saved: {fileSaveResult.Exception.Message}", "OK");
         }
     }
 
@@ -213,7 +213,7 @@ public partial class Deckbuilder : UraniumContentPage
         var importOptions = deckFileService.GetImportFileTypes();
         var importLabels = importOptions.Keys.ToArray();
 
-        var selectedImport = await DisplayActionSheet("Import from...", "Cancel", null, importLabels);
+        var selectedImport = await DisplayActionSheetAsync("Import from...", "Cancel", null, importLabels);
         if (selectedImport == "Cancel")
         {
             return;
@@ -221,7 +221,7 @@ public partial class Deckbuilder : UraniumContentPage
 
         if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
         {
-            var overwrite = await DisplayAlert("Overwrite existing deck?", "Do you want to use a different name for the deck?", "Yes", "No", FlowDirection.LeftToRight);
+            var overwrite = await DisplayAlertAsync("Overwrite existing deck?", "Do you want to use a different name for the deck?", "Yes", "No", FlowDirection.LeftToRight);
             if (overwrite)
             {
                 viewModel.DecklistName = string.Empty;
@@ -265,7 +265,7 @@ public partial class Deckbuilder : UraniumContentPage
         var action = saveAs;
         if (!string.IsNullOrWhiteSpace(viewModel.DecklistName))
         {
-            action = await DisplayActionSheet("Save as new?", "Cancel", null, save, saveAs);
+            action = await DisplayActionSheetAsync("Save as new?", "Cancel", null, save, saveAs);
         }
 
         // Return if action selection was cancelled.
@@ -292,13 +292,13 @@ public partial class Deckbuilder : UraniumContentPage
                 isValidFileName = IsValidFileName(deckName);
                 if (!isValidFileName)
                 {
-                    await DisplayAlert("Error", "Deck name cannot contain any of these characters.\n\\/:*?\"<>|", "OK");
+                    await DisplayAlertAsync("Error", "Deck name cannot contain any of these characters.\n\\/:*?\"<>|", "OK");
                 }
             } while (!isValidFileName);
         }
 
         await deckFileService.SaveDecklistAsync(deckName, ConvertToCardArtIdDictionary(viewModel.Decks));
-        await DisplayAlert("Deck Saved", $"Your deck {deckName} has been saved.", "OK");
+        await DisplayAlertAsync("Deck Saved", $"Your deck {deckName} has been saved.", "OK");
 
         // Create Decklist in CardArtId format.
         static Dictionary<string, IEnumerable<CardArtId>> ConvertToCardArtIdDictionary(IDictionary<string, ObservableCollection<CardArt>> decklist)
