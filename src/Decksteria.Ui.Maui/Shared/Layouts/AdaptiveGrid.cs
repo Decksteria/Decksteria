@@ -4,6 +4,8 @@ using System.ComponentModel;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 
+using GridLengthTypeConverter = Microsoft.Maui.Converters.GridLengthTypeConverter;
+
 internal sealed class AdaptiveGrid : Grid
 {
     public int RowCount
