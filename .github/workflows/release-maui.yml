@@ -38,7 +38,7 @@ jobs:
       # Build Solution
       - name: Build MAUI Solution
         run: >
-          dotnet build src/Decksteria.sln
+          dotnet build src/Decksteria.Base.sln
           -c Release
           /p:PublishReadyToRun=true
 
