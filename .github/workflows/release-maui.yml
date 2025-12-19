@@ -82,10 +82,11 @@ jobs:
 
       # Delete all existing pre-releases (regardless of tag)
       - name: Delete all existing pre-releases
-        run: |
-          gh release list --json tagName,isPrerelease | \
-            jq -r '.[] | select(.isPrerelease==true) | .tagName' | \
-            xargs -r -I % gh release delete "%" --yes
+        run: >
+          gh release list --json tagName,isPrerelease |
+            ConvertFrom-Json |
+              Where-Object { $_.isPrerelease -eq $true } |
+                ForEach-Object { gh release delete $_.tagName --yes }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -99,6 +100,6 @@ jobs:
           prerelease: true
           files: |
             Decksteria-Windows.zip
-            ${{ steps.find_apk.outputs.apk_path }}
+            publish_android/com.decksteria.maui-Signed.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
