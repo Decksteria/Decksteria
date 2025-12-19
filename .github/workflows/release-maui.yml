@@ -53,9 +53,7 @@ jobs:
            --no-build
       - name: Zip Windows EXE
         run: |
-          cd publish_win
-          powershell -Command "Compress-Archive -Path * -DestinationPath Decksteria-Windows.zip"
-          cd ..
+          Compress-Archive -Path .\publish_win\* -DestinationPath ./Decksteria_Windows.zip
 
       # Build Android APK
       - name: Publish Android APK
