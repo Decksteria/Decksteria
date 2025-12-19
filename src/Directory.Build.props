@@ -5,6 +5,11 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
   <PropertyGroup>
+    <AssemblyVersion>$(ApplicationVersion)</AssemblyVersion>
+    <FileVersion>$(ApplicationVersion)</FileVersion>
+    <InformationalVersion>$(ApplicationVersion)</InformationalVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <RepositoryUrl>https://github.com/Decksteria/Decksteria</RepositoryUrl>
   </PropertyGroup>
 </Project>

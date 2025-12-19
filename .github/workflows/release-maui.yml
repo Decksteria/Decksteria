@@ -51,7 +51,7 @@ jobs:
           dotnet build src/Decksteria.Base.sln
           -c Release
           /p:PublishReadyToRun=true
-
+          /p:ApplicationDisplayVersion=${{ env.RELEASE_VERSION }} /p:Version=${{ env.RELEASE_VERSION }}
       # Build Windows EXE
       - name: Publish Windows EXE
         run: >
