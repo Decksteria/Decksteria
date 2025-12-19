@@ -54,27 +54,31 @@ jobs:
       - name: Zip Windows EXE
         run: |
           cd publish_win
-          powershell -Command "Compress-Archive -Path * -DestinationPath ../Decksteria-Windows.zip"
+          powershell -Command "Compress-Archive -Path * -DestinationPath Decksteria-Windows.zip"
           cd ..
 
       # Build Android APK
       - name: Publish Android APK
-        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net10.0-android -r android-arm64 -o publish_android
-      - name: Find APK File
-        id: find_apk
-        run: |
-          $apk = Get-ChildItem -Path publish_android -Filter *.apk -Recurse | Select-Object -First 1
-          echo "::set-output name=apk_path::${apk.FullName}"
+        run: >
+          dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+          -c Release
+          -f net10.0-android
+          -r android-arm64
+          -o publish_android
+
+      # Publish Windows Artifact
       - name: Upload Windows ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Decksteria-Windows
           path: Decksteria-Windows.zip
+      
+      # Publish Android Artifact
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Decksteria-Android
-          path: ${{ steps.find_apk.outputs.apk_path }}
+          path: publish_android/com.decksteria.maui-Signed.apk
 
       # Delete all existing pre-releases (regardless of tag)
       - name: Delete all existing pre-releases
