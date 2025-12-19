@@ -60,14 +60,14 @@ jobs:
           ls -Recurse
           Compress-Archive -Path .\publish_win\* -DestinationPath ./Decksteria_Windows.zip
 
-      # Build Android APK
-      - name: Publish Android APK
-        run: >
-          dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
-          -c Release
-          -f net10.0-android
-          -r android-arm64
-          -o publish_android
+      # # Build Android APK
+      # - name: Publish Android APK
+      #   run: >
+      #     dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+      #     -c Release
+      #     -f net10.0-android
+      #     -r android-arm64
+      #     -o publish_android
 
       # Publish Windows Artifact
       - name: Upload Windows ZIP Artifact
@@ -76,12 +76,12 @@ jobs:
           name: Decksteria-Windows
           path: Decksteria-Windows.zip
       
-      # Publish Android Artifact
-      - name: Upload Android APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Decksteria-Android
-          path: publish_android/com.decksteria.maui-Signed.apk
+      # # Publish Android Artifact
+      # - name: Upload Android APK Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Decksteria-Android
+      #     path: publish_android/com.decksteria.maui-Signed.apk
 
       # Delete all existing pre-releases (regardless of tag)
       - name: Delete all existing pre-releases
@@ -103,6 +103,6 @@ jobs:
           prerelease: true
           files: |
             Decksteria-Windows.zip
-            publish_android/com.decksteria.maui-Signed.apk
+            # publish_android/com.decksteria.maui-Signed.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
