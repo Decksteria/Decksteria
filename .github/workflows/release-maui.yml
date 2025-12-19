@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        dotnet-version: [ '9.0.x' ]
+        dotnet-version: [ '10.0.x' ]
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET ${{ matrix.dotnet-version }}
@@ -26,9 +26,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install MAUI Workload
-        run: dotnet workload install maui --ignore-failed-sources
-      - name: Install Android Workload
-        run: dotnet workload install android --ignore-failed-sources
+        run: dotnet workload restore
       - name: Restore MAUI Project
         run: dotnet restore src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
 
