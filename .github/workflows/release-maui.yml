@@ -101,7 +101,7 @@ jobs:
           body: ${{ github.event.inputs.release_notes }}
           prerelease: true
           files: |
-            Decksteria-Windows.zip
+            Decksteria_Windows.zip
             publish_android/com.decksteria.maui-Signed.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
