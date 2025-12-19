@@ -15,6 +15,10 @@ on:
         description: 'Release notes'
         required: false
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: windows-latest
