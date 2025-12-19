@@ -30,6 +30,7 @@ jobs:
       - name: Install MAUI Workload
         run: |
           dotnet workload install android
+          dotnet workload restore
       - name: Restore MAUI Project
         run: dotnet restore src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj /p:PublishReadyToRun=true
 
