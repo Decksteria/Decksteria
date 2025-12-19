@@ -45,13 +45,12 @@ jobs:
       # Build Windows EXE
       - name: Publish Windows EXE
         run: >
-          dotnet publish
-          src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
-          -c Release
-          -f net10.0-windows10.0.19041.0
-          --self-contained
-          -o publish_win
-          --no-build
+           dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+           -c Release
+           -f net10.0-windows10.0.19041.0
+           --self-contained
+           -o publish_win
+           --no-build
       - name: Zip Windows EXE
         run: |
           cd publish_win
