@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <TargetFramework Condition="'$(MSBuildProjectName)' != 'Decksteria.Ui.Maui'">net9.0</TargetFramework>
+    <TargetFramework Condition="'$(MSBuildProjectName)' != 'Decksteria.Ui.Maui'">net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
