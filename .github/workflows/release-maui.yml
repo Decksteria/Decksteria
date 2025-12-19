@@ -17,11 +17,20 @@ jobs:
     runs-on: windows-latest
     env:
       RELEASE_VERSION: '1.0.0'
-      FULL_VERSION: ${{ format('{0}{1}', env.RELEASE_VERSION, github.event.inputs['pre-release'] == 'true' && '-prerelease' || '') }}
     strategy:
       matrix:
         dotnet-version: [ '10.0.x' ]
     steps:
+      - name: Compute FULL_VERSION
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+          PRE: ${{ inputs.pre-release }}
+        run: |
+          if ($env:PRE -eq 'true') {
+            echo "FULL_VERSION=$($env:RELEASE_VERSION)-prerelease" >> $env:GITHUB_ENV
+          } else {
+            echo "FULL_VERSION=$($env:RELEASE_VERSION)" >> $env:GITHUB_ENV
+          }
       - uses: actions/checkout@v4
       - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
