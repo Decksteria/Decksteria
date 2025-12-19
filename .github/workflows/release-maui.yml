@@ -40,6 +40,7 @@ jobs:
         run: |
           cd publish_win
           powershell -Command "Compress-Archive -Path * -DestinationPath ../Decksteria-Windows.zip"
+          cd ..
 
       # Build Android APK
       - name: Publish Android APK
