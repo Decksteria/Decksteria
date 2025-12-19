@@ -29,8 +29,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install MAUI Workload
         run: |
-          dotnet workload install android
-          dotnet workload restore --project src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+          dotnet workload restore .\src\Decksteria.Base.sln
       - name: Restore MAUI Project
         run: dotnet restore src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj /p:PublishReadyToRun=true
 
