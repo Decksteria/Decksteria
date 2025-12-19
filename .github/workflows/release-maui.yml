@@ -73,8 +73,8 @@ jobs:
       - name: Upload Windows ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Decksteria-Windows
-          path: Decksteria-Windows.zip
+          name: Decksteria_Windows
+          path: Decksteria_Windows.zip
       
       # # Publish Android Artifact
       # - name: Upload Android APK Artifact
