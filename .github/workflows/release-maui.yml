@@ -57,8 +57,8 @@ jobs:
            --no-build
       - name: Zip Windows EXE
         run: |
-          ls -Recurse
           Compress-Archive -Path .\publish_win\* -DestinationPath ./Decksteria_Windows.zip
+          ls
 
       # # Build Android APK
       # - name: Publish Android APK
