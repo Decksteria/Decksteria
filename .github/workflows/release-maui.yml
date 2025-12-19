@@ -1,0 +1,119 @@
+name: Release MAUI App
+
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+    inputs:
+      pre-release:
+        description: 'Create pre-release? (true or false)'
+        required: true
+        default: 'true'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      MAJOR_VERSION: 1
+      RELEASE_VERSION: '1.0.0'
+      PRE_RELEASE: ${{ github.event.inputs.pre-release || 'true' }}
+    strategy:
+      matrix:
+        dotnet-version: [ '10.0.x' ]
+    steps:
+      - name: Compute FULL_VERSION
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+          PRE: ${{ env.PRE_RELEASE }}
+        run: |
+          if ($env:PRE -eq 'true') {
+            echo "FULL_VERSION=$($env:RELEASE_VERSION)-prerelease" >> $env:GITHUB_ENV
+          } else {
+            echo "FULL_VERSION=$($env:RELEASE_VERSION)" >> $env:GITHUB_ENV
+          }
+      - uses: actions/checkout@v4
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install MAUI Workload
+        run: |
+          dotnet workload restore .\src\Decksteria.Base.sln
+      - name: Restore MAUI Project
+        run: >
+          dotnet restore src/Decksteria.Base.sln
+          /p:PublishReadyToRun=true
+
+      # Build Solution
+      - name: Build MAUI Solution
+        run: >
+          dotnet build src/Decksteria.Base.sln
+          -c Release
+          /p:PublishReadyToRun=true
+          /p:ApplicationDisplayVersion=${{ env.RELEASE_VERSION }} /p:Version=${{ env.RELEASE_VERSION }}
+      # Build Windows EXE
+      - name: Publish Windows EXE
+        run: >
+           dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+           -c Release
+           -f net10.0-windows10.0.19041.0
+           --self-contained
+           -o publish_win
+           --no-build
+           /p:ApplicationDisplayVersion=${{ env.RELEASE_VERSION }} /p:Version=${{ env.RELEASE_VERSION }}
+      - name: Zip Windows EXE
+        run: |
+          Compress-Archive -Path .\publish_win\* -DestinationPath ./Decksteria_Windows.zip
+
+      # Build Android APK
+      - name: Publish Android APK
+        run: >
+          dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj
+          -c Release
+          -f net10.0-android
+          -r android-arm64
+          -o publish_android
+          /p:ApplicationDisplayVersion=${{ env.RELEASE_VERSION }} /p:Version=${{ env.RELEASE_VERSION }}
+
+      # Publish Windows Artifact
+      - name: Upload Windows ZIP Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Decksteria_Windowshte
+          path: Decksteria_Windows.zip
+      
+      # Publish Android Artifact
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Decksteria-Android
+          path: publish_android/com.decksteria.maui-Signed.apk
+
+      # Delete all existing pre-releases (regardless of tag)
+      - name: Delete all existing pre-releases
+        run: >
+          gh release list --json tagName,isPrerelease |
+            ConvertFrom-Json |
+              Where-Object { $_.isPrerelease -eq $true } |
+                ForEach-Object { gh release delete $_.tagName --yes }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create Pre-release and Upload Assets
+      - name: Create Pre-release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ format('v{0}', env.FULL_VERSION) }}
+          name: ${{ env.PRE_RELEASE == 'true' && format('Pre-release v{0}', env.FULL_VERSION) || format('Release v{0}', env.FULL_VERSION) }}
+          body: ${{ env.PRE_RELEASE == 'true' && format('Pre-release v{0}', env.FULL_VERSION) || format('Release v{0}', env.FULL_VERSION) }}
+          prerelease: ${{ env.PRE_RELEASE == 'true' }}
+          files: |
+            Decksteria_Windows.zip
+            publish_android/com.decksteria.maui-Signed.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

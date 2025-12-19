@@ -7,7 +7,7 @@ using NSubstitute;
 
 internal sealed class DeckbuildingServiceBuilder
 {
-    private DefaultDecksteriaGame decksteriaGame;
+    private readonly DefaultDecksteriaGame decksteriaGame;
 
     public DeckbuildingServiceBuilder()
     {

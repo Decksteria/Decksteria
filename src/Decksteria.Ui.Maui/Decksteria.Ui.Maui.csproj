@@ -22,8 +22,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.decksteria.maui</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>$(ApplicationDisplayVersion)</ApplicationDisplayVersion>
+    <ApplicationVersion>$(ApplicationVersion)</ApplicationVersion>
     <!--<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>-->
     <!--<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">16.4</SupportedOSPlatformVersion>-->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">34.0</SupportedOSPlatformVersion>
@@ -35,6 +35,7 @@
     <Description>A plug-in based Deckbuilder that works on Android and Windows.</Description>
     <AssemblyName>Decksteria</AssemblyName>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
   </PropertyGroup>
   <ItemGroup>
     <!-- App Icon -->
