@@ -35,7 +35,7 @@ jobs:
 
       # Build Windows EXE
       - name: Publish Windows EXE
-        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net9.0-windows10.0.19041.0 -r win-x64 --self-contained -o publish_win
+        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net10.0-windows10.0.19041.0 -r win-x64 --self-contained -o publish_win
       - name: Zip Windows EXE
         run: |
           cd publish_win
@@ -43,7 +43,7 @@ jobs:
 
       # Build Android APK
       - name: Publish Android APK
-        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net9.0-android -r android-arm64 -o publish_android
+        run: dotnet publish src/Decksteria.Ui.Maui/Decksteria.Ui.Maui.csproj -c Release -f net10.0-android -r android-arm64 -o publish_android
       - name: Find APK File
         id: find_apk
         run: |
